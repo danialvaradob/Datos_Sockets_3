@@ -115,8 +115,8 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
 
             cantNodosVisitados += 2;
-            int menorpeso = nodo->getPesoMenorConexion(codMenor);
-            insertarNodo(codigo1,codMenor,menorpeso);
+            pesoMenor = nodo->getPesoMenorConexion(codMenor);
+            insertarNodo(codigo1,codMenor,pesoMenor);
 
         }else {
             int i = largoArbol();
@@ -128,14 +128,14 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
             NodoArbolExpansion* nodoExpansionAux = primero;
             do {
-                nodo = _grafo->getNodoLugar(nodoExpansionAux->codLugar1);
-                nodo2 = _grafo->getNodoLugar(nodoExpansionAux->codLugar2);
+                //nodo = _grafo->getNodoLugar(nodoExpansionAux->codLugar1);
+                //nodo2 = _grafo->getNodoLugar(nodoExpansionAux->codLugar2);
 
 
                 //primera vez el mas pequenho es el del codigo 1
-                if (nodoExpansionAux == primero){
+                /*if (nodoExpansionAux == primero){
                     pesoMenor = nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion());
-                }
+                }*/
 
                 //primer codigo
                 codigoNodo1 = nodoExpansionAux->codLugar1;
@@ -150,9 +150,6 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                         codVertice2 = nodo->getCodigoMenorConexion();
                     }
                 }
-
-
-
                 //segundo codigo
                 codigoNodo2 = nodoExpansionAux->codLugar2;
                 nodo2 = _grafo->getNodoLugar(codigoNodo2);

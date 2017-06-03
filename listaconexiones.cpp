@@ -50,20 +50,29 @@ int ListaConexiones::largoLista() {
         return cont;
     }
 }
-
 int ListaConexiones::getCodMenorConexion() {
-    int menorConexion = primero->codLugar;
-    int menorPeso = primero->peso;
+    int menorConexion;
+    int menorPeso;
+    NodoConexion* nodoAux = primero;
+    do {
+        if (!nodoAux->visitado) {
+            menorPeso = nodoAux->peso;
+            break;
+        }
+        nodoAux = nodoAux->siguiente;
+    } while (nodoAux != primero);
+
+
     NodoConexion* aux = primero;
 
-    while (aux->siguiente != primero) {
+    do{
         if (aux->peso <= menorPeso && !aux->visitado) {
             menorConexion = aux->codLugar;
             menorPeso = aux->peso;
-            break;
+            //break;
         }
         aux = aux->siguiente;
-    }
+    } while (aux != primero);
     return menorConexion;
 
 }
