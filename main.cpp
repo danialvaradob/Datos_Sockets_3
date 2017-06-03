@@ -80,7 +80,8 @@ int main() {
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
-    arbol->prim(_listaLugares,12);
+    //arbol->prim(_listaLugares,78);
+    arbol->prim(_listaLugares,20);
 
 
 

@@ -147,7 +147,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
                 int codigoAcomparar = nodo->getCodigoMenorConexion();
                 //if (!nodoVisitado(nodo->getCodigoMenorConexion())) {
-                if (!nodoVisitado(codigoAcomparar) && _grafo->existeLugar(codigoAcomparar)) {
+                if (!nodoVisitado(codigoAcomparar) && _grafo->existeLugar(codigoAcomparar) && nodo->existeConexion(codigoAcomparar)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
 
                     if (pesoMenor >= nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion())) {
@@ -163,7 +163,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
                 int codigoAcomparar2 = nodo2->getCodigoMenorConexion();
                 //if (!nodoVisitado(nodo2->getCodigoMenorConexion())) {
-                if (!nodoVisitado(codigoAcomparar2) && _grafo->existeLugar(codigoAcomparar2)) {
+                if (!nodoVisitado(codigoAcomparar2) && _grafo->existeLugar(codigoAcomparar2) && nodo2->existeConexion(codigoAcomparar2)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
 
                     if (pesoMenor >= nodo2->getPesoMenorConexion(nodo2->getCodigoMenorConexion())) {

@@ -45,7 +45,6 @@ public:
     int getCantidad() {return cantidadSupermercados;}
     void aumentarCantidadSuper() {cantidadSupermercados++;}
 
-
     //Conexiones
     ListaConexiones* getConexiones() {return conexiones;}
     int getCantidadDeConexiones() {return conexiones->largoLista();}
@@ -55,6 +54,7 @@ public:
 
     void visitarConexion(int _codigo) {conexiones->visitar(_codigo);}
     void desvisitarConexiones() {conexiones->desvisitarConexiones();}
+    bool existeConexion(int _codigo) {return conexiones->existeConexion(_codigo);}
 
 private:
     bool visitado;

@@ -24,6 +24,8 @@ public:
 
     void desvisitarConexiones();
 
+    bool existeConexion(int _codigo);
+
     void visitar(int _codigo);
     int getMayorPeso();
 

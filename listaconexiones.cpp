@@ -118,3 +118,13 @@ int ListaConexiones::getMayorPeso() {
 
     return  mayorPeso;
 }
+
+bool ListaConexiones::existeConexion(int _codigo) {
+    NodoConexion* aux = primero;
+    do {
+        if (aux->codLugar == _codigo)
+            return true;
+        aux = aux->siguiente;
+    } while(aux != primero);
+    return false;
+}
