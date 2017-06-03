@@ -25,7 +25,7 @@ public:
     //int **OT() {return T;} //Arbol de Expansion
     //int arbolExpancionPrim(ListaLugares* _grafo);    //algoritmo de Prim
     void prim(ListaLugares* _grafo, int _primerNodo);
-
+    void profundida(ListaLugares* _grafo, int _puntoInicial);
 
 
     void insertarNodo(int _codigo1, int _codigo2 , int _peso);

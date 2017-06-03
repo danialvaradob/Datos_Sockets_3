@@ -261,3 +261,10 @@ bool ArbolExpansionMinimo::nodoVisitado(int _codigo) {
 
 
 
+void ArbolExpansionMinimo::profundida(ListaLugares *_grafo, int _puntoInicial) {
+
+}
+
+
+
+

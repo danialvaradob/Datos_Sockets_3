@@ -5,16 +5,18 @@
 #ifndef PROGRA_3_PILA_H
 #define PROGRA_3_PILA_H
 
-#include "nodolugar.h"
+#include "nodo.h"
 
 class Pila {
 public:
-    void push();
-    bool vacia();
-    int pop();
+    Pila() {top = NULL;}
+
+    void push(int _valor);
+    bool vacia() {return top == NULL;};
+    nodo* pop();
 
 private:
-    int  top;
+    nodo*  top;
 
 
 
