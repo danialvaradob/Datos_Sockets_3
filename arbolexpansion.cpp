@@ -89,6 +89,8 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
     int cantNodosVisitados = 0;
     int codMenor,pesoMenor;
 
+    bool crearNodoArbolExp = false;
+
 
     NodoLugar* nodo = _grafo->getNodoLugar(_primerNodo);
     NodoLugar* nodo2;
@@ -127,7 +129,9 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
             int codVertice1,codVertice2;
 
             NodoArbolExpansion* nodoExpansionAux = primero;
+            crearNodoArbolExp = false;
             do {
+
                 //nodo = _grafo->getNodoLugar(nodoExpansionAux->codLugar1);
                 //nodo2 = _grafo->getNodoLugar(nodoExpansionAux->codLugar2);
 
@@ -141,25 +145,32 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 codigoNodo1 = nodoExpansionAux->codLugar1;
                 nodo = _grafo->getNodoLugar(codigoNodo1);
 
-                if (!nodoVisitado(nodo->getCodigoMenorConexion())) {
+                int codigoAcomparar = nodo->getCodigoMenorConexion();
+                //if (!nodoVisitado(nodo->getCodigoMenorConexion())) {
+                if (!nodoVisitado(codigoAcomparar) && _grafo->existeLugar(codigoAcomparar)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
 
                     if (pesoMenor >= nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion())) {
                         pesoMenor = nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion());
                         codVertice1 = nodo->getCodigo();
                         codVertice2 = nodo->getCodigoMenorConexion();
+                        crearNodoArbolExp = true;
                     }
                 }
                 //segundo codigo
                 codigoNodo2 = nodoExpansionAux->codLugar2;
                 nodo2 = _grafo->getNodoLugar(codigoNodo2);
-                if (!nodoVisitado(nodo2->getCodigoMenorConexion())) {
+
+                int codigoAcomparar2 = nodo2->getCodigoMenorConexion();
+                //if (!nodoVisitado(nodo2->getCodigoMenorConexion())) {
+                if (!nodoVisitado(codigoAcomparar2) && _grafo->existeLugar(codigoAcomparar2)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
 
-                    if (pesoMenor >= nodo2->getPesoMenorConexion(nodo->getCodigoMenorConexion())) {
-                        pesoMenor = nodo2->getPesoMenorConexion(nodo->getCodigoMenorConexion());
+                    if (pesoMenor >= nodo2->getPesoMenorConexion(nodo2->getCodigoMenorConexion())) {
+                        pesoMenor = nodo2->getPesoMenorConexion(nodo2->getCodigoMenorConexion());
                         codVertice1 = nodo2->getCodigo();
                         codVertice2 = nodo2->getCodigoMenorConexion();
+                        crearNodoArbolExp = true;
                     }
                 }
 
@@ -167,20 +178,22 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 nodoExpansionAux = nodoExpansionAux->siguiente;
 
             }while(nodoExpansionAux != primero);
-            //ACA A LOS CODIGOS QUE HAYAN EN CODIGO VERTICE
-            //LUGAR1
-            nodo = _grafo->getNodoLugar(codVertice1);
-            nodo2->visitar();
-            //LUGAR2 --> LO VISITA ///ACA SE CAE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            nodo2 = _grafo->getNodoLugar(codVertice2);
-            nodo2->visitar();
+            if (crearNodoArbolExp) {
+                //ACA A LOS CODIGOS QUE HAYAN EN CODIGO VERTICE
+                //LUGAR1
+                nodo = _grafo->getNodoLugar(codVertice1);
+                nodo2->visitar();
+                //LUGAR2 --> LO VISITA
+                nodo2 = _grafo->getNodoLugar(codVertice2);
+                nodo2->visitar();
 
-            //visita todas las conexiones
-            _grafo->visitarTodasConexiones(codVertice1);
-            _grafo->visitarTodasConexiones(codVertice2);
+                //visita todas las conexiones
+                _grafo->visitarTodasConexiones(codVertice1);
+                _grafo->visitarTodasConexiones(codVertice2);
 
-            //INSERTA EL NODO AL ARBOL
-            insertarNodo(codVertice1,codVertice2,pesoMenor);
+                //INSERTA EL NODO AL ARBOL
+                insertarNodo(codVertice1, codVertice2, pesoMenor);
+            }
         }
 
 

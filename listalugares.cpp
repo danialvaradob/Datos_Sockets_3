@@ -54,10 +54,10 @@ bool ListaLugares::existeLugar(int _codigo) {
     NodoLugar* aux = primero;
     if (listaVacia()) return false;
 
-    while(aux->siguiente != primero) {
+    do{
         if (aux->codigo == _codigo) return true;
         aux = aux->getSiguiente();
-    }
+    }while(aux!= primero);
     return false;
 }
 
