@@ -132,9 +132,9 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 //nodo2 = _grafo->getNodoLugar(nodoExpansionAux->codLugar2);
 
 
-                //primera vez el mas pequenho es el del codigo 1
+                //CAMBIAR ESTA FUNCION PARA DESPUES PODER COMPARAR CON ESTE
                 if (nodoExpansionAux == primero){
-                    pesoMenor = nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion());
+                    pesoMenor = _grafo->getMayorPeso();
                 }
 
                 //primer codigo
@@ -171,7 +171,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
             //LUGAR1
             nodo = _grafo->getNodoLugar(codVertice1);
             nodo2->visitar();
-            //LUGAR2 --> LO VISITA
+            //LUGAR2 --> LO VISITA ///ACA SE CAE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             nodo2 = _grafo->getNodoLugar(codVertice2);
             nodo2->visitar();
 

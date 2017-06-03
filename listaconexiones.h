@@ -25,6 +25,7 @@ public:
     void desvisitarConexiones();
 
     void visitar(int _codigo);
+    int getMayorPeso();
 
     NodoConexion* primero;
     NodoConexion* actual;

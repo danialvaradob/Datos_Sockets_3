@@ -166,3 +166,18 @@ void ListaLugares::desvisitarTODO() {
         aux = aux->siguiente;
     } while (aux != primero);
 }
+
+int ListaLugares::getMayorPeso() {
+    NodoLugar* lugar = primero;
+    if (primero->conexiones->primero == NULL) return -1;
+    int mayorPeso = primero->conexiones->primero->peso;
+    do {
+        if (mayorPeso < lugar->getConexiones()->getMayorPeso()) {
+            mayorPeso = lugar->getConexiones()->getMayorPeso();
+
+        }
+        lugar = lugar->siguiente;
+    } while (lugar != primero);
+    return mayorPeso;
+
+}

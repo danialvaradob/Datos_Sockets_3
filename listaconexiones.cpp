@@ -105,3 +105,16 @@ void ListaConexiones::desvisitarConexiones() {
     } while (aux != primero);
 
 }
+
+int ListaConexiones::getMayorPeso() {
+    NodoConexion* aux = primero;
+    int mayorPeso = primero->peso;
+    do {
+        if (mayorPeso < aux->peso){
+            mayorPeso = aux->peso;
+        }
+        aux = aux->siguiente;
+    } while (aux != primero);
+
+    return  mayorPeso;
+}

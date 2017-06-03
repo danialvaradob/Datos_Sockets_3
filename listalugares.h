@@ -36,6 +36,8 @@ public:
 
     void visitarTodasConexiones(int _codigoDeConexion);
 
+    int getMayorPeso();
+
 
     NodoLugar* primero;
     NodoLugar* actual;
