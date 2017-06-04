@@ -21,7 +21,7 @@ void Pila::push(int _valor) {
     }
 }
 
-nodo* Pila::pop() {
+int Pila::pop() {
     nodo* pop = top;
     if (top->siguiente == top){
         nodo* temp = top;
@@ -33,6 +33,6 @@ nodo* Pila::pop() {
         top->anterior = aux->anterior;
         delete aux;
     }
-    return pop;
+    return pop->getValor();
 }
 

@@ -13,7 +13,7 @@ public:
 
     void push(int _valor);
     bool vacia() {return top == NULL;};
-    nodo* pop();
+    int pop();
 
 private:
     nodo*  top;

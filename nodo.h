@@ -14,6 +14,7 @@ public:
         siguiente = NULL;
         anterior = NULL;
     }
+    int getValor() {return valor;}
 
 private:
     int valor;
