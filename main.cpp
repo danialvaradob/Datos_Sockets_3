@@ -4,6 +4,8 @@
 #include "arbolexpansion.h"
 void leerArchLugares(ListaLugares * _lugares){
     std::string nombreArchivo = "Lugares.txt";
+    //std::string nombreArchivo = "LugaresDaniel.txt";
+
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -40,6 +42,7 @@ void leerArchLugares(ListaLugares * _lugares){
 
 void leerArchConexiones(ListaLugares* _listaLugares) {
     std::string nombreArchivo = "Conexiones.txt";
+    //std::string nombreArchivo = "ConexionesDaniel.txt";
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -74,14 +77,16 @@ void leerArchConexiones(ListaLugares* _listaLugares) {
 
 int main() {
 
-    ListaLugares* _listaLugares = new ListaLugares();
-    leerArchLugares(_listaLugares);
-    leerArchConexiones(_listaLugares);
+    ListaLugares* listaLugares = new ListaLugares();
+    leerArchLugares(listaLugares);
+    leerArchConexiones(listaLugares);
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
+    listaLugares->profundida(20);
+
     ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
     //arbol->prim(_listaLugares,78);
-    arbol->prim(_listaLugares,20);
+    arbol->prim(listaLugares,20);
 
 
 

@@ -28,10 +28,26 @@ int Pila::pop() {
         top = NULL;
         delete temp;
     }else{
+        /*
         nodo* aux = top->anterior;
         aux->anterior->siguiente = top;
         top->anterior = aux->anterior;
         delete aux;
+
+        nodo*aux = top;
+        top->anterior->siguiente = top->siguiente;
+        top->siguiente->anterior = top->anterior;
+        aux->anterior = NULL;
+        aux->siguiente = NULL;
+        top = top->siguiente;
+        delete aux;
+         */
+        nodo* temp = top;
+        top->anterior->siguiente = top->siguiente;
+        top->siguiente->anterior = top->anterior;
+        top = top->siguiente;
+        delete temp;
+
     }
     return pop->getValor();
 }

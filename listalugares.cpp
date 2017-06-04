@@ -201,11 +201,14 @@ void ListaLugares::profundida(int _puntoInicial) {
     while (contador > 0 && !todosVisitados()) {
         if (contador == cantLugares) {
             pilaLugares->push(_puntoInicial);
-            lugar = getNodoLugar(_puntoInicial);
-            std::cout << "Lugar: " << std::to_string(lugar->codigo)<< std::endl;
+            //lugar = getNodoLugar(_puntoInicial);
+            //lugar->visitar();
+            visitarTodasConexiones(_puntoInicial);
+            std::cout << "Lugar: " << std::to_string(_puntoInicial)<< std::endl;
         }
         codLugar = pilaLugares->pop();
         lugar = getNodoLugar(codLugar);
+        lugar->visitar();
         NodoConexion* aux = lugar->conexiones->primero;
         if (aux!= NULL) {
             do {
