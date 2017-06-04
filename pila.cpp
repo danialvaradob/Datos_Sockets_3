@@ -22,9 +22,10 @@ void Pila::push(int _valor) {
 }
 
 int Pila::pop() {
-    nodo* pop = top;
+    int valor;
     if (top->siguiente == top){
         nodo* temp = top;
+        valor = top->getValor();
         top = NULL;
         delete temp;
     }else{
@@ -43,12 +44,14 @@ int Pila::pop() {
         delete aux;
          */
         nodo* temp = top;
+        valor = top->getValor();
         top->anterior->siguiente = top->siguiente;
         top->siguiente->anterior = top->anterior;
         top = top->siguiente;
         delete temp;
 
     }
-    return pop->getValor();
+
+    return valor;
 }
 

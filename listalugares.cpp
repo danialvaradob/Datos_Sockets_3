@@ -216,7 +216,6 @@ void ListaLugares::profundida(int _puntoInicial) {
                     pilaLugares->push(aux->codLugar);
                     visitarTodasConexiones(aux->codLugar);
                     std::cout << "Lugar: " << std::to_string(aux->codLugar) << std::endl;
-
                 }
                 aux = aux->siguiente;
             } while (aux != lugar->conexiones->primero);
