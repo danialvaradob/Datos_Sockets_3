@@ -17,6 +17,7 @@ public:
 
 private:
     nodo*  top;
+    friend class ListaLugares;
 
 
 

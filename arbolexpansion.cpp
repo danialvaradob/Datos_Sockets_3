@@ -195,6 +195,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
                 //INSERTA EL NODO AL ARBOL
                 insertarNodo(codVertice1, codVertice2, pesoMenor);
+                pesoTotal += pesoMenor;
             }
         }
 
@@ -262,27 +263,30 @@ bool ArbolExpansionMinimo::nodoVisitado(int _codigo) {
 
 
 
-
+/*
 void ArbolExpansionMinimo::profundida(ListaLugares *_grafo, int _puntoInicial) {
-    NodoLugar* lugar = _grafo->getNodoLugar(_puntoInicial);
+    int cantVisitados = 0;
     int cantLugares,contador = _grafo->getNumVertices();
     Pila* pilaLugares = new Pila();
+    NodoLugar* lugar;
 
 
     while (contador > 0) {
         if (contador == cantLugares) {
             pilaLugares->push(_puntoInicial);
+            lugar = _grafo->getNodoLugar(_puntoInicial);
         }
 
-        NodoLugar* lugar = _grafo->getNodoLugar(_puntoInicial);
-        //while ()
+
+
+
 
         cantLugares--;
     }
 
 
 }
-
+*/
 
 
 

@@ -179,5 +179,38 @@ int ListaLugares::getMayorPeso() {
         lugar = lugar->siguiente;
     } while (lugar != primero);
     return mayorPeso;
+}
+
+bool ListaLugares::todosVisitados() {
+    NodoLugar* aux = primero;
+    do {
+        if (!aux->visitado)
+            return false;
+        aux = aux->siguiente;
+    } while (aux != primero);
+    return true;
+}
+
+
+void ListaLugares::profundida(int _puntoInicial) {
+    int cantVisitados = 0;
+    int cantLugares,contador = getNumVertices();
+    Pila* pilaLugares = new Pila();
+    NodoLugar* lugar;
+
+
+    while (contador > 0) {
+        if (contador == cantLugares) {
+            pilaLugares->push(_puntoInicial);
+            lugar = getNodoLugar(_puntoInicial);
+        }
+
+
+
+
+
+        cantLugares--;
+    }
+
 
 }

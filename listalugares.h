@@ -6,7 +6,7 @@
 #define PROGRA_3_LISTALUGARES_H
 
 #include "nodolugar.h"
-
+#include "pila.h"
 //LISTA CIRCULAR DOBLE
 
 class ListaLugares {
@@ -33,11 +33,12 @@ public:
 
     int getCodigo(int _posicion); //recibe como parametro la posicion de la cual desea el codigo
     void desvisitarTODO();
-
+    bool todosVisitados(); //retorna true si TODOS los nodos estan visitados
     void visitarTodasConexiones(int _codigoDeConexion);
 
     int getMayorPeso();
-
+    //RECORRIDOS
+    void profundida(int _puntoInicial);
 
     NodoLugar* primero;
     NodoLugar* actual;
