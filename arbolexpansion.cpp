@@ -3,6 +3,8 @@
 //
 
 #include "arbolexpansion.h"
+#include "pila.h"
+
 /*
 ArbolExpansionMinimo::ArbolExpansionMinimo(ListaLugares* _grafo) {
     n = _grafo->getNumVertices();
@@ -262,6 +264,22 @@ bool ArbolExpansionMinimo::nodoVisitado(int _codigo) {
 
 
 void ArbolExpansionMinimo::profundida(ListaLugares *_grafo, int _puntoInicial) {
+    NodoLugar* lugar = _grafo->getNodoLugar(_puntoInicial);
+    int cantLugares,contador = _grafo->getNumVertices();
+    Pila* pilaLugares = new Pila();
+
+
+    while (contador > 0) {
+        if (contador == cantLugares) {
+            pilaLugares->push(_puntoInicial);
+        }
+
+        NodoLugar* lugar = _grafo->getNodoLugar(_puntoInicial);
+        //while ()
+
+        cantLugares--;
+    }
+
 
 }
 
