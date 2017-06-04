@@ -194,17 +194,15 @@ bool ListaLugares::todosVisitados() {
 
 void ListaLugares::profundida(int _puntoInicial) {
     int cantVisitados,codLugar = 0;
-    int cantLugares,contador = getNumVertices();
+    int contador = getNumVertices();
+    int cantLugares = getNumVertices();
     Pila* pilaLugares = new Pila();
     NodoLugar* lugar;
-
-
     while (contador > 0 && !todosVisitados()) {
         if (contador == cantLugares) {
             pilaLugares->push(_puntoInicial);
             lugar = getNodoLugar(_puntoInicial);
             std::cout << "Lugar: " << std::to_string(lugar->codigo)<< std::endl;
-
         }
         codLugar = pilaLugares->pop();
         lugar = getNodoLugar(codLugar);
@@ -222,6 +220,4 @@ void ListaLugares::profundida(int _puntoInicial) {
         }
         cantLugares--;
     }
-
-
 }

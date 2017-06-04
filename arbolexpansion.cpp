@@ -85,12 +85,9 @@ int ArbolExpansionMinimo::largoArbol() {
 
 
 void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
-    int costoMinimo;
     int cantidadNodos = _grafo->getNumVertices();
-    int arrayVisitados[cantidadNodos];
     int cantNodosVisitados = 0;
     int codMenor,pesoMenor;
-
     bool crearNodoArbolExp = false;
 
 
@@ -101,48 +98,38 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
     while (cantidadNodos > 0) {
 
         if (arbolVacio()) {
+
             int codigo1 = nodo->getCodigo();
             codMenor = nodo->getCodigoMenorConexion();
             NodoLugar* nodoMenor = _grafo->getNodoLugar(codMenor);
             //se cambia a visitado tanto el nodo del usuario como el otro vertice
             nodo->visitar();
             nodo->visitarConexion(codMenor);
-
             nodoMenor->visitar();
             nodoMenor->visitarConexion(codigo1);
-
-
             //funcion que visita todos los nodos de conexiones a traves de una lista de lugares
-
             _grafo->visitarTodasConexiones(codMenor);
             _grafo->visitarTodasConexiones(codigo1);
-
-
             cantNodosVisitados += 2;
             pesoMenor = nodo->getPesoMenorConexion(codMenor);
             insertarNodo(codigo1,codMenor,pesoMenor);
 
         }else {
+
             int i = largoArbol();
             int codigoNodo1,codigoNodo2;
-
             //VARIABLES QUE GUARDAN LOS DOS CODIGOS DE LOS LUGARES QUE ESTAN CONECTADOS
             //SI EL PESO ENTRE ESTOS DOS CODIGOS ES EL MENOR ENTONCES SE CREA UN NODOEXPANSION
             int codVertice1,codVertice2;
-
             NodoArbolExpansion* nodoExpansionAux = primero;
             crearNodoArbolExp = false;
             do {
-
                 //nodo = _grafo->getNodoLugar(nodoExpansionAux->codLugar1);
                 //nodo2 = _grafo->getNodoLugar(nodoExpansionAux->codLugar2);
-
-
                 //CAMBIAR ESTA FUNCION PARA DESPUES PODER COMPARAR CON ESTE
                 if (nodoExpansionAux == primero){
                     pesoMenor = _grafo->getMayorPeso();
                 }
-
                 //primer codigo
                 codigoNodo1 = nodoExpansionAux->codLugar1;
                 nodo = _grafo->getNodoLugar(codigoNodo1);
@@ -151,7 +138,6 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 //if (!nodoVisitado(nodo->getCodigoMenorConexion())) {
                 if (!nodoVisitado(codigoAcomparar) && _grafo->existeLugar(codigoAcomparar) && nodo->existeConexion(codigoAcomparar)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
-
                     if (pesoMenor >= nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion())) {
                         pesoMenor = nodo->getPesoMenorConexion(nodo->getCodigoMenorConexion());
                         codVertice1 = nodo->getCodigo();
@@ -162,12 +148,10 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 //segundo codigo
                 codigoNodo2 = nodoExpansionAux->codLugar2;
                 nodo2 = _grafo->getNodoLugar(codigoNodo2);
-
                 int codigoAcomparar2 = nodo2->getCodigoMenorConexion();
                 //if (!nodoVisitado(nodo2->getCodigoMenorConexion())) {
                 if (!nodoVisitado(codigoAcomparar2) && _grafo->existeLugar(codigoAcomparar2) && nodo2->existeConexion(codigoAcomparar2)) {
                     //si entra aca quiere decir que retorno un codigo que no esta visitado
-
                     if (pesoMenor >= nodo2->getPesoMenorConexion(nodo2->getCodigoMenorConexion())) {
                         pesoMenor = nodo2->getPesoMenorConexion(nodo2->getCodigoMenorConexion());
                         codVertice1 = nodo2->getCodigo();
@@ -175,10 +159,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                         crearNodoArbolExp = true;
                     }
                 }
-
-
                 nodoExpansionAux = nodoExpansionAux->siguiente;
-
             }while(nodoExpansionAux != primero);
             if (crearNodoArbolExp) {
                 //ACA A LOS CODIGOS QUE HAYAN EN CODIGO VERTICE
@@ -188,23 +169,17 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
                 //LUGAR2 --> LO VISITA
                 nodo2 = _grafo->getNodoLugar(codVertice2);
                 nodo2->visitar();
-
                 //visita todas las conexiones
                 _grafo->visitarTodasConexiones(codVertice1);
                 _grafo->visitarTodasConexiones(codVertice2);
-
                 //INSERTA EL NODO AL ARBOL
                 insertarNodo(codVertice1, codVertice2, pesoMenor);
                 pesoTotal += pesoMenor;
             }
         }
-
-
         cantidadNodos--;
-
     }
     _grafo->desvisitarTODO();
-
 }
 
 void ArbolExpansionMinimo::insertarNodo(int _codigo1, int _codigo2, int _peso) {
