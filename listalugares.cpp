@@ -192,7 +192,9 @@ bool ListaLugares::todosVisitados() {
 }
 
 
-void ListaLugares::profundida(int _puntoInicial) {
+std::string ListaLugares::profundida(int _puntoInicial) {
+    std::string recorrido_str = "";
+
     int cantVisitados,codLugar = 0;
     int contador = getNumVertices();
     int cantLugares = getNumVertices();
@@ -205,6 +207,7 @@ void ListaLugares::profundida(int _puntoInicial) {
             //lugar->visitar();
             visitarTodasConexiones(_puntoInicial);
             std::cout << "Lugar: " << std::to_string(_puntoInicial)<< std::endl;
+            recorrido_str += "Lugar: " + std::to_string(_puntoInicial) + "\n";
         }
         codLugar = pilaLugares->pop();
         lugar = getNodoLugar(codLugar);
@@ -216,6 +219,7 @@ void ListaLugares::profundida(int _puntoInicial) {
                     pilaLugares->push(aux->codLugar);
                     visitarTodasConexiones(aux->codLugar);
                     std::cout << "Lugar: " << std::to_string(aux->codLugar) << std::endl;
+                    recorrido_str += "Lugar: " + std::to_string(aux->codLugar) + "\n";
                 }
                 aux = aux->siguiente;
             } while (aux != lugar->conexiones->primero);

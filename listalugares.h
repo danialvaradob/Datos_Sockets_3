@@ -38,7 +38,7 @@ public:
 
     int getMayorPeso();
     //RECORRIDOS
-    void profundida(int _puntoInicial);
+    std::string profundida(int _puntoInicial);
 
     NodoLugar* primero;
     NodoLugar* actual;
