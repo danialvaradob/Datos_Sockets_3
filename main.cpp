@@ -15,6 +15,11 @@
 #include <stdlib.h>
 #include <string>
 #include <pthread.h>
+#include <vector>
+#include "arbolproveedores.h"
+#include "arbolclientes.h"
+#include "arbolsupermercados.h"
+
 const int PRIMERA_VEZ = -1;
 const int OPCION_VENTA = 1;
 const int OPCION_PROVEEDOR_MAS_VENTAS = 2;
@@ -28,7 +33,9 @@ const int OPCION_IMPRIMIR_ARBOL_PREORDEN = 9;
 const int OPCION_ELIMINAR_PRODUCTO = 10;
 const int OPCION_ELIMINAR_CLIENTE = 11;
 const int OPCION_FACTURA = 12;
-int const TAMANHO_BUFFER = 256;
+int const TAMANHO_BUFFER = 301;
+
+
 
 void leerArchLugares(ListaLugares * _lugares){
     std::string nombreArchivo = "Lugares.txt";
@@ -103,8 +110,8 @@ void leerArchConexiones(ListaLugares* _listaLugares) {
 
 }
 
-ListaLugares* listaLugares = new ListaLugares();
-ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
+static ListaLugares* listaLugares = new ListaLugares();
+static ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 
 void *task1(void *);
 static int newsockfd;
@@ -117,11 +124,9 @@ int main() {
     leerArchConexiones(listaLugares);
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
-    listaLugares->profundida(20);
-
-
+    //listaLugares->profundida(20);
     //arbol->prim(_listaLugares,78);
-    arbol->prim(listaLugares,20);
+    //arbol->prim(listaLugares,20);
 
 
     int pId, portNo, listenFd;
@@ -195,28 +200,51 @@ int main() {
 
 void *task1 (void *dummyPt) {
 
+    //PRUEBAS
+    std::string recorridoArbol = "Recorrido:\n";
+    int nodoInicial = 20;
+    //
+
     std::cout << "Thread No: " << pthread_self() << std::endl;
     char buffer[TAMANHO_BUFFER];
     bzero(buffer, TAMANHO_BUFFER);
     bool loop = false;
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
+        read(newsockfd, buffer, TAMANHO_BUFFER-1);
+
+        //PRUEBAS
+        if ((memcmp(buffer, "1", strlen("1"))) == 0) {
+            recorridoArbol += listaLugares->profundida(nodoInicial);
+            std::vector<char> v(recorridoArbol.begin(), recorridoArbol.end());
+            v.push_back('\0'); // Make sure we are null-terminated
+            char *msgCodSR = &v[0];
+            write(newsockfd, msgCodSR, strlen(msgCodSR));
+            std::cout << recorridoArbol << std::endl;
+            //char msgCodClientPreorden[] = "REVISAR SERVIDOR";
+            //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
 
 
-        read(newsockfd, buffer, TAMANHO_BUFFER);
+        } else {
+
+            std::string tester (buffer);
+            std::cout << tester << std::endl;
+            char serverMsg[] = "BIENVENIDO AL SERVIDOR";
+            write(newsockfd,serverMsg,strlen(serverMsg));
+            if(tester == "exit")
+               break;
+        }
+
+
+
         //write()
 
 
-        std::string tester (buffer);
-        std::cout << tester << std::endl;
-        char serverMsg[] = "BIENVENIDO AL SERVIDOR";
-        write(newsockfd,serverMsg,strlen(serverMsg));
 
-
-
-        if(tester == "exit")
-            break;
+      //  if(tester == "exit")
+        //    break;
     }
+
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockfd);
 }
