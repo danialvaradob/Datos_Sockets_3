@@ -128,3 +128,25 @@ bool ListaConexiones::existeConexion(int _codigo) {
     } while(aux != primero);
     return false;
 }
+
+NodoConexion* ListaConexiones::getConexion(int _codigo) {
+    NodoConexion* aux = primero;
+    do {
+        if (aux->codLugar == _codigo)
+            return aux;
+        aux = aux->siguiente;
+    } while (aux != primero);
+    return 0;
+}
+
+void ListaConexiones::sumarDistTotal(int disTotal) {
+    NodoConexion* aux = primero;
+    do {
+        //if (aux->codLugar == _codigo)
+            //return aux;
+        aux->peso = aux->peso + disTotal;
+        aux = aux->siguiente;
+    } while (aux != primero);
+    return;
+}
+

@@ -1,14 +1,17 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include "arbolexpansion.h"
+#include "ListaLugares.cpp"
+#include "Pila.cpp"
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <netdb.h>
+//#include <netdb.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
 #include <iostream>
 #include <fstream>
 #include <strings.h>
@@ -30,8 +33,11 @@ const int OPCION_ELIMINAR_CLIENTE = 11;
 const int OPCION_FACTURA = 12;
 int const TAMANHO_BUFFER = 256;
 
+using namespace std;
+
 void leerArchLugares(ListaLugares * _lugares){
     std::string nombreArchivo = "Lugares.txt";
+    //cout<<"Je, je"<<endl;
     //std::string nombreArchivo = "LugaresDaniel.txt";
 
 
@@ -53,7 +59,7 @@ void leerArchLugares(ListaLugares * _lugares){
         std::string nombre(std::strtok (NULL, ";"));
 
         // ... crear el nodo
-        //cout << id << "," << nombre << "," << direccion << "," << telefono << endl;
+       // cout << id << "," << nombre << "," << direccion << "," << telefono << endl;
         int codigoL = atoi(id.c_str());
 
 
@@ -107,23 +113,32 @@ ListaLugares* listaLugares = new ListaLugares();
 ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 
 void *task1(void *);
-static int newsockfd;
+//static int newsockfd;
 
 
 
 int main() {
 
+try{
+
     leerArchLugares(listaLugares);
     leerArchConexiones(listaLugares);
+    
+    //listaLugares->recorridoProfundidad(listaLugares->actual);
+    
+    listaLugares->Dijkstra(3, 20);
+    
+    
+    
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
-    listaLugares->profundida(20);
+   // listaLugares->profundida(20);
 
 
     //arbol->prim(_listaLugares,78);
-    arbol->prim(listaLugares,20);
+    //arbol->prim(listaLugares,20);
 
-
+	/*
     int pId, portNo, listenFd;
     socklen_t len; //store size of the address
     bool loop = false;
@@ -189,10 +204,15 @@ int main() {
 
 
 
-
+*/
     return 0;
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown exception caught\n";
+    }
 }
-
+/*
 void *task1 (void *dummyPt) {
 
     std::cout << "Thread No: " << pthread_self() << std::endl;
@@ -219,4 +239,4 @@ void *task1 (void *dummyPt) {
     }
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockfd);
-}
+}*/

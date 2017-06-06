@@ -28,6 +28,9 @@ public:
 
     void visitar(int _codigo);
     int getMayorPeso();
+    
+    NodoConexion* getConexion(int _codigo);
+    void sumarDistTotal(int disTotal);
 
     NodoConexion* primero;
     NodoConexion* actual;

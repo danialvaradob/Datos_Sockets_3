@@ -23,6 +23,8 @@ public:
     void getLugarMasSuper(NodoLugar*&_lugarMasSupermercados);
     NodoLugar* getNodoLugar(int _codigo);
 
+	
+	
 
     //FUNCIONES UTILIZADAS PARA GRAFOS
     int getCantidadConexiones(int _codLugar);
@@ -35,6 +37,12 @@ public:
     void desvisitarTODO();
     bool todosVisitados(); //retorna true si TODOS los nodos estan visitados
     void visitarTodasConexiones(int _codigoDeConexion);
+    
+    //Dijkstra
+    void Dijkstra(int inicio, int final);
+	//NodoLugar* getNodoLugar(int _codigo);
+	void insertarLugar(NodoLugar* nuevo);
+	//Fin Dijkstra
 
     int getMayorPeso();
     //RECORRIDOS
