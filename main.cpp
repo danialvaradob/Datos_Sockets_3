@@ -493,7 +493,7 @@ void *task1 (void *dummyPt) {
 
             std::string tester (buffer);
             std::cout << tester << std::endl;
-            char serverMsg[] = "BIENVENIDO AL SERVIDOR";
+            char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
             write(newsockfd,serverMsg,strlen(serverMsg));
             if(tester == "exit")
                break;
