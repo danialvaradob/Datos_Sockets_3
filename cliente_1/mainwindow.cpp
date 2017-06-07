@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogcompra.h"
+#include <QMessageBox>
 
 
 MainWindow::MainWindow( SocketClient* _server ,QWidget *parent) :
@@ -35,6 +36,19 @@ void MainWindow::on_pushButton_clicked()
     //... se pone un atributo en MainWindow, en el header, que se llama comprarDialog compra;
     client->writeSocket(compraDialog.getInfo());
     client->readSocket();
+
+
+    string lecturaSocket (client->buffer);
+    if (lecturaSocket == "V_REALIZADA") {
+        char message[] = "VENTA REALIZADA";
+        QMessageBox::about(this,tr("Compra"),tr(message));
+    } else {
+        char message[] = "VENTA NO REALIZADA, por favor verifique los codigos";
+        QMessageBox::about(this,tr("Compra"),tr(message));
+    }
+
+
+
 
 
 }

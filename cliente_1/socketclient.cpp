@@ -75,8 +75,8 @@ void SocketClient::writeSocket(std::string _message) {
 
 void SocketClient::readSocket() {
 
-    emptyBuffer();
-    int n = read(listenFd, buffer, strlen(buffer) - 1);
+    //emptyBuffer();
+    int n = read(listenFd, buffer, TAMANO_BUFFER - 1);
 
 
 }

@@ -379,6 +379,8 @@ static ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 
 void *task1(void *);
 static int newsockfd;
+static int newsockfd2;
+static int newsockfd3;
 static int newsockProvider;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -408,18 +410,23 @@ void* clientManagement (void *dummyPt) {
         read(newsockfd, buffer, TAMANHO_BUFFER-1);
 
         //PRUEBAS
-        if ((memcmp(buffer, "1", strlen("1"))) == 0) {
+        std::string tester (buffer);
+        if (tester == "PROFUNDIDAD") {
             recorridoArbol += listaLugares->profundida(nodoInicial);
-            std::vector<char> v(recorridoArbol.begin(), recorridoArbol.end());
-            v.push_back('\0'); // Make sure we are null-terminated
-            char *msgCodSR = &v[0];
-            write(newsockfd, msgCodSR, strlen(msgCodSR));
             std::cout << recorridoArbol << std::endl;
+
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
             //char msgCodClientPreorden[] = "REVISAR SERVIDOR";
             //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
 
 
-        } else {
+        } else if ((memcmp(buffer, "v.", strlen("v."))) == 0) {
+
+            char serverMsg[] = "V_REALIZADA";
+            write(newsockfd,serverMsg,strlen(serverMsg));
+
+        }else {
 
             std::string tester (buffer);
             std::cout << tester << std::endl;
@@ -562,7 +569,14 @@ int main() {
         std::cout << "Listening" << std::endl;
 
         //this is where client connects. svr will hang in this mode until client conn
-        newsockfd = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
+        if (noThread == 0)
+            newsockfd = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
+        else if(noThread == 1)
+            newsockfd2 = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
+        else if (noThread == 2)
+            newsockfd3 = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
+
+
 
         if (newsockfd < 0) {
             std::cerr << "Cannot accept connection" << std::endl;
@@ -576,9 +590,16 @@ int main() {
         read(newsockfd, buffer, TAMANHO_BUFFER-1);
 
         std::string tester (buffer);
-        if (tester == "proveedor") {
+        if (tester == "PROVEEDOR") {
             //llama a la funcion de proveedor
             //funcion diferente a las de task1
+            if (noThread == 0)
+                newsockProvider = newsockfd ;
+            else if(noThread == 1)
+                newsockProvider = newsockfd2;
+            else if (noThread == 2)
+                newsockProvider = newsockfd3;
+
             pthread_create(&threadA[noThread], NULL, provider, NULL);
 
         } else if (tester == "CLIENTE_1") {

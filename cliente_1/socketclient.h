@@ -20,7 +20,7 @@
 #include <vector>
 using namespace std;
 
-int const TAMANHO_BUFFER = 256;
+int const TAMANHO_BUFFER = 301;
 
 class SocketClient
 {
