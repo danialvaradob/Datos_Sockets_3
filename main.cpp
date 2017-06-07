@@ -409,8 +409,13 @@ void* clientManagement (void *dummyPt) {
         bzero(buffer, TAMANHO_BUFFER);
         read(newsockfd, buffer, TAMANHO_BUFFER-1);
 
+        std::string parteString;
+
+
         //PRUEBAS
         std::string tester (buffer);
+
+        parteString = tester.substr(0,1);
         if (tester == "PROFUNDIDAD") {
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
@@ -421,8 +426,9 @@ void* clientManagement (void *dummyPt) {
             //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
 
 
-        } else if ((memcmp(buffer, "v.", strlen("v."))) == 0) {
+        } else if ( parteString == "v") {
 
+            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
             char serverMsg[] = "V_REALIZADA";
             write(newsockfd,serverMsg,strlen(serverMsg));
 
