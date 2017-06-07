@@ -180,7 +180,7 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
         cantidadNodos--;
     }
     _grafo->desvisitarTODO();
-    std::cout << pesoTotal << std::endl;
+    std::cout << "El peso total es: "<< pesoTotal << std::endl;
 }
 
 void ArbolExpansionMinimo::insertarNodo(int _codigo1, int _codigo2, int _peso) {

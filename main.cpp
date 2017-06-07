@@ -378,11 +378,14 @@ static ListaLugares* listaLugares = new ListaLugares();
 static ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 
 void *task1(void *);
-static int newsockfd;
+static int newsockfd1;
 static int newsockfd2;
 static int newsockfd3;
 static int newsockProvider;
+static int newsockfd;
 
+
+static char bufferProveedor[TAMANHO_BUFFER];
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -421,7 +424,22 @@ void* clientManagement (void *dummyPt) {
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
 
-            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+
+            std::string msgMal = "NO fue permitido";
+
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string bufProvee (bufferProveedor);
+            if (bufProvee == "SI")
+                write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            else
+                write(newsockfd,msgMal.c_str(),strlen(msgMal.c_str()));
+
+
+
 
             //char msgCodClientPreorden[] = "REVISAR SERVIDOR";
             //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
@@ -461,38 +479,20 @@ void* clientManagement (void *dummyPt) {
 
 void *provider (void *dummyPt) {
 
-    //PRUEBAS
-    std::string recorridoArbol = "Recorrido:\n";
-    int nodoInicial = 20;
-    //
-
     std::cout << "Thread No: " << pthread_self() << std::endl;
-    char buffer[TAMANHO_BUFFER];
-    bzero(buffer, TAMANHO_BUFFER);
+
+    //bzero(bufferProveedor, TAMANHO_BUFFER);
     char msg[] = "CONECTADO AL SERVIDOR\nBIENVENIDO PROVEEDOR";
-    write(newsockfd, msg, strlen(msg));
+    write(newsockProvider, msg, strlen(msg));
     bool loop = false;
+    /*
     while (!loop) {
         bzero(buffer, TAMANHO_BUFFER);
         read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-        //PRUEBAS
-        if ((memcmp(buffer, "1", strlen("1"))) == 0) {
-            recorridoArbol += listaLugares->profundida(nodoInicial);
-            std::vector<char> v(recorridoArbol.begin(), recorridoArbol.end());
-            v.push_back('\0'); // Make sure we are null-terminated
-            char *msgCodSR = &v[0];
-            write(newsockfd, msgCodSR, strlen(msgCodSR));
-            std::cout << recorridoArbol << std::endl;
-            //char msgCodClientPreorden[] = "REVISAR SERVIDOR";
-            //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
-
-
-        } else {
-
             std::string tester(buffer);
             std::cout << tester << std::endl;
-            char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
+            char serverMsg[] = "BIENVENIDO AL SERVIDOR";
             write(newsockfd, serverMsg, strlen(serverMsg));
             if (tester == "exit")
                 break;
@@ -509,7 +509,8 @@ void *provider (void *dummyPt) {
     }
 
     std::cout << "\nClosing thread and conn" << std::endl;
-    close(newsockfd);
+    close(newsockProvider);
+     */
 }
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -577,7 +578,7 @@ int main() {
 
         //this is where client connects. svr will hang in this mode until client conn
         if (noThread == 0)
-            newsockfd = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
+            newsockfd1 = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
         else if(noThread == 1)
             newsockfd2 = accept(listenFd, (struct sockaddr *)&clntAdd, &len);
         else if (noThread == 2)
@@ -593,15 +594,23 @@ int main() {
         }
 
         int neverUsedVariable;
+        bzero(buffer,TAMANHO_BUFFER);
+        if (noThread == 0)
+            read(newsockfd1, buffer, TAMANHO_BUFFER-1);
+        else if(noThread == 1)
+            read(newsockfd2, buffer, TAMANHO_BUFFER-1);
+        else if (noThread == 2)
+            read(newsockfd3, buffer, TAMANHO_BUFFER-1);
 
-        read(newsockfd, buffer, TAMANHO_BUFFER-1);
+        //read(newsockfd, buffer, TAMANHO_BUFFER-1);
 
         std::string tester (buffer);
         if (tester == "PROVEEDOR") {
+            std::cout << "ENTRO EL PROVEEDOR" << std::endl;
             //llama a la funcion de proveedor
             //funcion diferente a las de task1
             if (noThread == 0)
-                newsockProvider = newsockfd ;
+                newsockProvider = newsockfd1;
             else if(noThread == 1)
                 newsockProvider = newsockfd2;
             else if (noThread == 2)
@@ -609,9 +618,16 @@ int main() {
 
             pthread_create(&threadA[noThread], NULL, provider, NULL);
 
-        } else if (tester == "CLIENTE_1") {
+        } else if (tester == "CLIENTE_1" || tester == "CLIENTE_2") {
             std::cout << "ENTRO EL CLLIENTE 1 ACA" << std::endl;
             //hace la funcion del cliente1, asi sabe como comunicarse co este cliente en especifico
+            if (noThread == 0)
+                newsockfd = newsockfd1;
+            else if(noThread == 1)
+                newsockfd = newsockfd2;
+            else if (noThread == 2)
+                newsockfd = newsockfd3;
+
             pthread_create(&threadA[noThread], NULL, clientManagement, NULL);
 
         }
