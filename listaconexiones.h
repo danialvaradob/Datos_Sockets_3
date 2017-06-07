@@ -17,6 +17,7 @@ public:
 
     int largoLista();
     void agregarConexion(int _codigo, int _peso);
+    void agregarConexion(int _codigo, int _peso, int codMenor);
     void agregarConexion(NodoConexion*& nuevo);
     int getCodMenorConexion();
     int getCantidadConexiones() {return cantidadConexiones;}
@@ -31,7 +32,7 @@ public:
     int getMayorPeso();
     
     NodoConexion* getConexion(int _codigo);
-    void sumarDistTotal(int disTotal);
+    void sumarDistTotal(int disTotal, int codMenor);
     
     void insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos);
 

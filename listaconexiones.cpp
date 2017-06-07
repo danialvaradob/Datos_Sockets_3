@@ -36,6 +36,26 @@ void ListaConexiones::agregarConexion(int _codigo, int _peso) {
     }
 }
 
+void ListaConexiones::agregarConexion(int _codigo, int _peso, int codMenor) {
+
+    if (listaVacia()){
+        NodoConexion* nuevo = new  NodoConexion( _codigo,  _peso);
+		nuevo->codigoUltimaConexion = codMenor;
+        primero = nuevo;
+        nuevo->siguiente = primero;
+        nuevo->anterior = primero;
+        cantidadConexiones++;
+    }else{
+        NodoConexion* nuevo = new  NodoConexion( _codigo,_peso);
+        nuevo->codigoUltimaConexion = codMenor;
+        nuevo->siguiente = primero;
+        nuevo->anterior = primero->anterior;
+        primero->anterior->siguiente = nuevo;
+        primero->anterior = nuevo;
+        cantidadConexiones++;
+    }
+}
+
 int ListaConexiones::largoLista() {
     int cont = 1;
     NodoConexion* aux;
@@ -139,13 +159,13 @@ NodoConexion* ListaConexiones::getConexion(int _codigo) {
     return 0;
 }
 
-void ListaConexiones::sumarDistTotal(int disTotal) {
+void ListaConexiones::sumarDistTotal(int disTotal, int codMenor) {
     NodoConexion* aux = primero;
     if (aux!=NULL){
     do {
         //if (aux->codLugar == _codigo)
             //return aux;
-        
+        aux->codigoUltimaConexion = codMenor;
         aux->peso = aux->peso + disTotal;
         aux = aux->siguiente;
 		
@@ -153,6 +173,17 @@ void ListaConexiones::sumarDistTotal(int disTotal) {
 	}
     return;
 }
+/*
+void ListaConexiones::visitarDijkstra(ListaConexion* nodosResueltos) {
+    NodoConexion* aux = nodosResueltos->primero;
+    //NodoConexion* aux2 = nodosResueltos->primero;
+    do {
+        if (aux->codLugar == _codigo)
+            aux->visitado = true;
+        aux = aux->siguiente;
+    } while (aux != primero);
+
+}*/
 
 void ListaConexiones::agregarConexion(NodoConexion*& nuevo) {
 
