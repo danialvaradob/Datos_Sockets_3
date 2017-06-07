@@ -258,23 +258,28 @@ NodoLugar* ListaLugares::getNodoLugar(int _codigo) {
 int ListaLugares::getMenorPeso() {  //Para obtener el peso real de cualquier nodo, poner un cero como parametro
     NodoLugar* lugar = primero;
     if (primero->conexiones->primero == NULL) return -1;
-    int mayorPeso = primero->conexiones->primero->peso;
+    int menorPeso = primero->conexiones->primero->peso;
     do {
-        if (getMenorPeso < lugar->getConexiones()->getMenorPeso()) {
-            getMenorPeso = lugar->getConexiones()->getMenorPeso();
+        if (menorPeso < lugar->getConexiones()->getMenorPeso()) {
+            menorPeso = lugar->getConexiones()->getMenorPeso();
 
         }
         lugar = lugar->siguiente;
     } while (lugar != primero);
-    return mayorPeso;
+    return menorPeso;
 }*/
 
 
 
+	
+	
+
+
 void ListaLugares::Dijkstra(int inicio, int final){
+	
 	NodoLugar* aux = primero;
-	int distMinima;
-	int distTotal;
+	int distMinima=0;
+	int distTotal=0;
 	ListaConexiones* nodosResueltos = new ListaConexiones();
 	ListaConexiones* nodosNoResueltos = new ListaConexiones();
 	int ultimaConexion;
@@ -283,8 +288,8 @@ void ListaLugares::Dijkstra(int inicio, int final){
 	
 	
 	
-	getNodoLugar(inicio)->getConexiones()->getPeso(inicio);
-
+	//getNodoLugar(inicio)->getConexiones()->getPeso(inicio);
+	//profundida(3);
 	nodosResueltos->agregarConexion(inicio, getNodoLugar(inicio)->getConexiones()->getPeso(inicio));
 	//nodosResueltos->insertarLugar(getNodoLugar(inicio));
 	//ListaLugares
@@ -299,20 +304,68 @@ void ListaLugares::Dijkstra(int inicio, int final){
 			noResueltos->visitar(inicio);
 			noResueltos->sumarDistTotal(distTotal);
 			nodosNoResueltos = noResueltos;
+			nodosNoResueltos->visitar(inicio);
+			nodosResueltos->visitar(inicio);
+			
 			
 		}
 		else{
 			noResueltos = getNodoLugar(codMenor)->getConexiones();
-			noResueltos->sumarDistTotal(distTotal);
-			noResueltos->primero = nodosResueltos->primero;
+			//int a = noResueltos->getMayorPeso();
+			noResueltos->sumarDistTotal(distMinima);
+			
+			if (noResueltos->primero == NULL){
+				return;
+			}
+			
+			//noResueltos->insertarNodosNoResueltos(nodosNoResueltos);
+			
+			NodoConexion* aux = noResueltos->primero;
+			int nodosNuevos = noResueltos->getCantidadConexiones();
+			NodoConexion* aux2 = noResueltos->primero;
+		
+		    for (int i = 0; i<nodosNuevos;i++){
+		    	
+		    	nodosNoResueltos->agregarConexion(aux->codLugar, aux->peso);   	
+		    	//aux = aux->siguiente;
+		    	aux = aux->siguiente;
+		    	//aux = aux2;
+			}
+		    	
+			
+			/*
+			//NodoLugar* nuevo = new  NodoLugar( _codigo,  _nombre);
+	        noResueltos->primero->anterior->siguiente = nodosNoResueltos->primero;
+	        noResueltos->primero->anterior = nodosNoResueltos->primero->anterior;
+	        nodosNoResueltos->primero->anterior->siguiente = noResueltos->primero;
+	        nodosNoResueltos->primero->anterior = noResueltos->primero;
+
+			
+			//noResueltos->primero->anterior=NULL;
+			//noResueltos->primero->anterior->siguiente = nodosNoResueltos->primero->anterior;
+			//nodosNoResueltos->primero->anterior = noResueltos->primero;
+			//nodosNoResueltos->primero->anterior=noResueltos->primero;
+			
+			NodoConexion* temp = nodosNoResueltos->primero;
+			NodoConexion* tempAnterior = nodosNoResueltos->primero->anterior;
 			nodosNoResueltos->primero = noResueltos->primero;
+			nodosNoResueltos->primero->anterior = noResueltos->primero->anterior;
+			noResueltos->primero = temp;*/
+			//noResueltos->primero- = temp;
+			
+			//nodosNoResueltos->primero = temp;
 		}
 		
-		nodosNoResueltos->
+		nodosNoResueltos->visitar(codMenor);
 		codMenor = nodosNoResueltos->getCodMenorConexion();
+		std::cout<<"Codigo menor: "<<codMenor<<std::endl;
+		distMinima = nodosNoResueltos->getPeso(codMenor);
+//		distTotal = getNodoLugar(codMenor)->getConexiones()->getPeso(codMenor);
+		nodosResueltos->agregarConexion(codMenor, distMinima);
+		nodosNoResueltos->visitar(codMenor);
+		getNodoLugar(codMenor)->visitar();
 		
-		
-		aux=aux->siguiente;
+		//aux=aux->siguiente;
 	}
 	
 	

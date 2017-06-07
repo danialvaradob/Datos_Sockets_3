@@ -141,12 +141,50 @@ NodoConexion* ListaConexiones::getConexion(int _codigo) {
 
 void ListaConexiones::sumarDistTotal(int disTotal) {
     NodoConexion* aux = primero;
+    if (aux!=NULL){
     do {
         //if (aux->codLugar == _codigo)
             //return aux;
+        
         aux->peso = aux->peso + disTotal;
         aux = aux->siguiente;
+		
     } while (aux != primero);
+	}
+    return;
+}
+
+void ListaConexiones::agregarConexion(NodoConexion*& nuevo) {
+
+
+    if (listaVacia()){
+        //NodoConexion* nuevo = new  NodoConexion( _codigo,  _peso);
+
+        primero = nuevo;
+        nuevo->siguiente = primero;
+        nuevo->anterior = primero;
+        cantidadConexiones++;
+    }else{
+        //NodoConexion* nuevo = new  NodoConexion( _codigo,_peso);
+        nuevo->siguiente = primero;
+        nuevo->anterior = primero->anterior;
+        primero->anterior->siguiente = nuevo;
+        primero->anterior = nuevo;
+        cantidadConexiones++;
+    }
+}
+
+
+void ListaConexiones::insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos){
+	NodoConexion* aux = primero;
+	NodoConexion* aux2 = primero;
+
+    do {
+    	NodosNoResueltos->agregarConexion(aux);   	
+    	aux = aux->siguiente;
+    	aux2 = aux2->siguiente;
+    }
+     while (aux2 != primero);
     return;
 }
 

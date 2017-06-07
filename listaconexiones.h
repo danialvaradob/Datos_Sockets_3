@@ -17,6 +17,7 @@ public:
 
     int largoLista();
     void agregarConexion(int _codigo, int _peso);
+    void agregarConexion(NodoConexion*& nuevo);
     int getCodMenorConexion();
     int getCantidadConexiones() {return cantidadConexiones;}
     int getPeso(int _codigo); //busca en la lista a ver si existe el codigo y si existe
@@ -31,6 +32,8 @@ public:
     
     NodoConexion* getConexion(int _codigo);
     void sumarDistTotal(int disTotal);
+    
+    void insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos);
 
     NodoConexion* primero;
     NodoConexion* actual;

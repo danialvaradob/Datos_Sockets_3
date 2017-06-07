@@ -42,6 +42,7 @@ public:
     void Dijkstra(int inicio, int final);
 	//NodoLugar* getNodoLugar(int _codigo);
 	void insertarLugar(NodoLugar* nuevo);
+	int getMenorPeso();
 	//Fin Dijkstra
 
     int getMayorPeso();

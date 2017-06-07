@@ -126,7 +126,7 @@ try{
     
     //listaLugares->recorridoProfundidad(listaLugares->actual);
     
-    listaLugares->Dijkstra(3, 20);
+    listaLugares->Dijkstra(3, 8);
     
     
     
