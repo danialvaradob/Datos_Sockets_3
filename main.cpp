@@ -412,7 +412,7 @@ void* clientManagement (void *dummyPt) {
         bzero(buffer, TAMANHO_BUFFER);
         read(newsockfd, buffer, TAMANHO_BUFFER-1);
 
-        std::string parteString;
+        std::string parteString,parteStr;
 
 
         //PRUEBAS
@@ -433,7 +433,8 @@ void* clientManagement (void *dummyPt) {
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
             std::string bufProvee (bufferProveedor);
-            if (bufProvee == "SI")
+
+            if (bufProvee == "SI\n")
                 write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
             else
                 write(newsockfd,msgMal.c_str(),strlen(msgMal.c_str()));
