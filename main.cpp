@@ -383,6 +383,9 @@ static int newsockfd2;
 static int newsockfd3;
 static int newsockProvider;
 static int newsockfd;
+static int newsockfdc2;
+int codigoProveedor;
+
 
 
 static char bufferProveedor[TAMANHO_BUFFER];
@@ -476,13 +479,84 @@ void* clientManagement (void *dummyPt) {
     close(newsockfd);
 }
 
+void* clientManagement2 (void *dummyPt) {
 
+    int nodoInicial = 20;
+    std::cout << "Thread No: " << pthread_self() << std::endl;
+    char buffer[TAMANHO_BUFFER];
+    bzero(buffer, TAMANHO_BUFFER);
+    char msg[] = "CONECTADO AL SERVIDOR";
+    write(newsockfdc2,msg,strlen(msg));
+    bool loop = false;
+    while(!loop) {
+        bzero(buffer, TAMANHO_BUFFER);
+        read(newsockfdc2, buffer, TAMANHO_BUFFER-1);
+        std::string parteString,parteStr;
+        std::string tester (buffer);
+
+        parteString = tester.substr(0,1);
+        if (tester == "PROFUNDIDAD") {
+            std::string recorridoArbol = "Recorrido en Profundidad:\n";
+            recorridoArbol += listaLugares->profundida(nodoInicial);
+            std::cout << recorridoArbol << std::endl;
+
+            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+
+            std::string msgMal = "NO fue permitido";
+
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string bufProvee (bufferProveedor);
+
+            if (bufProvee == "SI\n")
+                write(newsockfdc2,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            else
+                write(newsockfdc2,msgMal.c_str(),strlen(msgMal.c_str()));
+
+
+        } else if ( parteString == "v") {
+
+            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+            char serverMsg[] = "V_REALIZADA";
+            write(newsockfdc2,serverMsg,strlen(serverMsg));
+
+        }else {
+
+            std::string tester (buffer);
+            std::cout << tester << std::endl;
+            char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
+            write(newsockfdc2,serverMsg,strlen(serverMsg));
+            if(tester == "exit")
+                break;
+        }
+    }
+    std::cout << "\nClosing thread and conn" << std::endl;
+    close(newsockfdc2);
+}
 
 void *provider (void *dummyPt) {
 
     std::cout << "Thread No: " << pthread_self() << std::endl;
+/*    while(true) {
+        bzero(bufferProveedor,TAMANHO_BUFFER);
+        char msg[] = "PORFAVOR DIGITE SU CODIGO: ";
+        write(newsockProvider,msg,strlen(msg));
 
-    //bzero(bufferProveedor, TAMANHO_BUFFER);
+        read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+        std::string respuestaProveedor (bufferProveedor);
+
+        //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
+        //
+        //break
+        // }
+        break;
+    }
+*/
+
+    bzero(bufferProveedor, TAMANHO_BUFFER);
     char msg[] = "CONECTADO AL SERVIDOR\nBIENVENIDO PROVEEDOR";
     write(newsockProvider, msg, strlen(msg));
     bool loop = false;
@@ -619,7 +693,7 @@ int main() {
 
             pthread_create(&threadA[noThread], NULL, provider, NULL);
 
-        } else if (tester == "CLIENTE_1" || tester == "CLIENTE_2") {
+        } else if (tester == "CLIENTE_1") {
             std::cout << "ENTRO EL CLLIENTE 1 ACA" << std::endl;
             //hace la funcion del cliente1, asi sabe como comunicarse co este cliente en especifico
             if (noThread == 0)
@@ -630,6 +704,18 @@ int main() {
                 newsockfd = newsockfd3;
 
             pthread_create(&threadA[noThread], NULL, clientManagement, NULL);
+
+        }else if (tester == "CLIENTE_2") {
+            std::cout << "ENTRO EL CLLIENTE 2 ACA" << std::endl;
+            //hace la funcion del cliente1, asi sabe como comunicarse co este cliente en especifico
+            if (noThread == 0)
+                newsockfdc2 = newsockfd1;
+            else if(noThread == 1)
+                newsockfdc2 = newsockfd2;
+            else if (noThread == 2)
+                newsockfdc2 = newsockfd3;
+
+            pthread_create(&threadA[noThread], NULL, clientManagement2, NULL);
 
         }
 
