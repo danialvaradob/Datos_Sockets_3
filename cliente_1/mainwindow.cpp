@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogcompra.h"
+#include "widgetprofundidad.h"
 #include <QMessageBox>
+
 
 
 MainWindow::MainWindow( SocketClient* _server ,QWidget *parent) :
@@ -47,6 +49,21 @@ void MainWindow::on_pushButton_clicked()
         QMessageBox::about(this,tr("Compra"),tr(message));
     }
 
+
+
+
+
+}
+//BOTON DE PROFUNDIDAD
+void MainWindow::on_pushButton_2_clicked()
+{
+
+    client->writeSocket("PROFUNDIDAD");
+
+    WidgetProfundidad widgetProfundidad;
+    widgetProfundidad.setModal(true);
+    widgetProfundidad.setCliente(client);
+    widgetProfundidad.exec(); //show the dialog when button is pressed
 
 
 

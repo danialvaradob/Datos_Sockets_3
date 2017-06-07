@@ -395,7 +395,7 @@ static int newsockProvider;
 void* clientManagement (void *dummyPt) {
 
     //PRUEBAS
-    std::string recorridoArbol = "Recorrido:\n";
+
     int nodoInicial = 20;
     //
 
@@ -417,6 +417,7 @@ void* clientManagement (void *dummyPt) {
 
         parteString = tester.substr(0,1);
         if (tester == "PROFUNDIDAD") {
+            std::string recorridoArbol = "Recorrido en Profundidad:\n";
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
 

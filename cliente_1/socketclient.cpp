@@ -76,6 +76,7 @@ void SocketClient::writeSocket(std::string _message) {
 void SocketClient::readSocket() {
 
     //emptyBuffer();
+    bzero(buffer,TAMANO_BUFFER);
     int n = read(listenFd, buffer, TAMANO_BUFFER - 1);
 
 

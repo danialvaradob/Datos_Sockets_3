@@ -15,11 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     dialogcompra.cpp \
-    socketclient.cpp
+    socketclient.cpp \
+    widgetprofundidad.cpp
 
 HEADERS  += mainwindow.h \
     dialogcompra.h \
-    socketclient.h
+    socketclient.h \
+    widgetprofundidad.h
 
 FORMS    += mainwindow.ui \
-    dialogcompra.ui
+    dialogcompra.ui \
+    widgetprofundidad.ui
