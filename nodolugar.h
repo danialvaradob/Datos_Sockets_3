@@ -5,7 +5,7 @@
 #ifndef PROGRA_3_NODOLUGAR_H
 #define PROGRA_3_NODOLUGAR_H
 
-#include <string>
+
 #include "listaconexiones.h"
 #include "arbolsupermercados.h"
 
