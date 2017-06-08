@@ -84,7 +84,7 @@ int ArbolExpansionMinimo::largoArbol() {
 
 
 
-void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
+std::string ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
     int cantidadNodos = _grafo->getNumVertices();
     int cantNodosVisitados = 0;
     int codMenor,pesoMenor;
@@ -182,6 +182,11 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
     _grafo->desvisitarTODO();
     std::cout << "El peso total es: "<< pesoTotal << std::endl;
+    return std::to_string(pesoTotal);
+}
+
+std::string ArbolExpansionMinimo::getPrim() {
+
 }
 
 void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {

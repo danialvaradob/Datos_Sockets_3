@@ -702,15 +702,28 @@ void* clientManagement (void *dummyPt) {
             std::string nodoInicialStr (buffer);
 
         }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
-            char * lineaValores = buffer;
-            std::string nombre(std::strtok (lineaValores, ";"));
-            std::string nodoInicial(std::strtok (NULL, ";"));
 
+            int x = 0;
 
         }else if ( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) {
             int x = 0;
         }else if (memcmp( buffer, "PRIM", strlen( "PRIM"))) {
-            int x = 0;
+
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicial(std::strtok (NULL, ";"));
+
+            //esto se hace para simular que el proveedor acepta el pedido
+            std::string msg2Provider = "Puede el cliente consultar el PRIM?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            
+            write(newsockfd,msg,strlen(msg))
+
+
+
         }else if (tester == "ARTICU") {
             int x = 0;
         }else {

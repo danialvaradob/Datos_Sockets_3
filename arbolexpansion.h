@@ -28,7 +28,11 @@ public:
 
     //int **OT() {return T;} //Arbol de Expansion
     //int arbolExpancionPrim(ListaLugares* _grafo);    //algoritmo de Prim
-    void prim(ListaLugares* _grafo, int _primerNodo);
+    std::string prim(ListaLugares* _grafo, int _primerNodo);
+    std::string getPrim();
+
+
+
     void profundida(ListaLugares* _grafo, int _puntoInicial);
     void kruskal(ListaLugares* _grafo, int _primerNodo);
 
