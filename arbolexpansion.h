@@ -39,6 +39,7 @@ public:
     void seleccionarAristas(ListaConjunto *conjunto);
     std::string imprimirKruskal();
 
+
     void insertarNodo(int _codigo1, int _codigo2 , int _peso);
     bool existeConexion(int _codigo1, int _codigo2);
     int getPesoTotal(){return pesoTotal;}

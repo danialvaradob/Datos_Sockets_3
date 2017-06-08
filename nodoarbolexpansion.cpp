@@ -12,7 +12,6 @@ std::string NodoArbolExpansion::toString() {
     std::string f1;
     std::string f2;
     std::string f3;
-
     flujo1 << codLugar1;
     f1 = flujo1.str();
     flujo2 << codLugar2;

@@ -570,8 +570,8 @@ void* clientManagement (void *dummyPt) {
                             proveedores->getNodoProveedor(codigoProveedorGlobal, proveedores->raiz, nodoProv);
                             NodoCliente *nodoCliente = new NodoCliente();
                             clientes->getCliente(clientes->raizB, nodoCliente, codigoClienteGlobal1);
-                            //_nodoCliente->aumentarVentas();
-                            //_nodoProv->aumentarVentas();
+                            nodoCliente->aumentarVentas();
+                            nodoProv->aumentarVentas();
                             nodoPro->setCantidadEnStock(cantidad);
                             nodocategoria *nodoCat = new nodocategoria();
                             cat->getNodoCat(cat->raiz,cC, nodoCat);

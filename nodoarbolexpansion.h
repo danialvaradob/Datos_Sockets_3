@@ -21,7 +21,6 @@ public:
     }
     std::string toString();
 
-
 private:
     int codLugar1;
     int codLugar2;
