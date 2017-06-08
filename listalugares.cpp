@@ -2,7 +2,6 @@
 // Created by Daniel Alvarado on 5/18/17.
 //
 #include "listalugares.h"
-#include "ListaConexiones.cpp"
 
 ListaLugares::~ListaLugares() {
     NodoLugar* aux;

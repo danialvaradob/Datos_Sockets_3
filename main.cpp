@@ -38,8 +38,8 @@ int const TAMANHO_BUFFER = 1024;
 bool banderaCLIENTENUEVO = false;
 
 void leerArchLugares(ListaLugares * _lugares){
-    //std::string nombreArchivo = "Lugares.txt";
-    std::string nombreArchivo = "LugaresDaniel.txt";
+    std::string nombreArchivo = "Lugares.txt";
+    //std::string nombreArchivo = "LugaresDaniel.txt";
 
 
     std::ifstream archivoEntrada;
@@ -76,8 +76,8 @@ void leerArchLugares(ListaLugares * _lugares){
 }
 
 void leerArchConexiones(ListaLugares* _listaLugares) {
-    //std::string nombreArchivo = "Conexiones.txt";
-    std::string nombreArchivo = "ConexionesDaniel.txt";
+    std::string nombreArchivo = "Conexiones.txt";
+    //std::string nombreArchivo = "ConexionesDaniel.txt";
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -166,7 +166,9 @@ void leerArchProductos(ListaLugares *_lugares) {
 
         ArbolCategorias* arbolCategorias = new ArbolCategorias();
         aux->getArbolCat(codSupI,aux->raiz,arbolCategorias);
-
+        if(arbolCategorias == NULL){
+            continue;
+        }
         ArbolProductos* productos = new ArbolProductos();
         arbolCategorias->getArbolProd(arbolCategorias->raiz,codCatI,productos);
 
@@ -194,46 +196,46 @@ void leerArchCategorias(ListaLugares* _lugares) {
     std::string nombreArchivo = "Categorias.txt";
     std::ifstream file;
     std::string lineaEnArchivo;
-    int codigo;
-    int codigoSup,codigoLugar;
     int cont = 0;
-    file.open(nombreArchivo,std::ios::in);
+
+    file.open(nombreArchivo, std::ios::in);
+
     if (file.fail()) {
-        std::cout << "Unable to open file";
-    }else{
-        while(file>>lineaEnArchivo){
-            char *valorEnLinea = new char[lineaEnArchivo.length()+1];
-            strcpy(valorEnLinea, lineaEnArchivo.c_str());
+        std::cout << "Unable to open file" << std::endl;
+    }
+    while(file>>lineaEnArchivo){
+        char *valorEnLinea = new char[lineaEnArchivo.length()+1];
+        strcpy(valorEnLinea, lineaEnArchivo.c_str());
 
+        std::string codLugar(std::strtok (valorEnLinea, ";"));
+        std::string codSuper(std::strtok (NULL, ";"));
+        std::string codCat(std::strtok (NULL, ";"));
+        std::string descripcion(std::strtok (NULL, ";"));
 
-            std::string _codigoLugar(std::strtok (valorEnLinea, ";") );
-            codigoLugar = atoi(_codigoLugar.c_str());
-            std::string _codigoSup(std::strtok (NULL, ";") );
-            codigoSup = atoi(_codigoSup.c_str());
-            std::string _codigo(std::strtok (NULL, ";") );
-            codigo = atoi(_codigo.c_str());
-            std::string descripcion(std::strtok (NULL, ";") );
-            //nodocategoria *nuevo = new nodocategoria(codigo, descripcion);
-            NodoLugar *temp = _lugares->getNodoLugar(codigoLugar);
-            ArbolSupermercados *aux = temp->getArbolSuper();
+        // ... crear el nodo
+        //cout << id << "," << nombre << "," << direccion << "," << telefono << endl;
+        int codLint = atoi(codLugar.c_str());
+        int codSint = atoi(codSuper.c_str());
+        int codCint = atoi(codCat.c_str());
 
-            if(cont==0){
-                //arbolCategorias->insertarValorNodoRN(codigo, descripcion);
-                aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
+        //nodocategoria *nuevo = new nodocategoria(codigo, descripcion);
+        NodoLugar *temp = _lugares->getNodoLugar(codLint);
+        ArbolSupermercados *aux = temp->getArbolSuper();
+        if(aux == NULL){ continue;}
+        if(cont==0){
+            //arbolCategorias->insertarValorNodoRN(codigo, descripcion);
+            aux->agregarCategoria(aux->raiz,codSint,codCint,descripcion);
+            cont++;
+            std::cout << "primera vez" << std::endl;
+
+        }else{
+            if(!aux->existeCategoria(codSint,codCint,aux->raiz)) {
+                aux->agregarCategoria(aux->raiz,codSint,codCint,descripcion);
+                std::cout <<"Codigo Categoria: "<< codCat << "," << descripcion << std::endl;
                 cont++;
-                std::cout << "primera vez" << std::endl;
-
-            }else{
-                if(!aux->existeCategoria(codigoSup,codigo,aux->raiz)) {
-                    aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
-                    std::cout <<"Codigo Categoria: "<< _codigo << "," << descripcion << std::endl;
-                    cont++;
-                }
             }
         }
-        //leerArchProductos("Productos.txt");
-    }
-    file.close();
+    }file.close();
 
 }
 
@@ -267,6 +269,7 @@ void leerArchSupermercado(ListaLugares* _lugares){
         int codSint = atoi(codSuper.c_str());
         NodoLugar *temp = _lugares->getNodoLugar(codLint);
         ArbolSupermercados *aux = temp->getArbolSuper();
+        if(aux == NULL){ continue;}
         if (aux->existeSupermercado(codSint,aux->raiz)) {
             std::cout << "Supermercado ya existe, codigo: " << codSuper << std::endl;
             continue;

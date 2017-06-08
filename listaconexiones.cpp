@@ -4,18 +4,6 @@
 
 #include "listaconexiones.h"
 
-ListaConexiones::~ListaConexiones() {
-    NodoConexion* aux;
-
-    while(primero) {
-        aux = primero;
-        primero = primero->siguiente;
-        delete aux;
-    }
-    actual = NULL;
-
-}
-
 
 void ListaConexiones::agregarConexion(int _codigo, int _peso) {
 
