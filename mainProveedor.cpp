@@ -173,41 +173,120 @@ int main()
 						cout<<"Los productos que rebajaron su stock son: "<<buffer<<endl; 
 						
 						memset(buffer, 0, sizeof(buffer));
-						
-						//Solicitar proveedor con mas ventas al servidor
+
 						}
 						break;
 					case 5:
 						cout<<"Categoria con mas ventas"<<endl;
+						{
+						string mayorProveedor_msg = "VENTAS CATEGORIA";
+						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar categoria con mas ventas al servidor
 						break;
 					case 6:
 						cout<<"Supermercado con mas ventas"<<endl;
+						{
+						string mayorProveedor_msg = "VENTAS SUPERMERCADO";
+						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar supermercado con mas ventas al servidor
 						break;
 					case 7:
 						cout<<"Lugar con mas supermercado"<<endl;
+						{
+						string mayorProveedor_msg = "SUPERMERCADO LUGAR";
+						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar lugar con mas supermercados al servidor
 						break;
 					case 8:
 						cout<<"Lugar con mas ventas"<<endl;
+						{
+						string mayorProveedor_msg = "VENTAS LUGAR";
+						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar lugar con mas ventas al servidor
 						break;
 					case 9:
 						cout<<"Recorrido de arboles"<<endl;
+						{
+						string otros_msg = "RECORRIDOS";
+						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar recorrido de arboles al servidor
 						break;
 					case 10:
+						{
+						string mayorProveedor_msg = "ELIMINAR C";
+						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Eliminar cliente
 						cout<<"Eliminar cliente"<<endl;
 						break;
 					case 11:
 						cout<<"Eliminar producto"<<endl;
 						//Eliminar producto
+						{
+						string mayorProveedor_msg = "ELIMINAR P";
+						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 12:
 						cout<<"Lista de adyacencia"<<endl;
 						//Solicitar lista de adyacencia
+						{
+						string mayorProveedor_msg = "ADYACENCIA";
+						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 13:
 						cout<<"Recorrido en profundidad"<<endl;
