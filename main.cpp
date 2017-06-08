@@ -1,14 +1,14 @@
 #include <iostream>
 #include <fstream>
-#include "arbolexpansion.h"
+#include "arbolexpansion.cpp"
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <netdb.h>
+//#include <netdb.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
 #include <iostream>
 #include <fstream>
 #include <strings.h>
@@ -17,8 +17,17 @@
 #include <pthread.h>
 #include <vector>
 #include <cstring>
-#include "arbolproveedores.h"
-#include "arbolclientes.h"
+/*
+#include "arbolproveedores.cpp"
+#include "arbolclientes.cpp"
+#include "arbolsupermercados.cpp"
+#include "arbolcategorias.cpp"
+#include "listalugares.cpp"
+#include "listaconexiones.cpp"
+#include "listaconjunto.cpp"
+#include "pila.cpp"
+*/
+
 
 const int PRIMERA_VEZ = -1;
 const int OPCION_VENTA = 1;
@@ -33,12 +42,13 @@ const int OPCION_IMPRIMIR_ARBOL_PREORDEN = 9;
 const int OPCION_ELIMINAR_PRODUCTO = 10;
 const int OPCION_ELIMINAR_CLIENTE = 11;
 const int OPCION_FACTURA = 12;
-int const TAMANHO_BUFFER = 1024;
-bool banderaCLIENTENUEVO = false;
+int const TAMANHO_BUFFER = 301;
+
+
 
 void leerArchLugares(ListaLugares * _lugares){
+    //std::string nombreArchivo = "Lugares.txt";
     std::string nombreArchivo = "Lugares.txt";
-    //std::string nombreArchivo = "LugaresDaniel.txt";
 
 
     std::ifstream archivoEntrada;
@@ -75,8 +85,8 @@ void leerArchLugares(ListaLugares * _lugares){
 }
 
 void leerArchConexiones(ListaLugares* _listaLugares) {
+    //std::string nombreArchivo = "Conexiones.txt";
     std::string nombreArchivo = "Conexiones.txt";
-    //std::string nombreArchivo = "ConexionesDaniel.txt";
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -165,9 +175,7 @@ void leerArchProductos(ListaLugares *_lugares) {
 
         ArbolCategorias* arbolCategorias = new ArbolCategorias();
         aux->getArbolCat(codSupI,aux->raiz,arbolCategorias);
-        if(arbolCategorias == NULL){
-            continue;
-        }
+
         ArbolProductos* productos = new ArbolProductos();
         arbolCategorias->getArbolProd(arbolCategorias->raiz,codCatI,productos);
 
@@ -195,46 +203,46 @@ void leerArchCategorias(ListaLugares* _lugares) {
     std::string nombreArchivo = "Categorias.txt";
     std::ifstream file;
     std::string lineaEnArchivo;
+    int codigo;
+    int codigoSup,codigoLugar;
     int cont = 0;
-
-    file.open(nombreArchivo, std::ios::in);
-
+    file.open(nombreArchivo,std::ios::in);
     if (file.fail()) {
-        std::cout << "Unable to open file" << std::endl;
-    }
-    while(file>>lineaEnArchivo){
-        char *valorEnLinea = new char[lineaEnArchivo.length()+1];
-        strcpy(valorEnLinea, lineaEnArchivo.c_str());
+        std::cout << "Unable to open file";
+    }else{
+        while(file>>lineaEnArchivo){
+            char *valorEnLinea = new char[lineaEnArchivo.length()+1];
+            strcpy(valorEnLinea, lineaEnArchivo.c_str());
 
-        std::string codLugar(std::strtok (valorEnLinea, ";"));
-        std::string codSuper(std::strtok (NULL, ";"));
-        std::string codCat(std::strtok (NULL, ";"));
-        std::string descripcion(std::strtok (NULL, ";"));
 
-        // ... crear el nodo
-        //cout << id << "," << nombre << "," << direccion << "," << telefono << endl;
-        int codLint = atoi(codLugar.c_str());
-        int codSint = atoi(codSuper.c_str());
-        int codCint = atoi(codCat.c_str());
+            std::string _codigoLugar(std::strtok (valorEnLinea, ";") );
+            codigoLugar = atoi(_codigoLugar.c_str());
+            std::string _codigoSup(std::strtok (NULL, ";") );
+            codigoSup = atoi(_codigoSup.c_str());
+            std::string _codigo(std::strtok (NULL, ";") );
+            codigo = atoi(_codigo.c_str());
+            std::string descripcion(std::strtok (NULL, ";") );
+            //nodocategoria *nuevo = new nodocategoria(codigo, descripcion);
+            NodoLugar *temp = _lugares->getNodoLugar(codigoLugar);
+            ArbolSupermercados *aux = temp->getArbolSuper();
 
-        //nodocategoria *nuevo = new nodocategoria(codigo, descripcion);
-        NodoLugar *temp = _lugares->getNodoLugar(codLint);
-        ArbolSupermercados *aux = temp->getArbolSuper();
-        if(aux == NULL){ continue;}
-        if(cont==0){
-            //arbolCategorias->insertarValorNodoRN(codigo, descripcion);
-            aux->agregarCategoria(aux->raiz,codSint,codCint,descripcion);
-            cont++;
-            std::cout << "primera vez" << std::endl;
-
-        }else{
-            if(!aux->existeCategoria(codSint,codCint,aux->raiz)) {
-                aux->agregarCategoria(aux->raiz,codSint,codCint,descripcion);
-                std::cout <<"Codigo Categoria: "<< codCat << "," << descripcion << std::endl;
+            if(cont==0){
+                //arbolCategorias->insertarValorNodoRN(codigo, descripcion);
+                aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
                 cont++;
+                std::cout << "primera vez" << std::endl;
+
+            }else{
+                if(!aux->existeCategoria(codigoSup,codigo,aux->raiz)) {
+                    aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
+                    std::cout <<"Codigo Categoria: "<< _codigo << "," << descripcion << std::endl;
+                    cont++;
+                }
             }
         }
-    }file.close();
+        //leerArchProductos("Productos.txt");
+    }
+    file.close();
 
 }
 
@@ -268,7 +276,6 @@ void leerArchSupermercado(ListaLugares* _lugares){
         int codSint = atoi(codSuper.c_str());
         NodoLugar *temp = _lugares->getNodoLugar(codLint);
         ArbolSupermercados *aux = temp->getArbolSuper();
-        if(aux == NULL){ continue;}
         if (aux->existeSupermercado(codSint,aux->raiz)) {
             std::cout << "Supermercado ya existe, codigo: " << codSuper << std::endl;
             continue;
@@ -379,13 +386,7 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 
 ListaLugares* listaLugares = new ListaLugares();
 ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
-ArbolProductos* productos = new ArbolProductos();
-ArbolCategorias* categorias = new ArbolCategorias();
-ArbolSupermercados* supermercados = new ArbolSupermercados();
-ArbolProveedores* proveedores = new ArbolProveedores();
-ArbolClientes* clientes = new ArbolClientes();
-
-
+/*
 void *task1(void *);
 static int newsockfd1;
 static int newsockfd2;
@@ -425,15 +426,33 @@ void* clientManagement (void *dummyPt) {
     write(newsockfd,msg,strlen(msg));
     bool loop = false;
 
-    char clienteExistemsg[] = "CLIENTE_EXISTE";
+
     char clienteError[] = "NO_EXISTE";
 
+    bzero(buffer, TAMANHO_BUFFER);
+    read(newsockfd, buffer, TAMANHO_BUFFER-1);
     //ACA RECIBE EL CODIGO DEL CLLIENTE
 
+    while (true) {
+        std::string codigoCliente (buffer);
+        if (codigoCliente == "1111") {
+            break;
+        }
+        write(newsockfd,clienteError,strlen(clienteError));
+        read(newsockfd,buffer,TAMANHO_BUFFER -1);
 
+
+    }
 /////////////////////////////////////////
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
+<<<<<<< HEAD
+        read(newsockfd, buffer, TAMANHO_BUFFER-1);
+        std::string parteString,parteStr;
+        std::string tester (buffer);
+        parteString = tester.substr(0,1);
+        if (tester == "PROFUNDIDAD") {
+=======
         read(newsockfd, buffer, TAMANHO_BUFFER - 1);
         std::string parteString, parteStr;
         std::string tester(buffer);
@@ -497,6 +516,7 @@ void* clientManagement (void *dummyPt) {
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
             std::string nodoInicialStr (buffer);
 
+>>>>>>> origin/master
             std::string recorridoArbol = "Recorrido en Profundidad:\n";
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
@@ -515,6 +535,11 @@ void* clientManagement (void *dummyPt) {
         } else if ( parteString == "v") {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+<<<<<<< HEAD
+            char serverMsg[] = "V_REALIZADA";
+            write(newsockfd,serverMsg,strlen(serverMsg));
+
+=======
 
 
 
@@ -726,6 +751,7 @@ void* clientManagement (void *dummyPt) {
 
         }else if (tester == "ARTICU") {
             int x = 0;
+>>>>>>> origin/master
         }else {
             std::string tester (buffer);
             std::cout << tester << std::endl;
@@ -734,7 +760,7 @@ void* clientManagement (void *dummyPt) {
             if(tester == "exit")
                 break;
         }
-
+        /
         // /write()
         //  if(tester == "exit")
         //    break;
@@ -833,20 +859,23 @@ void *provider (void *dummyPt) {
         bzero(bufferProveedor,TAMANHO_BUFFER);
         char msg2[] = "PORFAVOR DIGITE SU CODIGO: ";
         write(newsockProvider,msg2,strlen(msg2));
-        bzero(bufferProveedor, TAMANHO_BUFFER);
         read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
         std::string respuestaProveedor (bufferProveedor);
+<<<<<<< HEAD
+        //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
+        //
+        //break
+        // }
+       if (respuestaProveedor == "1111")
+=======
         if (proveedores->existeProveedor(atoi(bufferProveedor),proveedores->raiz)) {
             codigoProveedorGlobal = atoi(bufferProveedor);
+>>>>>>> origin/master
             break;
-         }
-
     }
     bzero(bufferProveedor, TAMANHO_BUFFER);
     char msg[] = "CONECTADO";
     write(newsockProvider, msg, strlen(msg));
-    bzero(bufferProveedor, TAMANHO_BUFFER);
-    read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
     /*
     while (!loop) {
         bzero(bufferProveedor, TAMANHO_BUFFER);
@@ -870,8 +899,8 @@ void *provider (void *dummyPt) {
 
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockProvider);
-*/
-    }
+
+    }*/
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -889,18 +918,25 @@ int main() {
 
     leerArchLugares(listaLugares);
     leerArchConexiones(listaLugares);
-    leerArchSupermercado(listaLugares);
-    leerArchCategorias(listaLugares);
-    leerArchProductos(listaLugares);
-    leerArchProveedores(proveedores);
-    leerArchClientes(clientes);
-
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
-    //listaLugares->profundida(20);
-    arbol->prim(listaLugares,20);
+    
+   // listaLugares->profundida(1);
+    //listaLugares->puntosDeArticulacion(1);
+   // listaLugares->desvisitarTODO();
+    //listaLugares->puntosDeArticulacion(1);
+    
+   // std::cout<<"Pf: "<<std::endl;
+   // listaLugares->profundida(20);
+    //listaLugares->desvisitarTODO();
+   // arbol->prim(listaLugares,78);
     //arbol->prim(listaLugares,20);
-
+    
+    listaLugares->Dijkstra(31, 8);
+    
+    
+    
+/*
     char buffer[TAMANHO_BUFFER];
     int pId, portNo, listenFd;
     socklen_t len; //store size of the address
@@ -1019,7 +1055,7 @@ int main() {
     for(int i = 0; i < 3; i++) {
         pthread_join(threadA[i], NULL);
     }
-
+*/
 
 
 

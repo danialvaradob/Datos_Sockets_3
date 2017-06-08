@@ -2,7 +2,8 @@
 // Created by Daniel Alvarado on 5/18/17.
 //
 #include "listalugares.h"
-
+//#include "ListaConexiones.cpp"
+//#include "pila.cpp"
 ListaLugares::~ListaLugares() {
     NodoLugar* aux;
 
@@ -226,6 +227,43 @@ std::string ListaLugares::profundida(int _puntoInicial) {
     return recorrido_str;
 }
 
+std::string ListaLugares::anchura(int _puntoInicial) {
+    std::string recorrido_str = "";
+
+    int cantVisitados,codLugar = 0;
+    int contador = getNumVertices();
+    int cantLugares = getNumVertices();
+    ListaLugares* pilaLugares = new ListaLugares();
+    NodoLugar* lugar;
+    while (contador > 0 && !todosVisitados()) {
+        if (contador == cantLugares) {
+            pilaLugares->InsertarInicio(_puntoInicial);
+            //lugar = getNodoLugar(_puntoInicial);
+            //lugar->visitar();
+            visitarTodasConexiones(_puntoInicial);
+            std::cout << "Lugar: " << std::to_string(_puntoInicial)<< std::endl;
+            recorrido_str += "Lugar: " + std::to_string(_puntoInicial) + "\n";
+        }
+        codLugar = pilaLugares->SacarFinal();
+        lugar = getNodoLugar(codLugar);
+        lugar->visitar();
+        NodoConexion* aux = lugar->conexiones->primero;
+        if (aux!= NULL) {
+            do {
+                if (!aux->visitado){
+                    pilaLugares->InsertarInicio(aux->codLugar);
+                    visitarTodasConexiones(aux->codLugar);
+                    std::cout << "Lugar: " << std::to_string(aux->codLugar) << std::endl;
+                    recorrido_str += "Lugar: " + std::to_string(aux->codLugar) + "\n";
+                }
+                aux = aux->siguiente;
+            } while (aux != lugar->conexiones->primero);
+        }
+        cantLugares--;
+    }
+    return recorrido_str;
+}
+
 void ListaLugares::insertarLugar(NodoLugar* nuevo) {
 
     if (listaVacia()){
@@ -242,6 +280,33 @@ void ListaLugares::insertarLugar(NodoLugar* nuevo) {
         primero->anterior = nuevo;
 
     }
+}
+
+void ListaLugares::InsertarInicio(int v)
+{
+  
+   if (listaVacia())
+   {
+     primero = new NodoLugar(v, "");
+     primero->anterior=primero;
+     primero->siguiente=primero;
+   }  
+   else
+   {
+     NodoLugar* nuevo = new NodoLugar(v, "");
+     nuevo->siguiente=primero;
+     nuevo->anterior= primero->anterior;
+     primero->anterior->siguiente=nuevo;
+     nuevo->siguiente->anterior=nuevo;
+     primero= nuevo;
+   }
+}
+
+int ListaLugares::SacarFinal(){
+	NodoLugar* temp = primero;
+	primero = primero->siguiente;
+	
+	return temp->getCodigo();
 }
 /*
 NodoLugar* ListaLugares::getNodoLugar(int _codigo) {
@@ -331,29 +396,7 @@ void ListaLugares::Dijkstra(int inicio, int final){
 		    	aux = aux->siguiente;
 		    	//aux = aux2;
 			}
-		    	
-			
-			/*
-			//NodoLugar* nuevo = new  NodoLugar( _codigo,  _nombre);
-	        noResueltos->primero->anterior->siguiente = nodosNoResueltos->primero;
-	        noResueltos->primero->anterior = nodosNoResueltos->primero->anterior;
-	        nodosNoResueltos->primero->anterior->siguiente = noResueltos->primero;
-	        nodosNoResueltos->primero->anterior = noResueltos->primero;
-
-			
-			//noResueltos->primero->anterior=NULL;
-			//noResueltos->primero->anterior->siguiente = nodosNoResueltos->primero->anterior;
-			//nodosNoResueltos->primero->anterior = noResueltos->primero;
-			//nodosNoResueltos->primero->anterior=noResueltos->primero;
-			
-			NodoConexion* temp = nodosNoResueltos->primero;
-			NodoConexion* tempAnterior = nodosNoResueltos->primero->anterior;
-			nodosNoResueltos->primero = noResueltos->primero;
-			nodosNoResueltos->primero->anterior = noResueltos->primero->anterior;
-			noResueltos->primero = temp;*/
-			//noResueltos->primero- = temp;
-			
-			//nodosNoResueltos->primero = temp;
+		   
 		}
 		
 		int nodosNuevos = nodosResueltos->getCantidadConexiones();
@@ -388,4 +431,80 @@ void ListaLugares::Dijkstra(int inicio, int final){
 	
 	
 	
+}
+
+std::string ListaLugares::puntosDeArticulacion(int _puntoInicial) {
+    std::string recorrido_str = "";
+
+    int cantVisitados,codLugar = 0;
+    int contador = getNumVertices();
+    int cantLugares = getNumVertices();
+    Pila* pilaLugares = new Pila();
+    ListaLugares* arbolM = new ListaLugares();
+    ListaConexiones* arbolm_ario = new ListaConexiones();
+    NodoLugar* lugar;
+    while (contador > 0 && !todosVisitados()) {
+        if (contador == cantLugares) {
+            pilaLugares->push(_puntoInicial);
+            //lugar = getNodoLugar(_puntoInicial);
+            //lugar->visitar();
+            visitarTodasConexiones(_puntoInicial);
+            arbolM->insertarLugar(_puntoInicial, "");
+            //arbolm_ario->agregarConexion(_puntoInicial, 0);
+           // std::cout << "Lugar: " << std::to_string(_puntoInicial)<< std::endl;
+            recorrido_str += "Lugar: " + std::to_string(_puntoInicial) + "\n";
+        }
+        codLugar = pilaLugares->pop();
+        lugar = getNodoLugar(codLugar);
+        lugar->visitar();
+        
+        NodoConexion* aux = lugar->conexiones->primero;
+        if (aux!= NULL) {
+            do {
+                if (!aux->visitado){
+                	NodoLugar* temp = arbolM->primero->anterior;
+                	int largo = arbolM->largoLista();
+                	for (int i = 0; i<largo;i++){
+                		if(getNodoLugar(temp->getCodigo())->existeConexion(codLugar)){
+                			int a = getNodoLugar(temp->getCodigo())->getCodigo();
+                			if (!arbolM->existeLugar(codLugar))
+                				{
+								arbolM->insertarLugar(codLugar, "");
+								arbolM->getNodoLugar(temp->getCodigo())->getConexiones()->agregarConexion(codLugar, 1);
+								}
+                			
+                			break;
+						}
+                		else{
+                			temp = temp->anterior;
+						}
+                		//NodoLugar->
+					}
+                	
+                    pilaLugares->push(aux->codLugar);
+                    visitarTodasConexiones(aux->codLugar);
+                    
+                    //arbolM->insertarLugar(codLugar, "");
+					//arbolm_ario->agregarConexion(codLugar, 0);
+					
+				//	NodoLugar *lugar = _listaLugares->getNodoLugar(codigoL);
+        		//	lugar->getConexiones()->agregarConexion(codConex, pesoI);
+                    
+                   // std::cout << "Lugar: " << std::to_string(aux->codLugar) << std::endl;
+                    recorrido_str += "Lugar: " + std::to_string(aux->codLugar) + "\n";
+                    
+                    
+                }
+                aux = aux->siguiente;
+            } while (aux != lugar->conexiones->primero);
+        }
+        
+        cantLugares--;
+    }
+    arbolm_ario->largoLista();
+   // std::cout<<"BARRA SEPARADORA"<<std::endl;
+   //arbolM->desvisitarTODO();
+   // arbolM->profundida(_puntoInicial);
+
+    return recorrido_str;
 }

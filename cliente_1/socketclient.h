@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -31,6 +32,7 @@ public:
     int TAMANO_BUFFER = TAMANHO_BUFFER;
     int listenFd;
     int checker;
+    bool loop = false;
     struct sockaddr_in svrAdd;
     struct hostent *server;
     char buffer[TAMANHO_BUFFER];

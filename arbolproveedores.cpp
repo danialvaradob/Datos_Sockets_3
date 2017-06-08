@@ -1,6 +1,7 @@
 //#include <iostream>
 #include <sstream>
 #include "arbolproveedores.h"
+#include "nodoproveedor.cpp"
 
 
 //ARBOL BINARIO DE BUSQUEDA

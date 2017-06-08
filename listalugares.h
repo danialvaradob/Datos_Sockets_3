@@ -46,8 +46,18 @@ public:
 	//Fin Dijkstra
 
     int getMayorPeso();
+    //Cola
+    void InsertarInicio(int v);
+    int SacarFinal();
+    //Fin Cola
+    
+    //Puntos de articulacion
+    std::string puntosDeArticulacion(int _puntoInicial);
+    //Fin Puntos de articulacion
     //RECORRIDOS
     std::string profundida(int _puntoInicial);
+    std::string anchura(int _puntoInicial);
+    
 
     NodoLugar* primero;
     NodoLugar* actual;

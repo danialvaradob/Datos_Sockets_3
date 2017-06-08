@@ -1,4 +1,5 @@
 #include "arbolcategorias.h"
+#include "arbolproductos.cpp"
 //#include <iostream>
 #include <sstream>
 //Arbol ROJINEGRO

@@ -27,7 +27,6 @@ void MainWindow::on_pushButton_clicked()
 
     dialogCompra compraDialog;
     compraDialog.setModal(true);
-    compraDialog.setCliente(client);
     compraDialog.exec(); //show the dialog when button is pressed
 
     //std::cout << compraDialog.getInfo() << std::endl;
@@ -70,5 +69,3 @@ void MainWindow::on_pushButton_2_clicked()
 
 
 }
-
-
