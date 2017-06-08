@@ -5,8 +5,8 @@
 #ifndef PROGRA_3_NODOCONJUNTO_H
 #define PROGRA_3_NODOCONJUNTO_H
 
-
-#include "listalugares.h"
+#include <iostream>
+//#include "listalugares.h"
 
 class NodoConjunto {
 public:

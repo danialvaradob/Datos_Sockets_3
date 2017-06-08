@@ -7,6 +7,8 @@
 
 
 #include "nodoarbolexpansion.h"
+//
+#include "listalugares.h"
 #include "listaconjunto.h"
 
 class ArbolExpansionMinimo {
