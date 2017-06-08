@@ -6,7 +6,6 @@
 #define PROGRA_3_ARBOLEXPANSION_H\
 
 
-#include "listalugares.h"
 #include "nodoarbolexpansion.h"
 #include "listaconjunto.h"
 
