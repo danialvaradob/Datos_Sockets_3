@@ -34,9 +34,8 @@ const int OPCION_IMPRIMIR_ARBOL_PREORDEN = 9;
 const int OPCION_ELIMINAR_PRODUCTO = 10;
 const int OPCION_ELIMINAR_CLIENTE = 11;
 const int OPCION_FACTURA = 12;
-int const TAMANHO_BUFFER = 301;
-
-
+int const TAMANHO_BUFFER = 1024;
+bool banderaCLIENTENUEVO = false;
 
 void leerArchLugares(ListaLugares * _lugares){
     //std::string nombreArchivo = "Lugares.txt";
@@ -416,31 +415,61 @@ void* clientManagement (void *dummyPt) {
     write(newsockfd,msg,strlen(msg));
     bool loop = false;
 
-
+    char clienteExistemsg[] = "CLIENTE_EXISTE";
     char clienteError[] = "NO_EXISTE";
 
-    bzero(buffer, TAMANHO_BUFFER);
-    read(newsockfd, buffer, TAMANHO_BUFFER-1);
     //ACA RECIBE EL CODIGO DEL CLLIENTE
 
-    while (true) {
-        std::string codigoCliente (buffer);
-        if (codigoCliente == "1111") {
-            break;
-        }
-        write(newsockfd,clienteError,strlen(clienteError));
-        read(newsockfd,buffer,TAMANHO_BUFFER -1);
 
-
-    }
 /////////////////////////////////////////
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
-        read(newsockfd, buffer, TAMANHO_BUFFER-1);
-        std::string parteString,parteStr;
-        std::string tester (buffer);
-        parteString = tester.substr(0,1);
-        if (tester == "PROFUNDIDAD") {
+        read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+        std::string parteString, parteStr;
+        std::string tester(buffer);
+        parteString = tester.substr(0, 1);
+
+
+        if(tester == "CLIENTE"){
+
+            std::string codigoCliente (buffer);
+
+            std::string msg2Provider = "Codigo Cliente Recibido";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            //if arbolClientes->existeCliente(_arbolClientes->raizB,idCliente,existeCliente);
+            if (codigoCliente == "1111") {
+                std::cout << "El cliente ingresado es el correcto" << std::endl;
+                //le dice la cliente que si existe, no pide datos
+                write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
+                break;
+            } else {
+                banderaCLIENTENUEVO = true;
+                //le dice al cliente que no existe,
+                write(newsockfd,clienteError,strlen(clienteError));
+                bzero(buffer, TAMANHO_BUFFER);
+                read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+                char * lineaValores = buffer;
+
+                std::string codClienteNuevo(std::strtok (lineaValores, ";"));
+                std::string nombre(std::strtok (NULL, ";"));
+                std::string direccion(std::strtok (NULL, ";"));
+                std::string telefono(std::strtok (NULL, ";"));
+
+                int codClienteI = atoi(codClienteNuevo.c_str());
+                int nombreI = atoi(nombre.c_str());
+                int dirI = atoi(direccion.c_str());
+                int telI = atoi(telefono.c_str());
+
+                //_arbolClientes->IniciarInsercionB(codClienteI,codClienteI,nombreI,dirI,telI);
+
+
+            }
+
+
+        }else if (tester == "PROFUNDIDAD") {
             std::string recorridoArbol = "Recorrido en Profundidad:\n";
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
@@ -459,6 +488,21 @@ void* clientManagement (void *dummyPt) {
         } else if ( parteString == "v") {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+
+            char * lineaValores = buffer;
+
+            std::string msg2Provider = "Solicitud de Venta Recibida";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+            std::string cotProducto(std::strtok (NULL, ";"));
+
+
+
             char serverMsg[] = "V_REALIZADA";
             write(newsockfd,serverMsg,strlen(serverMsg));
 
@@ -470,7 +514,7 @@ void* clientManagement (void *dummyPt) {
             if(tester == "exit")
                 break;
         }
-        /
+
         // /write()
         //  if(tester == "exit")
         //    break;
@@ -569,13 +613,14 @@ void *provider (void *dummyPt) {
         bzero(bufferProveedor,TAMANHO_BUFFER);
         char msg2[] = "PORFAVOR DIGITE SU CODIGO: ";
         write(newsockProvider,msg2,strlen(msg2));
+        bzero(bufferProveedor, TAMANHO_BUFFER);
         read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
         std::string respuestaProveedor (bufferProveedor);
         //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
         //
         //break
         // }
-       if (respuestaProveedor == "1111")
+       if (respuestaProveedor == "1111\n")
             break;
     }
     bzero(bufferProveedor, TAMANHO_BUFFER);
