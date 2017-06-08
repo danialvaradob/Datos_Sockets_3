@@ -758,10 +758,11 @@ void* clientManagement (void *dummyPt) {
             std::string nodoInicialStr(std::strtok (NULL, ";"));
 
 
-            std::string recorridoArbol = "Recorrido en Profundidad:\n";
-            recorridoArbol += listaLugares->profundida(atoi(nodoInicialStr.c_str()));
+            std::string recorridoArbol = "Recorrido en Anchura:\n";
+            recorridoArbol += listaLugares->anchura(atoi(nodoInicialStr.c_str()));
+
             std::cout << recorridoArbol << std::endl;
-            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            std::string msg2Provider = "Puede el cliente consultar el recorrido en Anchura?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
