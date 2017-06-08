@@ -15,6 +15,8 @@ public:
         codLugar1 = _codigo1;
         codLugar2 = _codigo2;
         peso = _peso;
+        ordenado = false;
+        kruskalElegido = false;
 
     }
 
@@ -23,6 +25,8 @@ private:
     int codLugar1;
     int codLugar2;
     int peso;
+    bool ordenado;
+    bool kruskalElegido;
 
     NodoArbolExpansion* anterior;
     NodoArbolExpansion* siguiente;

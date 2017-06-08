@@ -184,6 +184,155 @@ void ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
     std::cout << "El peso total es: "<< pesoTotal << std::endl;
 }
 
+void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
+    int codNodo2, peso;
+
+
+    NodoLugar *nodo = _grafo->getNodoLugar(_primerNodo);
+    do
+    {
+        if (arbolVacio()) {
+            int codigo1 = nodo->getCodigo();
+            NodoConexion *nodoConexion = nodo->getConexiones()->primero;
+            codNodo2 = nodoConexion->codLugar;
+            peso = nodoConexion->peso;
+            insertarNodo(codigo1, codNodo2, peso);
+            nodoConexion = nodoConexion->siguiente;
+
+            while (nodoConexion != nodo->getConexiones()->primero) {
+                codigo1 = nodo->getCodigo();
+                codNodo2 = nodoConexion->codLugar;
+                peso = nodoConexion->peso;
+                insertarNodo(codigo1, codNodo2, peso);
+                nodoConexion = nodoConexion->siguiente;
+            }
+        } else {
+            int codigo1 = nodo->getCodigo();
+            NodoConexion *nodoConexion = nodo->getConexiones()->primero;
+            codNodo2 = nodoConexion->codLugar;
+            if (!existeConexion(codigo1,codNodo2)) {
+                peso = nodoConexion->peso;
+                insertarNodo(codigo1, codNodo2, peso);
+            }
+            nodoConexion = nodoConexion->siguiente;
+            while (nodoConexion != nodo->getConexiones()->primero) {
+                codigo1 = nodo->getCodigo();
+                codNodo2 = nodoConexion->codLugar;
+                if(!existeConexion(codigo1,codNodo2)){
+                    peso = nodoConexion->peso;
+                    insertarNodo(codigo1, codNodo2, peso);
+                    nodoConexion = nodoConexion->siguiente;
+                }else{
+                    nodoConexion = nodoConexion->siguiente;
+                    continue;
+                }
+            }
+        }
+        nodo = nodo->siguiente;
+    } while (nodo != _grafo->primero);
+
+    ordenarKruskal();
+    ListaConjunto *kruskal = new ListaConjunto();
+    seleccionarAristas(kruskal);
+    imprimirKruskal();
+    _grafo->desvisitarTODO();
+}
+
+void ArbolExpansionMinimo::ordenarKruskal() {
+    NodoArbolExpansion *aux;
+
+    int i = 1;
+    while(i <= largoArbol()-1)
+    {
+        aux = obetenerNodoEnPosicion(i);
+        if (i==1 || aux->anterior->peso <= aux->peso)
+        {
+            i++;
+            continue;
+        }else if (aux->peso < primero->peso && !aux->ordenado)
+        {
+            aux->anterior->siguiente = aux->siguiente;
+            aux->siguiente->anterior = aux->anterior;
+            primero->anterior->siguiente = aux;
+            aux->anterior = primero->anterior;
+            aux->siguiente = primero;
+            primero->anterior = aux;
+            primero = aux;
+            primero->ordenado = true;
+        }else{
+            aux->anterior->anterior->siguiente = aux;
+            aux->siguiente->anterior = aux->anterior;
+            aux->anterior->siguiente = aux->siguiente;
+            aux->siguiente = aux->anterior;
+            aux->anterior = aux->siguiente->anterior;
+            aux->siguiente->anterior = aux;
+        }
+        i--;
+        if (i==0)
+        {
+            i=1;
+        }
+    }
+}
+
+void ArbolExpansionMinimo::seleccionarAristas(ListaConjunto *conjunto) {
+    NodoArbolExpansion *aux = primero;
+    do{
+        if(conjunto->listaVacia()){
+            conjunto->insertarConjunto(aux->codLugar1);
+            conjunto->insertarNodoEnConjunto(aux->codLugar2, 1);
+            aux->kruskalElegido = true;
+        }
+        else {
+            if(!conjunto->existeEnLista(aux->codLugar1) && !conjunto->existeEnLista(aux->codLugar2)){
+                conjunto->insertarConjunto(aux->codLugar1);
+                conjunto->insertarNodoEnConjunto(aux->codLugar2, conjunto->largoLista());
+                aux->kruskalElegido = true;
+            } else {
+                if (conjunto->getIndicedelNodo(aux->codLugar1) == 0) {
+                    int indice = conjunto->getIndicedelNodo(aux->codLugar2);
+                    conjunto->insertarNodoEnConjunto(aux->codLugar1, indice);
+                    aux->kruskalElegido = true;
+                }
+                if (conjunto->getIndicedelNodo(aux->codLugar2) == 0) {
+                    int indice = conjunto->getIndicedelNodo(aux->codLugar1);
+                    conjunto->insertarNodoEnConjunto(aux->codLugar2, indice);
+                    aux->kruskalElegido = true;
+                } else {
+                    if(!conjunto->existeNodoEnConjunto(aux->codLugar2, conjunto->getIndicedelNodo(aux->codLugar1)) || !conjunto->existeNodoEnConjunto(aux->codLugar1, conjunto->getIndicedelNodo(aux->codLugar2))){
+                        conjunto->unirConjuntos(conjunto->getIndicedelNodo(aux->codLugar1),conjunto->getIndicedelNodo(aux->codLugar2));
+                        aux->kruskalElegido = true;
+                    }
+                }
+            }
+        }
+        aux = aux->siguiente;
+    }while(aux != primero);
+}
+
+void ArbolExpansionMinimo::imprimirKruskal() {
+    NodoArbolExpansion *aux = primero;
+    pesoTotal = 0;
+    do{
+        if(aux->kruskalElegido){
+            std::cout << "cod1: " << aux->codLugar1 << "| cod2: " << aux->codLugar2 << "| peso: " << aux->peso << std::endl;
+            pesoTotal += aux->peso;
+        }
+        aux = aux->siguiente;
+    }while(aux!=primero);
+    std::cout << "Peso Total: " << pesoTotal << std::endl;
+}
+
+NodoArbolExpansion *ArbolExpansionMinimo::obetenerNodoEnPosicion(int pos) {
+    int cont = 0;
+    NodoArbolExpansion *aux = primero;
+    while(cont<pos){
+        aux = aux->siguiente;
+        cont++;
+    }
+    return aux;
+}
+
 void ArbolExpansionMinimo::insertarNodo(int _codigo1, int _codigo2, int _peso) {
 
     if (arbolVacio()){

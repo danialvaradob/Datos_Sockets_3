@@ -9,7 +9,7 @@
 #include "listalugares.h"
 #include "nodoarbolexpansion.h"
 #include <iostream>
-
+#include "listaconjunto.h"
 
 class ArbolExpansionMinimo {
 
@@ -20,13 +20,22 @@ public:
     //constructor
     //ArbolExpansionMinimo(ListaLugares* _grafo);
 
-    ArbolExpansionMinimo() {primero = actual = NULL;}
+    ArbolExpansionMinimo() {
+        primero = NULL;
+        n = 0;
+        pesoTotal = 0;
+    }
 
     //int **OT() {return T;} //Arbol de Expansion
     //int arbolExpancionPrim(ListaLugares* _grafo);    //algoritmo de Prim
     void prim(ListaLugares* _grafo, int _primerNodo);
     void profundida(ListaLugares* _grafo, int _puntoInicial);
+    void kruskal(ListaLugares* _grafo, int _primerNodo);
 
+    NodoArbolExpansion *obetenerNodoEnPosicion(int pos);
+    void ordenarKruskal();
+    void seleccionarAristas(ListaConjunto *conjunto);
+    void imprimirKruskal();
 
     void insertarNodo(int _codigo1, int _codigo2 , int _peso);
     bool existeConexion(int _codigo1, int _codigo2);
@@ -40,7 +49,6 @@ private:
 
 
     NodoArbolExpansion* primero;
-    NodoArbolExpansion* actual;
 };
 
 
