@@ -200,6 +200,7 @@ std::string ArbolExpansionMinimo::getPrim() {
 }
 
 void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
+    NodoLugar *inicio = _grafo->getNodoLugar(_primerNodo);
     int codNodo2, peso;
 
 
@@ -244,7 +245,7 @@ void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
             }
         }
         nodo = nodo->siguiente;
-    } while (nodo != _grafo->primero);
+    } while (nodo != inicio);
 
     ordenarKruskal();
     ListaConjunto *kruskal = new ListaConjunto();

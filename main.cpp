@@ -19,6 +19,9 @@
 #include <cstring>
 #include "arbolproveedores.cpp"
 #include "arbolclientes.cpp"
+#include "nodoventa.h"
+#include "listaventas.h"
+
 /*
 #include "arbolproveedores.cpp"
 #include "arbolclientes.cpp"
@@ -393,6 +396,7 @@ ArbolProveedores* proveedores = new ArbolProveedores();
 ArbolSupermercados* supermercados = new ArbolSupermercados();
 ArbolCategorias* categorias = new ArbolCategorias();
 ArbolProductos* productos = new ArbolProductos();
+ListaVentas* listaVentas = new ListaVentas();
 
 
 void *task1(void *);
@@ -405,6 +409,7 @@ static int newsockfdc2;
 
 int codigoProveedorGlobal;
 int codigoClienteGlobal;
+bool banderaCLIENTENUEVO;
 
 
 
@@ -539,15 +544,17 @@ void* clientManagement (void *dummyPt) {
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
             std::string codProducto(std::strtok (NULL, ";"));
+            std::string strCant(std::strtok (NULL, ";"));
 
 
             bool codigosCorrectos = false;
-
-            int cL,cS,cC,cP;
+            bool ventaRealizada = false;
+            int cL,cS,cC,cP, cantidad;
             cL = atoi(codLugar.c_str());
             cS = atoi(codSuper.c_str());
             cC = atoi(codCat.c_str());
             cP = atoi(codProducto.c_str());
+            cantidad = atoi(strCant.c_str());
 
             NodoLugar* nodo = new NodoLugar();
             if (listaLugares->existeLugar(cL)) {
@@ -568,7 +575,48 @@ void* clientManagement (void *dummyPt) {
                             NodoProducto* nodoPro = new NodoProducto();
                             pro->getNodoProducto(cP,pro->raiz,nodoPro);
                             codigosCorrectos = true;
+
+                            //_arbolProveedores->getNodoProveedor(codProveedor, _arbolProveedores->raiz, _nodoProv);
+                            //_arbolClientes->getCliente(_arbolClientes->raizB, _nodoCliente, idCliente);
+                            //_nodoCliente->aumentarVentas();
+                            //_nodoProv->aumentarVentas();
+                            nodoPro->setCantidadEnStock(cantidad);
+                            nodocategoria *nodoCat = new nodocategoria();
+                            cat->getNodoCat(cat->raiz,cC, nodoCat);
+                            nodoCat->incBestScore();
+                            super->getNodoSupermercado(cS, super->raiz, nodoSuper);
+                            nodoSuper->aumentarVentas();
+
+                            ventaRealizada = true;
+                            if (banderaCLIENTENUEVO) {
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
+                                                                      nodoCat->getDesc(),
+                                                                      nodoPro->getCodigoProducto(),
+                                                                      nodoPro->getNombreProducto(),
+                                                                      nodoPro->getPrecioPorUnidad(), cantidad,
+                                                                      nodoPro->getPrecioPorUnidad() * cantidad);
+                                listaVentas->insertar(_nodoVenta);
+
+                            }else {
+
+
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
+                                                                      nodoCat->getDesc(),
+                                                                      nodoPro->getCodigoProducto(),
+                                                                      nodoPro->getNombreProducto(),
+                                                                      nodoPro->getPrecioPorUnidad(), cantidad,
+                                                                      ((nodoPro->getPrecioPorUnidad() * cantidad)) - (nodoPro->getPrecioPorUnidad() * cantidad * 0.05));
+                                listaVentas->insertar(_nodoVenta);
+                            }
+                        }else {
+                            codigosCorrectos = false;
+
                         }
+
 
                     } else {
                         codigosCorrectos = false;
@@ -582,7 +630,7 @@ void* clientManagement (void *dummyPt) {
                 codigosCorrectos = false;
             }
 
-            bool ventaRealizada = false;
+
             if (codigosCorrectos) {
 
                 //ACA VA ABOSLUTAMENTE TODO LO QUE HACES DE LA VENTA
@@ -849,7 +897,6 @@ void *provider (void *dummyPt) {
         std::string respuestaProveedor (bufferProveedor);
         if (proveedores->existeProveedor(atoi(bufferProveedor),proveedores->raiz)) {
             codigoProveedorGlobal = atoi(bufferProveedor);
-//>>>>>>> origin/master
             break;
     }
     bzero(bufferProveedor, TAMANHO_BUFFER);
@@ -900,7 +947,7 @@ int main() {
     leerArchSupermercado(listaLugares);
     leerArchCategorias(listaLugares);
     leerArchProductos(listaLugares);
-    leerArchClientes()
+    //leerArchClientes();
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     
