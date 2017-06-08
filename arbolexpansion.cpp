@@ -4,6 +4,7 @@
 
 #include "arbolexpansion.h"
 #include "pila.h"
+#include <sstream>
 //#include "listalugares.cpp"
 
 /*
@@ -250,7 +251,6 @@ void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
     ordenarKruskal();
     ListaConjunto *kruskal = new ListaConjunto();
     seleccionarAristas(kruskal);
-    imprimirKruskal();
     _grafo->desvisitarTODO();
 }
 
@@ -326,17 +326,24 @@ void ArbolExpansionMinimo::seleccionarAristas(ListaConjunto *conjunto) {
     }while(aux != primero);
 }
 
-void ArbolExpansionMinimo::imprimirKruskal() {
+std::string ArbolExpansionMinimo::imprimirKruskal() {
+    std::string buffer;
+
     NodoArbolExpansion *aux = primero;
     pesoTotal = 0;
     do{
         if(aux->kruskalElegido){
-            std::cout << "cod1: " << aux->codLugar1 << "| cod2: " << aux->codLugar2 << "| peso: " << aux->peso << std::endl;
+            buffer += aux->toString();
             pesoTotal += aux->peso;
         }
         aux = aux->siguiente;
     }while(aux!=primero);
-    std::cout << "Peso Total: " << pesoTotal << std::endl;
+    std::string f;
+    std::stringstream flujo;
+
+    flujo << pesoTotal;
+    f = flujo.str();
+    buffer += "Peso Total: " + f;
 }
 
 NodoArbolExpansion *ArbolExpansionMinimo::obetenerNodoEnPosicion(int pos) {

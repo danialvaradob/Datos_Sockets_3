@@ -38,7 +38,7 @@ public:
     NodoArbolExpansion *obetenerNodoEnPosicion(int pos);
     void ordenarKruskal();
     void seleccionarAristas(ListaConjunto *conjunto);
-    void imprimirKruskal();
+    std::string imprimirKruskal();
 
     void insertarNodo(int _codigo1, int _codigo2 , int _peso);
     bool existeConexion(int _codigo1, int _codigo2);

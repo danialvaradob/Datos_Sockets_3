@@ -19,6 +19,7 @@ public:
         kruskalElegido = false;
 
     }
+    std::string toString();
 
 
 private:
