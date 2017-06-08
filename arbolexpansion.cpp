@@ -4,6 +4,7 @@
 
 #include "arbolexpansion.h"
 #include "pila.h"
+//#include "listalugares.cpp"
 
 /*
 ArbolExpansionMinimo::ArbolExpansionMinimo(ListaLugares* _grafo) {

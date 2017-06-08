@@ -1,5 +1,5 @@
 #include "arbolsupermercados.h"
-//#include "nodosupermercado.h"
+#include "nodosupermercado.cpp"
 //#include <iostream>
 //#include <iostream>
 //#include <stdio.h>

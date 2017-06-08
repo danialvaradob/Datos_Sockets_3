@@ -1,14 +1,14 @@
 #include <iostream>
 #include <fstream>
-#include "arbolexpansion.h"
+#include "arbolexpansion.cpp"
 #include <iostream>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <netdb.h>
+//#include <netdb.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
 #include <iostream>
 #include <fstream>
 #include <strings.h>
@@ -17,9 +17,17 @@
 #include <pthread.h>
 #include <vector>
 #include <cstring>
-#include "arbolproveedores.h"
-#include "arbolclientes.h"
-#include "arbolsupermercados.h"
+/*
+#include "arbolproveedores.cpp"
+#include "arbolclientes.cpp"
+#include "arbolsupermercados.cpp"
+#include "arbolcategorias.cpp"
+#include "listalugares.cpp"
+#include "listaconexiones.cpp"
+#include "listaconjunto.cpp"
+#include "pila.cpp"
+*/
+
 
 const int PRIMERA_VEZ = -1;
 const int OPCION_VENTA = 1;
@@ -40,7 +48,7 @@ int const TAMANHO_BUFFER = 301;
 
 void leerArchLugares(ListaLugares * _lugares){
     //std::string nombreArchivo = "Lugares.txt";
-    std::string nombreArchivo = "LugaresDaniel.txt";
+    std::string nombreArchivo = "Lugares.txt";
 
 
     std::ifstream archivoEntrada;
@@ -78,7 +86,7 @@ void leerArchLugares(ListaLugares * _lugares){
 
 void leerArchConexiones(ListaLugares* _listaLugares) {
     //std::string nombreArchivo = "Conexiones.txt";
-    std::string nombreArchivo = "ConexionesDaniel.txt";
+    std::string nombreArchivo = "Conexiones.txt";
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -378,7 +386,7 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 
 ListaLugares* listaLugares = new ListaLugares();
 ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
-
+/*
 void *task1(void *);
 static int newsockfd1;
 static int newsockfd2;
@@ -604,8 +612,8 @@ void *provider (void *dummyPt) {
 
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockProvider);
-*/
-    }
+
+    }*/
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -625,10 +633,23 @@ int main() {
     leerArchConexiones(listaLugares);
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
-    //listaLugares->profundida(20);
-    arbol->prim(listaLugares,78);
+    
+   // listaLugares->profundida(1);
+    //listaLugares->puntosDeArticulacion(1);
+   // listaLugares->desvisitarTODO();
+    //listaLugares->puntosDeArticulacion(1);
+    
+   // std::cout<<"Pf: "<<std::endl;
+   // listaLugares->profundida(20);
+    //listaLugares->desvisitarTODO();
+   // arbol->prim(listaLugares,78);
     //arbol->prim(listaLugares,20);
-
+    
+    listaLugares->Dijkstra(31, 8);
+    
+    
+    
+/*
     char buffer[TAMANHO_BUFFER];
     int pId, portNo, listenFd;
     socklen_t len; //store size of the address
@@ -747,7 +768,7 @@ int main() {
     for(int i = 0; i < 3; i++) {
         pthread_join(threadA[i], NULL);
     }
-
+*/
 
 
 

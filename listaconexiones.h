@@ -35,6 +35,8 @@ public:
     void sumarDistTotal(int disTotal, int codMenor);
     
     void insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos);
+    
+    
 
     NodoConexion* primero;
     NodoConexion* actual;
