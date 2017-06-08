@@ -471,6 +471,9 @@ void* clientManagement (void *dummyPt) {
     close(newsockfd);
 }
 
+//todo gual a clientmanagment pero usa
+//bufferC2
+//newsockfdc2
 void* clientManagement2 (void *dummyPt) {
 
     int nodoInicial = 20;
