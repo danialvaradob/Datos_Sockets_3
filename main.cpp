@@ -38,8 +38,8 @@ int const TAMANHO_BUFFER = 301;
 
 
 void leerArchLugares(ListaLugares * _lugares){
-    std::string nombreArchivo = "Lugares.txt";
-    //std::string nombreArchivo = "LugaresDaniel.txt";
+    //std::string nombreArchivo = "Lugares.txt";
+    std::string nombreArchivo = "LugaresDaniel.txt";
 
 
     std::ifstream archivoEntrada;
@@ -76,8 +76,8 @@ void leerArchLugares(ListaLugares * _lugares){
 }
 
 void leerArchConexiones(ListaLugares* _listaLugares) {
-    std::string nombreArchivo = "Conexiones.txt";
-    //std::string nombreArchivo = "ConexionesDaniel.txt";
+    //std::string nombreArchivo = "Conexiones.txt";
+    std::string nombreArchivo = "ConexionesDaniel.txt";
 
     std::ifstream archivoEntrada;
     std::string lineaEnArchivo;
@@ -185,7 +185,6 @@ void leerArchProductos(ArbolSupermercados* _supermercados) {
 
 }
 
-
 void leerArchCategorias(ArbolSupermercados* _supermercados) {
     std::string nombreArchivo = "Categorias.txt";
     std::ifstream file;
@@ -230,7 +229,6 @@ void leerArchCategorias(ArbolSupermercados* _supermercados) {
     file.close();
 
 }
-
 
 void leerArchSupermercado(ArbolSupermercados * _supermercado, ListaLugares* _lugares){
     bool Hh = false;
@@ -278,8 +276,6 @@ void leerArchSupermercado(ArbolSupermercados * _supermercado, ListaLugares* _lug
 
 }
 
-
-
 void leerArchProveedores(ArbolProveedores * _proveedores){
     std::string nombreArchivo = "Proveedores.txt";
 
@@ -322,7 +318,6 @@ void leerArchProveedores(ArbolProveedores * _proveedores){
 
 }
 
-
 void leerArchClientes(ArbolClientes * _ArbolClientes){
     std::string nombreArchivo = "Clientes.txt";
     std::cout << "entro" << std::endl;
@@ -361,8 +356,6 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 }
 
 
-
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -374,8 +367,8 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 
 
 
-static ListaLugares* listaLugares = new ListaLugares();
-static ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
+ListaLugares* listaLugares = new ListaLugares();
+ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 
 void *task1(void *);
 static int newsockfd1;
@@ -389,6 +382,8 @@ int codigoProveedor;
 
 
 static char bufferProveedor[TAMANHO_BUFFER];
+static char bufferC2[TAMANHO_BUFFER];
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -411,44 +406,47 @@ void* clientManagement (void *dummyPt) {
     char msg[] = "CONECTADO AL SERVIDOR";
     write(newsockfd,msg,strlen(msg));
     bool loop = false;
+
+
+    char clienteError[] = "NO_EXISTE";
+
+    bzero(buffer, TAMANHO_BUFFER);
+    read(newsockfd, buffer, TAMANHO_BUFFER-1);
+    //ACA RECIBE EL CODIGO DEL CLLIENTE
+
+    while (true) {
+        std::string codigoCliente (buffer);
+        if (codigoCliente == "1111") {
+            break;
+        }
+        write(newsockfd,clienteError,strlen(clienteError));
+        read(newsockfd,buffer,TAMANHO_BUFFER -1);
+
+
+    }
+/////////////////////////////////////////
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
         read(newsockfd, buffer, TAMANHO_BUFFER-1);
-
         std::string parteString,parteStr;
-
-
-        //PRUEBAS
         std::string tester (buffer);
-
         parteString = tester.substr(0,1);
         if (tester == "PROFUNDIDAD") {
             std::string recorridoArbol = "Recorrido en Profundidad:\n";
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
-
             std::string msg2Provider = "Puede el cliente consultar la profundidad?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
 
             std::string msgMal = "NO fue permitido";
-
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
             std::string bufProvee (bufferProveedor);
-
             if (bufProvee == "SI\n")
                 write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
             else
                 write(newsockfd,msgMal.c_str(),strlen(msgMal.c_str()));
-
-
-
-
-            //char msgCodClientPreorden[] = "REVISAR SERVIDOR";
-            //write(newsockfd, msgCodClientPreorden, strlen(msgCodClientPreorden));
-
-
         } else if ( parteString == "v") {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
@@ -456,7 +454,6 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,serverMsg,strlen(serverMsg));
 
         }else {
-
             std::string tester (buffer);
             std::cout << tester << std::endl;
             char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
@@ -464,13 +461,8 @@ void* clientManagement (void *dummyPt) {
             if(tester == "exit")
                 break;
         }
-
-
-
-        //write()
-
-
-
+        /
+        // /write()
         //  if(tester == "exit")
         //    break;
     }
@@ -483,16 +475,16 @@ void* clientManagement2 (void *dummyPt) {
 
     int nodoInicial = 20;
     std::cout << "Thread No: " << pthread_self() << std::endl;
-    char buffer[TAMANHO_BUFFER];
-    bzero(buffer, TAMANHO_BUFFER);
+    char bufferC2[TAMANHO_BUFFER];
+    bzero(bufferC2, TAMANHO_BUFFER);
     char msg[] = "CONECTADO AL SERVIDOR";
     write(newsockfdc2,msg,strlen(msg));
     bool loop = false;
     while(!loop) {
-        bzero(buffer, TAMANHO_BUFFER);
-        read(newsockfdc2, buffer, TAMANHO_BUFFER-1);
+        bzero(bufferC2, TAMANHO_BUFFER);
+        read(newsockfdc2, bufferC2, TAMANHO_BUFFER-1);
         std::string parteString,parteStr;
-        std::string tester (buffer);
+        std::string tester (bufferC2);
 
         parteString = tester.substr(0,1);
         if (tester == "PROFUNDIDAD") {
@@ -522,9 +514,29 @@ void* clientManagement2 (void *dummyPt) {
             char serverMsg[] = "V_REALIZADA";
             write(newsockfdc2,serverMsg,strlen(serverMsg));
 
+        } else if ( tester == "V_COD_CLIENTE") {
+
+            std::string msgC = "CLIENTE EXISTE";
+            std::string msgC2 = "CLIENTE NO EXISTE\nINGRESE SUS DATOS";
+
+            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+
+            std::string msgMal = "NO fue permitido";
+
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string bufProvee (bufferProveedor);
+
+            if (bufProvee == "SI\n")
+                write(newsockfdc2,msgC.c_str() , strlen(msgC.c_str()));
+            else
+                write(newsockfdc2,msgC2.c_str(),strlen(msgC2.c_str()));
+
         }else {
 
-            std::string tester (buffer);
+            std::string tester (bufferC2);
             std::cout << tester << std::endl;
             char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
             write(newsockfdc2,serverMsg,strlen(serverMsg));
@@ -537,56 +549,53 @@ void* clientManagement2 (void *dummyPt) {
 }
 
 void *provider (void *dummyPt) {
-
     std::cout << "Thread No: " << pthread_self() << std::endl;
-/*    while(true) {
+    bzero(bufferProveedor, TAMANHO_BUFFER);
+    //write(newsockProvider, msg, strlen(msg));
+    bool loop = false;
+   while(true) {
         bzero(bufferProveedor,TAMANHO_BUFFER);
-        char msg[] = "PORFAVOR DIGITE SU CODIGO: ";
-        write(newsockProvider,msg,strlen(msg));
-
+        char msg2[] = "PORFAVOR DIGITE SU CODIGO: ";
+        write(newsockProvider,msg2,strlen(msg2));
         read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
-
         std::string respuestaProveedor (bufferProveedor);
-
         //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
         //
         //break
         // }
-        break;
+       if (respuestaProveedor == "1111")
+            break;
     }
-*/
-
     bzero(bufferProveedor, TAMANHO_BUFFER);
-    char msg[] = "CONECTADO AL SERVIDOR\nBIENVENIDO PROVEEDOR";
+    char msg[] = "CONECTADO";
     write(newsockProvider, msg, strlen(msg));
-    bool loop = false;
     /*
     while (!loop) {
-        bzero(buffer, TAMANHO_BUFFER);
-        read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+        bzero(bufferProveedor, TAMANHO_BUFFER);
+        read(newsockProvider, bufferProveedor, TAMANHO_BUFFER - 1);
 
-            std::string tester(buffer);
-            std::cout << tester << std::endl;
-            char serverMsg[] = "BIENVENIDO AL SERVIDOR";
-            write(newsockfd, serverMsg, strlen(serverMsg));
-            if (tester == "exit")
-                break;
+        std::string tester(bufferProveedor);
+
+        //Proveedor espera una venta
+        if (tester == "1") {
+            sleep(10000);
+
         }
 
+        std::cout << tester << std::endl;
+        char serverMsg[] = "BIENVENIDO AL SERVIDOR";
+        write(newsockProvider, serverMsg, strlen(serverMsg));
 
-
-        //write()
-
-
-
-        //  if(tester == "exit")
-        //    break;
-    }
+        if (tester == "exit")
+            break;
+        }
 
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockProvider);
-     */
-}
+*/
+    }
+
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -605,8 +614,8 @@ int main() {
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     //listaLugares->profundida(20);
-    //arbol->prim(_listaLugares,78);
-    arbol->prim(listaLugares,20);
+    arbol->prim(listaLugares,78);
+    //arbol->prim(listaLugares,20);
 
     char buffer[TAMANHO_BUFFER];
     int pId, portNo, listenFd;
