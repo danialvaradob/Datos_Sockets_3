@@ -7,6 +7,7 @@
 
 #include <string>
 #include "listaconexiones.h"
+#include "arbolsupermercados.h"
 
 class NodoLugar {
 public:
@@ -21,6 +22,8 @@ public:
 
         ListaConexiones* listaConexiones = new ListaConexiones();
         conexiones = listaConexiones;
+        ArbolSupermercados* arbolSuper = new ArbolSupermercados();
+        punteroSuper = arbolSuper;
 
     }
 
@@ -33,6 +36,8 @@ public:
         anterior = NULL;
         ListaConexiones* listaConexiones = new ListaConexiones();
         conexiones = listaConexiones;
+        ArbolSupermercados* arbolSuper = new ArbolSupermercados();
+        punteroSuper = arbolSuper;
         visitado = false;
 
 
@@ -44,6 +49,7 @@ public:
     NodoLugar* getSiguiente() {return siguiente;}
     int getCantidad() {return cantidadSupermercados;}
     void aumentarCantidadSuper() {cantidadSupermercados++;}
+    ArbolSupermercados *getArbolSuper(){return punteroSuper;}
 
     //Conexiones
     ListaConexiones* getConexiones() {return conexiones;}
@@ -63,6 +69,8 @@ private:
     int cantidadSupermercados;
     NodoLugar* siguiente;
     NodoLugar* anterior;
+
+    ArbolSupermercados* punteroSuper;
 
     ListaConexiones* conexiones;
 

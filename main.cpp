@@ -16,6 +16,7 @@
 #include <string>
 #include <pthread.h>
 #include <vector>
+#include <cstring>
 #include "arbolproveedores.h"
 #include "arbolclientes.h"
 #include "arbolsupermercados.h"
@@ -125,7 +126,7 @@ void leerArchConexiones(ListaLugares* _listaLugares) {
 
 
 //// PARA PRUEBA A VER SI REGISTRA BIEN UN PRODUCTO
-void leerArchProductos(ArbolSupermercados* _supermercados) {
+void leerArchProductos(ListaLugares *_lugares) {
 
     std::string nombreArchivo = "Productos.txt";
 
@@ -160,12 +161,17 @@ void leerArchProductos(ArbolSupermercados* _supermercados) {
         double precioPorUnidad = atof(precioPorUnidadSt.c_str());
         int cantidadEnStock = atoi(cantidadEnStockSt.c_str());
 
+        NodoLugar *temp = _lugares->getNodoLugar(codLugI);
+        ArbolSupermercados *aux = temp->getArbolSuper();
+
 
         ArbolCategorias* arbolCategorias = new ArbolCategorias();
-        _supermercados->getArbolCat(codSupI,_supermercados->raiz,arbolCategorias);
+        aux->getArbolCat(codSupI,aux->raiz,arbolCategorias);
 
         ArbolProductos* productos = new ArbolProductos();
         arbolCategorias->getArbolProd(arbolCategorias->raiz,codCatI,productos);
+
+
 
         // ... crear el nodo
         if (productos != NULL && productos->existeProducto(productos->raiz,codProI)){
@@ -175,7 +181,7 @@ void leerArchProductos(ArbolSupermercados* _supermercados) {
             std::cout <<codigoProducto << "," << codigoCategoria << "," << nombreProducto<< "," << precioPorUnidadSt<< ","
                       << cantidadEnStockSt << std::endl;
             //_categoria->insertarProducto(codigoProducto, codigoCategoria, nombreProducto, precioPorUnidad, cantidadEnStock);
-            _supermercados->agregarProducto(_supermercados->raiz,codSupI,codCatI,codProI,nombreProducto, precioPorUnidad,
+            aux->agregarProducto(aux->raiz,codSupI,codCatI,codProI,nombreProducto, precioPorUnidad,
                                             cantidadEnStock);
 
         }
@@ -185,7 +191,7 @@ void leerArchProductos(ArbolSupermercados* _supermercados) {
 
 }
 
-void leerArchCategorias(ArbolSupermercados* _supermercados) {
+void leerArchCategorias(ListaLugares* _lugares) {
     std::string nombreArchivo = "Categorias.txt";
     std::ifstream file;
     std::string lineaEnArchivo;
@@ -209,16 +215,18 @@ void leerArchCategorias(ArbolSupermercados* _supermercados) {
             codigo = atoi(_codigo.c_str());
             std::string descripcion(std::strtok (NULL, ";") );
             //nodocategoria *nuevo = new nodocategoria(codigo, descripcion);
+            NodoLugar *temp = _lugares->getNodoLugar(codigoLugar);
+            ArbolSupermercados *aux = temp->getArbolSuper();
 
             if(cont==0){
                 //arbolCategorias->insertarValorNodoRN(codigo, descripcion);
-                _supermercados->agregarCategoria(_supermercados->raiz,codigoSup,codigo,descripcion);
+                aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
                 cont++;
                 std::cout << "primera vez" << std::endl;
 
             }else{
-                if(!_supermercados->existeCategoria(codigoSup,codigo,_supermercados->raiz)) {
-                    _supermercados->agregarCategoria(_supermercados->raiz,codigoSup,codigo,descripcion);
+                if(!aux->existeCategoria(codigoSup,codigo,aux->raiz)) {
+                    aux->agregarCategoria(aux->raiz,codigoSup,codigo,descripcion);
                     std::cout <<"Codigo Categoria: "<< _codigo << "," << descripcion << std::endl;
                     cont++;
                 }
@@ -230,7 +238,7 @@ void leerArchCategorias(ArbolSupermercados* _supermercados) {
 
 }
 
-void leerArchSupermercado(ArbolSupermercados * _supermercado, ListaLugares* _lugares){
+void leerArchSupermercado(ListaLugares* _lugares){
     bool Hh = false;
     std::string nombreArchivo = "Supermercados.txt";
 
@@ -256,10 +264,11 @@ void leerArchSupermercado(ArbolSupermercados * _supermercado, ListaLugares* _lug
         // ... crear el nodo
         //cout << id << "," << nombre << "," << direccion << "," << telefono << endl;
 
-        int codL1int = atoi(codLugar1.c_str());
+        int codLint = atoi(codLugar1.c_str());
         int codSint = atoi(codSuper.c_str());
-        int codLint = atoi(codLugar.c_str());
-        if (_supermercado->existeSupermercado(codSint,_supermercado->raiz)) {
+        NodoLugar *temp = _lugares->getNodoLugar(codLint);
+        ArbolSupermercados *aux = temp->getArbolSuper();
+        if (aux->existeSupermercado(codSint,aux->raiz)) {
             std::cout << "Supermercado ya existe, codigo: " << codSuper << std::endl;
             continue;
         }else{
@@ -267,7 +276,7 @@ void leerArchSupermercado(ArbolSupermercados * _supermercado, ListaLugares* _lug
             //std::cout << "Codigo LUGAR: " << codLugar << std::endl;
             //_supermercado->insertarNodoSupermercado(codSint,codLint,nombre);
 
-            _supermercado->insertarBalanceado(_supermercado->raiz, Hh,codSint,codLint,nombre);
+            aux->insertarBalanceado(aux->raiz, Hh,codSint,codLint,nombre);
             _lugares->aumentarCantidadDeSupermercados(codLint);
         }
     }
