@@ -17,15 +17,18 @@ SOURCES += main.cpp\
     dialogcompra.cpp \
     socketclient.cpp \
     widgetprofundidad.cpp \
-    dialogclientenuevo.cpp
+    dialogclientenuevo.cpp \
+    dialogconsulta.cpp
 
 HEADERS  += mainwindow.h \
     dialogcompra.h \
     socketclient.h \
     widgetprofundidad.h \
-    dialogclientenuevo.h
+    dialogclientenuevo.h \
+    dialogconsulta.h
 
 FORMS    += mainwindow.ui \
     dialogcompra.ui \
     widgetprofundidad.ui \
-    dialogclientenuevo.ui
+    dialogclientenuevo.ui \
+    dialogconsulta.ui
