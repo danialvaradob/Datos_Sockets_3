@@ -23,7 +23,7 @@ public:
     int getCantidadConexiones() {return cantidadConexiones;}
     int getPeso(int _codigo); //busca en la lista a ver si existe el codigo y si existe
                                 //retorna el peso entre esos dos
-
+	int getEstado(int _codigo);
     void desvisitarConexiones();
 
     bool existeConexion(int _codigo);
@@ -35,7 +35,7 @@ public:
     void sumarDistTotal(int disTotal, int codMenor);
     
     void insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos);
-    
+    int getCantidadConexionesSinVisitar(int _codigo);
     
 
     NodoConexion* primero;

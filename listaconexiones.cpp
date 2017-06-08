@@ -107,6 +107,16 @@ int ListaConexiones::getPeso(int _codigo) {
     return 0;
 }
 
+int ListaConexiones::getEstado(int _codigo) {
+    NodoConexion* aux = primero;
+    do {
+        if (aux->codLugar == _codigo)
+            return aux->visitado;
+        aux = aux->siguiente;
+    } while (aux != primero);
+    return 0;
+}
+
 void ListaConexiones::visitar(int _codigo) {
     NodoConexion* aux = primero;
     do {
@@ -218,4 +228,18 @@ void ListaConexiones::insertarNodosNoResueltos(ListaConexiones* NodosNoResueltos
      while (aux2 != primero);
     return;
 }
+
+int ListaConexiones::getCantidadConexionesSinVisitar(int _codigo){
+	NodoConexion* aux = primero;
+	int sinVisitar;
+    do {
+        if (aux->codigoUltimaConexion == _codigo && aux->visitado == false)
+            sinVisitar++;
+        aux = aux->siguiente;
+    } while (aux != primero);
+    return sinVisitar;
+
+}
+
+
 
