@@ -1,7 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include "arbolexpansion.cpp"
-#include <iostream>
+
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -9,17 +8,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <iostream>
 #include <fstream>
-#include <strings.h>
 #include <stdlib.h>
 #include <string>
 #include <pthread.h>
 #include <vector>
-#include <cstring>
+
 #include "arbolproveedores.cpp"
 #include "arbolclientes.cpp"
-#include "nodoventa.h"
 #include "listaventas.h"
 
 /*
@@ -576,6 +572,9 @@ void* clientManagement (void *dummyPt) {
 
                             ventaRealizada = true;
                             if (banderaCLIENTENUEVO) {
+                                int x = 0;
+
+                                /*
                                 NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
                                                                       _nodoCliente->getID(),
                                                                       _nodoCliente->getNombre(), _nodoCat->getCodigo(),
@@ -585,10 +584,11 @@ void* clientManagement (void *dummyPt) {
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       nodoPro->getPrecioPorUnidad() * cantidad);
                                 listaVentas->insertar(_nodoVenta);
+                                 */
 
                             }else {
-
-
+                                    int x = 0;
+                                /*
                                 NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
                                                                       _nodoCliente->getID(),
                                                                       _nodoCliente->getNombre(), _nodoCat->getCodigo(),
@@ -598,7 +598,9 @@ void* clientManagement (void *dummyPt) {
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       ((nodoPro->getPrecioPorUnidad() * cantidad)) - (nodoPro->getPrecioPorUnidad() * cantidad * 0.05));
                                 listaVentas->insertar(_nodoVenta);
-                            }
+                            */
+                                 }
+
                         }else {
                             codigosCorrectos = false;
 
@@ -793,7 +795,7 @@ void* clientManagement (void *dummyPt) {
             if(tester == "exit")
                 break;
         }
-        /
+
         // /write()
         //  if(tester == "exit")
         //    break;
