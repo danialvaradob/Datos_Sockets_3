@@ -575,6 +575,11 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
+            std::string msg2Provider = "Puede el cliente consultar el prducto mas comprado?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
             char * lineaValores = buffer;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
