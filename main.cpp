@@ -30,19 +30,6 @@
 */
 
 
-const int PRIMERA_VEZ = -1;
-const int OPCION_VENTA = 1;
-const int OPCION_PROVEEDOR_MAS_VENTAS = 2;
-const int OPCION_CLIENTE_MAS_COMPRO = 3;
-const int OPCION_PRODUCTO_MAS_VENDIDO = 4;
-const int OPCION_PRODUCTOS_CAMBIARON_STOCK = 5;
-const int OPCION_CATEGORIA_MAS_VENDIDA = 6;
-const int OPCION_SUPERMERCADO_MAS_VENTAS = 7;
-const int OPCION_LUGAR_CON_MAS_SUPERMERCADOS = 8;
-const int OPCION_IMPRIMIR_ARBOL_PREORDEN = 9;
-const int OPCION_ELIMINAR_PRODUCTO = 10;
-const int OPCION_ELIMINAR_CLIENTE = 11;
-const int OPCION_FACTURA = 12;
 int const TAMANHO_BUFFER = 512;
 
 
@@ -678,7 +665,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "¿Puede el cliente consultar el prducto mas comprado?";
+            std::string msg2Provider = "ï¿½Puede el cliente consultar el prducto mas comprado?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -737,7 +724,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "¿Puede el cliente consultar los productos que cambiaron su stock?";
+            std::string msg2Provider = "Puede el cliente consultar los productos que cambiaron su stock?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -770,7 +757,7 @@ void* clientManagement (void *dummyPt) {
                         ArbolProductos* pro = new ArbolProductos();
                         cat->getArbolProd(cat->raiz,cC,pro);
 
-                        std::string* nodoPro = new NodoProducto();
+                        std::string nodoPro;
                         pro->getProductosCambiaronStock(pro->raiz,nodoPro);
 
                         mensaje = nodoPro;
@@ -796,7 +783,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "¿Puede el cliente consultar la categoria mas vendida?";
+            std::string msg2Provider = "Puede el cliente consultar la categoria mas vendida?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -824,8 +811,8 @@ void* clientManagement (void *dummyPt) {
                     NodoSupermercado* nodoSuper = new NodoSupermercado();
                     ArbolCategorias* cat = new ArbolCategorias();
                     super->getArbolCat(cS,super->raiz,cat);
-                    
-                    NodoCategoria* nodoCat = new NodoCategoria();
+
+
                     cat->getCategoriaMasVendida(cat->raiz, nodoCat);
                     
                     mensaje = nodoCat->getDesc();
@@ -849,7 +836,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "¿Puede el cliente consultar el supermercado que mas vendio?";
+            std::string msg2Provider = "Puede el cliente consultar el supermercado que mas vendio?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -894,7 +881,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "¿Puede el cliente consultar el lugar con mas supermercados?";
+            std::string msg2Provider = "Puede el cliente consultar el lugar con mas supermercados?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -985,6 +972,10 @@ void* clientManagement (void *dummyPt) {
 
 
         }else if (tester == "ARTICU") {
+            int x = 0;
+
+        }else if (tester == "ARBOLES") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
 
         }else {
@@ -1149,6 +1140,8 @@ int main() {
     leerArchSupermercado(listaLugares);
     leerArchCategorias(listaLugares);
     leerArchProductos(listaLugares);
+    leerArchClientes(clientes);
+    leerArchProveedores(proveedores);
     //leerArchClientes();
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
