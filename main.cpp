@@ -532,33 +532,77 @@ void* clientManagement (void *dummyPt) {
             std::string codLugar(std::strtok (NULL, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
-            std::string cotProducto(std::strtok (NULL, ";"));
+            std::string codProducto(std::strtok (NULL, ";"));
 
+
+            bool codigosCorrectos = false;
+
+            int cL,cS,cC,cP;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+            cP = atoi(codProducto.c_str());
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        if (pro->existeProducto(pro->raiz,cP)) {
+                            NodoProducto* nodoPro = new NodoProducto();
+                            pro->getNodoProducto(cP,pro->raiz,nodoPro);
+                            codigosCorrectos = true;
+                        }
+
+                    } else {
+                        codigosCorrectos = false;
+                    }
+
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            bool ventaRealizada = false;
+            if (codigosCorrectos) {
+
+                //ACA VA ABOSLUTAMENTE TODO LO QUE HACES DE LA VENTA
+                //YA ACA SE VERIFICARON LOS CODIGOS
+                char serverMsg[] = "V_REALIZADA";
+                if (ventaRealizada)
+                    write(newsockfd,serverMsg,strlen(serverMsg));
+
+
+            } else {
+                char serverMsgNO[] = "V_NO_REALIZADA";
+                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+            }
 
             //if alguna no existe no lo deja
 
-            bool ventaRealizada = false;
             //DECLARACION DE VARIABLES
-            ArbolCategorias *_arbolCategorias = new ArbolCategorias();
-            ArbolProductos *_arbolProductos = new ArbolProductos();
-            NodoSupermercado *_nodoSup = new NodoSupermercado();
-            nodocategoria *_nodoCat = new nodocategoria();
-            NodoProducto *_nodoProd = new NodoProducto();
-            NodoProveedor *_nodoProv = new NodoProveedor();
-            NodoCliente *_nodoCliente = new NodoCliente();
+
 
 
             //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
 
 
 
-            char serverMsg[] = "V_REALIZADA";
-            char serverMsgNO[] = "V_NO_REALIZADA";
 
-            if (ventaRealizada)
-                write(newsockfd,serverMsg,strlen(serverMsg));
-            else
-                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+
 
 
         }else if (tester == "PMV") {//Proveedor con mas ventas
@@ -611,26 +655,40 @@ void* clientManagement (void *dummyPt) {
             cS = atoi(codSuper.c_str());
             cC = atoi(codCat.c_str());
 
+            bool codigosCorrectos = false;
+
             NodoLugar* nodo = new NodoLugar();
-            nodo = listaLugares->getNodoLugar(cL);
-            ArbolSupermercados* super = new ArbolSupermercados();
-            super = nodo->getArbolSuper();
-            ArbolCategorias* cat = new ArbolCategorias();
-            super->getArbolCat(cS,super->raiz,cat);
-            ArbolProductos* pro = new ArbolProductos();
-            cat->getArbolProd(cat->raiz,cC,pro);
-            NodoProducto* produc = new NodoProducto();
-            pro->getProductoMasVendido(pro->raiz,produc);
-            mensaje += produc->getNombreProducto();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        NodoProducto* nodoPro = new NodoProducto();
+                        pro->getProductoMasVendido(pro->raiz,nodoPro);
+
+                        mensaje = nodoPro->getNombreProducto();
+                    }
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
 
             write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
-
-
-
-
-
-
-
 
 
         }else if (tester == "PQRSS") {//productos que rebajaron su stock
