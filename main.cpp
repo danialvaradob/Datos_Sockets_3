@@ -529,31 +529,31 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,serverMsg,strlen(serverMsg));
 
         }else if (tester == "PMV") {//Proveedor con mas ventas
-
+                int x = 0;
         }else if (tester == "CQMC") {//CLIENTE QUE MAS COMPRO
-
+            int x = 0;
         }else if (tester == "PQMV") {//Producto mas vendido
-
-        }else if (tester = "PQRSS") {//productos que rebajaron su stock
-
+            int x = 0;
+        }else if (tester == "PQRSS") {//productos que rebajaron su stock
+            int x = 0;
         }else if (tester == "CMV") {//categoria mas vendida
-
+            int x = 0;
         }else if (tester == "SMV") {//supermercado con mas ventas
-
+            int x = 0;
         }else if (tester == "LQMV") {
-
+            int x = 0;
         }else if (tester == "IMPRESION") {
-
+            int x = 0;
         }else if (tester =="ELIMINAR ARTICULO" ) {
-
+            int x = 0;
         }else if (tester == "ANCHURA") {
-
+            int x = 0;
         }else if (tester == "DIJKSTRA") {
-
+            int x = 0;
         }else if (tester == "KRUSKAL") {
-
+            int x = 0;
         }else if (tester == "ARTICU") {
-
+            int x = 0;
         }else {
             std::string tester (buffer);
             std::cout << tester << std::endl;
@@ -719,7 +719,7 @@ int main() {
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     //listaLugares->profundida(20);
-    arbol->prim(listaLugares,78);
+    arbol->prim(listaLugares,20);
     //arbol->prim(listaLugares,20);
 
     char buffer[TAMANHO_BUFFER];
