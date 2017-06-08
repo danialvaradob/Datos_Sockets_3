@@ -1,7 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include "arbolexpansion.cpp"
-#include <iostream>
+
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -9,17 +8,14 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <iostream>
 #include <fstream>
-#include <strings.h>
 #include <stdlib.h>
 #include <string>
 #include <pthread.h>
 #include <vector>
-#include <cstring>
+
 #include "arbolproveedores.cpp"
 #include "arbolclientes.cpp"
-#include "nodoventa.h"
 #include "listaventas.h"
 
 /*
@@ -408,8 +404,7 @@ static int newsockfd;
 static int newsockfdc2;
 
 int codigoProveedorGlobal;
-int codigoClienteGlobal1;
-int codigoClienteGlobal2;
+int codigoClienteGlobal;
 bool banderaCLIENTENUEVO;
 
 
@@ -470,7 +465,6 @@ void* clientManagement (void *dummyPt) {
             bool existeCliente = false;
             clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
             if (existeCliente) {
-                codigoClienteGlobal1 = atoi(buffer);
                 std::cout << "El cliente ingresado es el correcto" << std::endl;
                 //le dice la cliente que si existe, no pide datos
                 write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
@@ -493,7 +487,6 @@ void* clientManagement (void *dummyPt) {
                 int telI = atoi(telefono.c_str());
 
                 clientes->IniciarInsercionB(codClienteI,codClienteI,nombre,direccion,telI);
-                codigoClienteGlobal1 = codClienteI;
 
                 char clienteCre[] = "CLIENTE_CREADO";
 
@@ -566,12 +559,10 @@ void* clientManagement (void *dummyPt) {
                             pro->getNodoProducto(cP,pro->raiz,nodoPro);
                             codigosCorrectos = true;
 
-                            NodoProveedor *nodoProv = new NodoProveedor();
-                            proveedores->getNodoProveedor(codigoProveedorGlobal, proveedores->raiz, nodoProv);
-                            NodoCliente *nodoCliente = new NodoCliente();
-                            clientes->getCliente(clientes->raizB, nodoCliente, codigoClienteGlobal1);
-                            nodoCliente->aumentarVentas();
-                            nodoProv->aumentarVentas();
+                            //_arbolProveedores->getNodoProveedor(codProveedor, _arbolProveedores->raiz, _nodoProv);
+                            //_arbolClientes->getCliente(_arbolClientes->raizB, _nodoCliente, idCliente);
+                            //_nodoCliente->aumentarVentas();
+                            //_nodoProv->aumentarVentas();
                             nodoPro->setCantidadEnStock(cantidad);
                             nodocategoria *nodoCat = new nodocategoria();
                             cat->getNodoCat(cat->raiz,cC, nodoCat);
@@ -581,29 +572,35 @@ void* clientManagement (void *dummyPt) {
 
                             ventaRealizada = true;
                             if (banderaCLIENTENUEVO) {
-                                NodoVenta *_nodoVenta = new NodoVenta(nodoProv->getID(), nodoProv->getNombre(),
-                                                                      nodoCliente->getID(),
-                                                                      nodoCliente->getNombre(), nodoCat->getCodigo(),
+                                int x = 0;
+
+                                /*
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
                                                                       nodoCat->getDesc(),
                                                                       nodoPro->getCodigoProducto(),
                                                                       nodoPro->getNombreProducto(),
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       nodoPro->getPrecioPorUnidad() * cantidad);
                                 listaVentas->insertar(_nodoVenta);
+                                 */
 
                             }else {
-
-
-                                NodoVenta *_nodoVenta = new NodoVenta(nodoProv->getID(), nodoProv->getNombre(),
-                                                                      nodoCliente->getID(),
-                                                                      nodoCliente->getNombre(), nodoCat->getCodigo(),
+                                    int x = 0;
+                                /*
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
                                                                       nodoCat->getDesc(),
                                                                       nodoPro->getCodigoProducto(),
                                                                       nodoPro->getNombreProducto(),
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       ((nodoPro->getPrecioPorUnidad() * cantidad)) - (nodoPro->getPrecioPorUnidad() * cantidad * 0.05));
                                 listaVentas->insertar(_nodoVenta);
-                            }
+                            */
+                                 }
+
                         }else {
                             codigosCorrectos = false;
 
@@ -762,7 +759,7 @@ void* clientManagement (void *dummyPt) {
 
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
-            std::string nodoInicial(std::strtok (NULL, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
 
             //esto se hace para simular que el proveedor acepta el pedido
             std::string msg2Provider = "Puede el cliente consultar el PRIM?";
@@ -770,9 +767,19 @@ void* clientManagement (void *dummyPt) {
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
+            std::string mensajeTotal = "";
+
+            std::string pesoTotal = arbol->prim(listaLugares,atoi(nodoInicialStr.c_str()));
+            std::string mensajeParcial = arbol->getPrim();
+
+            mensajeTotal = "Peso Total:  " + pesoTotal +  " " + mensajeParcial;
+
+            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
 
 
-            
+
+
+
             //write(newsockfd,msg,strlen(msg))
 
 
@@ -788,7 +795,7 @@ void* clientManagement (void *dummyPt) {
             if(tester == "exit")
                 break;
         }
-        /
+
         // /write()
         //  if(tester == "exit")
         //    break;
@@ -945,19 +952,19 @@ int main() {
     //leerArchClientes();
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
-    
+
    // listaLugares->profundida(1);
     //listaLugares->puntosDeArticulacion(1);
    // listaLugares->desvisitarTODO();
     //listaLugares->puntosDeArticulacion(1);
-    
+
    // std::cout<<"Pf: "<<std::endl;
    // listaLugares->profundida(20);
     //listaLugares->desvisitarTODO();
    // arbol->prim(listaLugares,78);
     //arbol->prim(listaLugares,20);
-    
-    listaLugares->Dijkstra(31, 8);
+
+    //listaLugares->Dijkstra(31, 8);
     
     
     
