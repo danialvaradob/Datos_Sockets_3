@@ -71,11 +71,15 @@ void SocketClient::writeSocket(std::string _message) {
     //v.push_back('\0'); // Make sure we are null-terminated
     //char* msg = &v[0];
     write(listenFd,_message.c_str() , strlen(_message.c_str()));
+    //send(listenFd,_message.c_str() , strlen(_message.c_str(),0);
 }
 
 void SocketClient::readSocket() {
 
     //emptyBuffer();
+    //memset(buffer,0,TAMANO_BUFFER - 1);
+    //recv(listenFd,buffer, TAMANO_BUFFER - 1,0);
+
     bzero(buffer,TAMANO_BUFFER);
     int n = read(listenFd, buffer, TAMANO_BUFFER - 1);
 

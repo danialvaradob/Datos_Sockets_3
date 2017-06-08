@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <pthread.h>
-#include "socketclient.h"
+
 int const NUM_THREADS = 1;
 //int const TAMANHO_BUFFER = 301;
 static int listenFd;
