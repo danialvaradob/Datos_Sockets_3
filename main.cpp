@@ -19,7 +19,6 @@
 #include <cstring>
 #include "arbolproveedores.h"
 #include "arbolclientes.h"
-#include "arbolsupermercados.h"
 
 const int PRIMERA_VEZ = -1;
 const int OPCION_VENTA = 1;
@@ -383,6 +382,8 @@ ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
 ArbolProductos* productos = new ArbolProductos();
 ArbolCategorias* categorias = new ArbolCategorias();
 ArbolSupermercados* supermercados = new ArbolSupermercados();
+ArbolProveedores* proveedores = new ArbolProveedores();
+ArbolClientes* clientes = new ArbolClientes();
 
 
 void *task1(void *);
@@ -439,14 +440,26 @@ void* clientManagement (void *dummyPt) {
 
         if(tester == "CLIENTE"){
 
+            char msg[] = "Esperando Respuesta";
+            write(newsockfd,msg,strlen(msg));
+
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
             std::string codigoCliente (buffer);
 
-            std::string msg2Provider = "Codigo Cliente Recibido";
+            std::string msg2Provider = "Codigo Cliente Recibido," + codigoCliente;
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+
+
+
+
             //if arbolClientes->existeCliente(_arbolClientes->raizB,idCliente,existeCliente);
-            if (codigoCliente == "1111") {
+            bool existeCliente = false;
+            clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
+            if (existeCliente) {
                 std::cout << "El cliente ingresado es el correcto" << std::endl;
                 //le dice la cliente que si existe, no pide datos
                 write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
@@ -496,13 +509,13 @@ void* clientManagement (void *dummyPt) {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
 
-            char * lineaValores = buffer;
+
 
             std::string msg2Provider = "Solicitud de Venta Recibida";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
-
+            char * lineaValores = buffer;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
@@ -529,11 +542,72 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,serverMsg,strlen(serverMsg));
 
         }else if (tester == "PMV") {//Proveedor con mas ventas
-                int x = 0;
-        }else if (tester == "CQMC") {//CLIENTE QUE MAS COMPRO
-            int x = 0;
+            std::string recorridoArbol = "El proveedor con mas ventas es:\n";
+            NodoProveedor* nodo = new NodoProveedor();
+            proveedores->getNodoProveedorMasVentas(proveedores->raiz,nodo);
+
+            recorridoArbol += nodo->getNombre();
+            std::string msg2Provider = "Puede el cliente consultar el proveedor con mas ventas?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
+
+        }else if (tester == "CMC") {//CLIENTE QUE MAS COMPRO
+            std::string clienteMasCompras = "El Cliente con mas Compras es:\n";
+
+            NodoCliente* nodo = new NodoCliente();
+            clientes->getClienteMasCompras(clientes->raizB,nodo);
+
+
+            clienteMasCompras += nodo->getNombre();
+            std::string msg2Provider = "Puede el cliente consultar el cliente con mas compras?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+            write(newsockfd,clienteMasCompras.c_str() , strlen(clienteMasCompras.c_str()));
+
+
         }else if (tester == "PQMV") {//Producto mas vendido
-            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            NodoLugar* nodo = new NodoLugar();
+            nodo = listaLugares->getNodoLugar(cL);
+            ArbolSupermercados* super = new ArbolSupermercados();
+            super = nodo->getArbolSuper();
+            ArbolCategorias* cat = new ArbolCategorias();
+            super->getArbolCat(cS,super->raiz,cat);
+            ArbolProductos* pro = new ArbolProductos();
+            cat->getArbolProd(cat->raiz,cC,pro);
+            NodoProducto* produc = new NodoProducto();
+            pro->getProductoMasVendido(pro->raiz,produc);
+            mensaje += produc->getNombreProducto();
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+
+
+
+
+
+
+
+
         }else if (tester == "PQRSS") {//productos que rebajaron su stock
             int x = 0;
         }else if (tester == "CMV") {//categoria mas vendida
@@ -664,16 +738,17 @@ void *provider (void *dummyPt) {
         bzero(bufferProveedor, TAMANHO_BUFFER);
         read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
         std::string respuestaProveedor (bufferProveedor);
-        //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
-        //
-        //break
-        // }
-       if (respuestaProveedor == "1111\n")
+        if (proveedores->existeProveedor(atoi(bufferProveedor),proveedores->raiz)) {
+            codigoProveedor = atoi(bufferProveedor);
             break;
+         }
+
     }
     bzero(bufferProveedor, TAMANHO_BUFFER);
     char msg[] = "CONECTADO";
     write(newsockProvider, msg, strlen(msg));
+    bzero(bufferProveedor, TAMANHO_BUFFER);
+    read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
     /*
     while (!loop) {
         bzero(bufferProveedor, TAMANHO_BUFFER);
@@ -716,6 +791,12 @@ int main() {
 
     leerArchLugares(listaLugares);
     leerArchConexiones(listaLugares);
+    leerArchSupermercado(listaLugares);
+    leerArchCategorias(listaLugares);
+    leerArchProductos(listaLugares);
+    leerArchProveedores(proveedores);
+    leerArchClientes(clientes);
+
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     //listaLugares->profundida(20);
