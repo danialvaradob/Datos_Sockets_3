@@ -757,13 +757,23 @@ void* clientManagement (void *dummyPt) {
 
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
-            std::string nodoInicial(std::strtok (NULL, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
 
             //esto se hace para simular que el proveedor acepta el pedido
             std::string msg2Provider = "Puede el cliente consultar el PRIM?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string mensajeTotal = "";
+
+            std::string pesoTotal = arbol->prim(listaLugares,atoi(nodoInicialStr.c_str()));
+            std::string mensajeParcial = arbol->getPrim();
+
+            mensajeTotal = "Peso Total:  " + pesoTotal +  " " + mensajeParcial;
+
+            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
+
 
 
 
@@ -952,7 +962,7 @@ int main() {
    // arbol->prim(listaLugares,78);
     //arbol->prim(listaLugares,20);
     
-    listaLugares->Dijkstra(31, 8);
+    //listaLugares->Dijkstra(31, 8);
     
     
     
