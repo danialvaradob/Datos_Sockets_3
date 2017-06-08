@@ -47,7 +47,7 @@ const int OPCION_IMPRIMIR_ARBOL_PREORDEN = 9;
 const int OPCION_ELIMINAR_PRODUCTO = 10;
 const int OPCION_ELIMINAR_CLIENTE = 11;
 const int OPCION_FACTURA = 12;
-int const TAMANHO_BUFFER = 301;
+int const TAMANHO_BUFFER = 512;
 
 
 
@@ -441,21 +441,8 @@ void* clientManagement (void *dummyPt) {
 
 
     char clienteError[] = "NO_EXISTE";
+    char clienteExistemsg[] = "CLIENTE_EXISTE";
 
-    bzero(buffer, TAMANHO_BUFFER);
-    read(newsockfd, buffer, TAMANHO_BUFFER-1);
-    //ACA RECIBE EL CODIGO DEL CLLIENTE
-
-    while (true) {
-        std::string codigoCliente (buffer);
-        if (codigoCliente == "1111") {
-            break;
-        }
-        write(newsockfd,clienteError,strlen(clienteError));
-        read(newsockfd,buffer,TAMANHO_BUFFER -1);
-
-
-    }
 /////////////////////////////////////////
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
@@ -778,6 +765,8 @@ void* clientManagement (void *dummyPt) {
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
+
+
             
             //write(newsockfd,msg,strlen(msg))
 
@@ -890,44 +879,45 @@ void *provider (void *dummyPt) {
     //write(newsockProvider, msg, strlen(msg));
     bool loop = false;
    while(true) {
-        bzero(bufferProveedor,TAMANHO_BUFFER);
-        char msg2[] = "PORFAVOR DIGITE SU CODIGO: ";
-        write(newsockProvider,msg2,strlen(msg2));
-        read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
-        std::string respuestaProveedor (bufferProveedor);
-        if (proveedores->existeProveedor(atoi(bufferProveedor),proveedores->raiz)) {
-            codigoProveedorGlobal = atoi(bufferProveedor);
-            break;
-    }
-    bzero(bufferProveedor, TAMANHO_BUFFER);
-    char msg[] = "CONECTADO";
-    write(newsockProvider, msg, strlen(msg));
-    /*
-    while (!loop) {
-        bzero(bufferProveedor, TAMANHO_BUFFER);
-        read(newsockProvider, bufferProveedor, TAMANHO_BUFFER - 1);
+       bzero(bufferProveedor, TAMANHO_BUFFER);
+       char msg2[] = "PORFAVOR DIGITE SU CODIGO: ";
+       write(newsockProvider, msg2, strlen(msg2));
+       read(newsockProvider, bufferProveedor, TAMANHO_BUFFER - 1);
+       std::string respuestaProveedor(bufferProveedor);
+       if (proveedores->existeProveedor(atoi(bufferProveedor), proveedores->raiz)) {
+           codigoProveedorGlobal = atoi(bufferProveedor);
+           break;
+       }
+   }
+       bzero(bufferProveedor, TAMANHO_BUFFER);
+       char msg[] = "CONECTADO";
+       write(newsockProvider, msg, strlen(msg));
+       /*
+       while (!loop) {
+           bzero(bufferProveedor, TAMANHO_BUFFER);
+           read(newsockProvider, bufferProveedor, TAMANHO_BUFFER - 1);
 
-        std::string tester(bufferProveedor);
+           std::string tester(bufferProveedor);
 
-        //Proveedor espera una venta
-        if (tester == "1") {
-            sleep(10000);
+           //Proveedor espera una venta
+           if (tester == "1") {
+               sleep(10000);
 
-        }
+           }
 
-        std::cout << tester << std::endl;
-        char serverMsg[] = "BIENVENIDO AL SERVIDOR";
-        write(newsockProvider, serverMsg, strlen(serverMsg));
+           std::cout << tester << std::endl;
+           char serverMsg[] = "BIENVENIDO AL SERVIDOR";
+           write(newsockProvider, serverMsg, strlen(serverMsg));
 
-        if (tester == "exit")
-            break;
-        }
+           if (tester == "exit")
+               break;
+           }
 
-    std::cout << "\nClosing thread and conn" << std::endl;
-    close(newsockProvider);
+       std::cout << "\nClosing thread and conn" << std::endl;
+       close(newsockProvider);
 
-    }*/
-
+       }*/
+   }
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
