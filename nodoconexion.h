@@ -27,6 +27,8 @@ public:
     NodoConexion* anterior;
     NodoConexion* siguiente;
     bool visitado;
+    
+    int codigoUltimaConexion;
 
 private:
 
