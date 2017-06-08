@@ -729,7 +729,6 @@ int main() {
         }
 
         //pthread_create(&threadA[noThread], NULL, clientManagement, NULL);
-
         noThread++;
     }
 
