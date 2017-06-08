@@ -5,10 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-//#include <netdb.h>
+#include <netdb.h>
 #include <sys/types.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <iostream>
 #include <fstream>
 #include <strings.h>
@@ -17,6 +17,8 @@
 #include <pthread.h>
 #include <vector>
 #include <cstring>
+#include "arbolproveedores.cpp"
+#include "arbolclientes.cpp"
 /*
 #include "arbolproveedores.cpp"
 #include "arbolclientes.cpp"
@@ -386,7 +388,13 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 
 ListaLugares* listaLugares = new ListaLugares();
 ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
-/*
+ArbolClientes* clientes = new ArbolClientes();
+ArbolProveedores* proveedores = new ArbolProveedores();
+ArbolSupermercados* supermercados = new ArbolSupermercados();
+ArbolCategorias* categorias = new ArbolCategorias();
+ArbolProductos* productos = new ArbolProductos();
+
+
 void *task1(void *);
 static int newsockfd1;
 static int newsockfd2;
@@ -446,13 +454,6 @@ void* clientManagement (void *dummyPt) {
 /////////////////////////////////////////
     while(!loop) {
         bzero(buffer, TAMANHO_BUFFER);
-<<<<<<< HEAD
-        read(newsockfd, buffer, TAMANHO_BUFFER-1);
-        std::string parteString,parteStr;
-        std::string tester (buffer);
-        parteString = tester.substr(0,1);
-        if (tester == "PROFUNDIDAD") {
-=======
         read(newsockfd, buffer, TAMANHO_BUFFER - 1);
         std::string parteString, parteStr;
         std::string tester(buffer);
@@ -509,14 +510,6 @@ void* clientManagement (void *dummyPt) {
 
         }else if (tester == "PROFUNDIDAD") {
 
-            char msg[] = "Esperando Respuesta";
-            write(newsockfd,msg,strlen(msg));
-
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
-            std::string nodoInicialStr (buffer);
-
->>>>>>> origin/master
             std::string recorridoArbol = "Recorrido en Profundidad:\n";
             recorridoArbol += listaLugares->profundida(nodoInicial);
             std::cout << recorridoArbol << std::endl;
@@ -535,13 +528,6 @@ void* clientManagement (void *dummyPt) {
         } else if ( parteString == "v") {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
-<<<<<<< HEAD
-            char serverMsg[] = "V_REALIZADA";
-            write(newsockfd,serverMsg,strlen(serverMsg));
-
-=======
-
-
 
             std::string msg2Provider = "Solicitud de Venta Recibida";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -745,13 +731,13 @@ void* clientManagement (void *dummyPt) {
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
             
-            write(newsockfd,msg,strlen(msg))
+            //write(newsockfd,msg,strlen(msg))
 
 
 
         }else if (tester == "ARTICU") {
             int x = 0;
->>>>>>> origin/master
+
         }else {
             std::string tester (buffer);
             std::cout << tester << std::endl;
@@ -861,16 +847,9 @@ void *provider (void *dummyPt) {
         write(newsockProvider,msg2,strlen(msg2));
         read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
         std::string respuestaProveedor (bufferProveedor);
-<<<<<<< HEAD
-        //if (arbolProveedores->exiteProveedor(respuestaProveedor)) {
-        //
-        //break
-        // }
-       if (respuestaProveedor == "1111")
-=======
         if (proveedores->existeProveedor(atoi(bufferProveedor),proveedores->raiz)) {
             codigoProveedorGlobal = atoi(bufferProveedor);
->>>>>>> origin/master
+//>>>>>>> origin/master
             break;
     }
     bzero(bufferProveedor, TAMANHO_BUFFER);
@@ -918,6 +897,10 @@ int main() {
 
     leerArchLugares(listaLugares);
     leerArchConexiones(listaLugares);
+    leerArchSupermercado(listaLugares);
+    leerArchCategorias(listaLugares);
+    leerArchProductos(listaLugares);
+    leerArchClientes()
     //ArbolExpansionMinimo* arbolExpansionMinimo = new ArbolExpansionMinimo(_listaLugares);
     //int min = arbolExpansionMinimo->arbolExpancionPrim(_listaLugares);
     
@@ -936,7 +919,7 @@ int main() {
     
     
     
-/*
+
     char buffer[TAMANHO_BUFFER];
     int pId, portNo, listenFd;
     socklen_t len; //store size of the address
@@ -1055,7 +1038,6 @@ int main() {
     for(int i = 0; i < 3; i++) {
         pthread_join(threadA[i], NULL);
     }
-*/
 
 
 
