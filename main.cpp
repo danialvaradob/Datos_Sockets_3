@@ -454,11 +454,6 @@ void* clientManagement (void *dummyPt) {
 
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
-
-
-
-
-            //if arbolClientes->existeCliente(_arbolClientes->raizB,idCliente,existeCliente);
             bool existeCliente = false;
             clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
             if (existeCliente) {
@@ -600,11 +595,6 @@ void* clientManagement (void *dummyPt) {
             //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
 
 
-
-
-
-
-
         }else if (tester == "PMV") {//Proveedor con mas ventas
             std::string recorridoArbol = "El proveedor con mas ventas es:\n";
             NodoProveedor* nodo = new NodoProveedor();
@@ -711,9 +701,15 @@ void* clientManagement (void *dummyPt) {
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
             std::string nodoInicialStr (buffer);
 
-        }else if (tester == "DIJKSTRA") {
+        }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicial(std::strtok (NULL, ";"));
+
+
+        }else if ( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) {
             int x = 0;
-        }else if (tester == "KRUSKAL") {
+        }else if (memcmp( buffer, "PRIM", strlen( "PRIM"))) {
             int x = 0;
         }else if (tester == "ARTICU") {
             int x = 0;
