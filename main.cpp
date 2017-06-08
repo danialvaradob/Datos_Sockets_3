@@ -1,5 +1,5 @@
 #include <iostream>
-#include "arbolexpansion.cpp"
+#include "arbolexpansion.h"
 
 #include <string.h>
 #include <unistd.h>
@@ -14,8 +14,8 @@
 #include <pthread.h>
 #include <vector>
 
-#include "arbolproveedores.cpp"
-#include "arbolclientes.cpp"
+#include "arbolproveedores.h"
+#include "arbolclientes.h"
 #include "listaventas.h"
 
 /*
