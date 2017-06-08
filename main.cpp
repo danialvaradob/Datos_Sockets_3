@@ -860,7 +860,7 @@ void* clientManagement (void *dummyPt) {
                 ArbolSupermercados* super = new ArbolSupermercados();
                 super = nodo->getArbolSuper();
                 
-                NodoSupermecado* nodoSup = new NodoSupermercado();
+                NodoSupermercado* nodoSup = new NodoSupermercado();
                 super->getSuperMasVendido(super->raiz, nodoSup);
                 
                 mensaje = nodoSup->getNombre();
