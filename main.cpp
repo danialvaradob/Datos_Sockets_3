@@ -678,7 +678,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "Puede el cliente consultar el prducto mas comprado?";
+            std::string msg2Provider = "¿Puede el cliente consultar el prducto mas comprado?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -732,12 +732,191 @@ void* clientManagement (void *dummyPt) {
 
         }else if (tester == "PQRSS") {//productos que rebajaron su stock
             int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "¿Puede el cliente consultar los productos que cambiaron su stock?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        std::string* nodoPro = new NodoProducto();
+                        pro->getProductosCambiaronStock(pro->raiz,nodoPro);
+
+                        mensaje = nodoPro;
+                    }
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            
+            
         }else if (tester == "CMV") {//categoria mas vendida
             int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "¿Puede el cliente consultar la categoria mas vendida?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+                    
+                    NodoCategoria* nodoCat = new NodoCategoria();
+                    cat->getCategoriaMasVendida(cat->raiz, nodoCat);
+                    
+                    mensaje = nodoCat->getDesc();
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            
         }else if (tester == "SMV") {//supermercado con mas ventas
             int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "¿Puede el cliente consultar el supermercado que mas vendio?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+                
+                NodoSupermecado* nodoSup = new NodoSupermercado();
+                super->getSuperMasVendido(super->raiz, nodoSup);
+                
+                mensaje = nodoSup->getNombre();
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            
         }else if (tester == "LQMV") {
             int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "¿Puede el cliente consultar el lugar con mas supermercados?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            //std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            //int cL,cS,cC;
+            //cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            listaLugares->getLugarMasSuper(nodo);
+            mensaje = nodo->getNombre();
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
         }else if (tester == "IMPRESION") {
             int x = 0;
         }else if (tester =="ELIMINAR ARTICULO" ) {
