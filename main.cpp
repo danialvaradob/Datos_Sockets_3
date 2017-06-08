@@ -377,6 +377,10 @@ void leerArchClientes(ArbolClientes * _ArbolClientes){
 
 ListaLugares* listaLugares = new ListaLugares();
 ArbolExpansionMinimo* arbol = new ArbolExpansionMinimo();
+ArbolProductos* productos = new ArbolProductos();
+ArbolCategorias* categorias = new ArbolCategorias();
+ArbolSupermercados* supermercados = new ArbolSupermercados();
+
 
 void *task1(void *);
 static int newsockfd1;
@@ -501,10 +505,51 @@ void* clientManagement (void *dummyPt) {
             std::string codCat(std::strtok (NULL, ";"));
             std::string cotProducto(std::strtok (NULL, ";"));
 
+            //if alguna no existe no lo deja
+
+
+            //DECLARACION DE VARIABLES
+            ArbolCategorias *_arbolCategorias = new ArbolCategorias();
+            ArbolProductos *_arbolProductos = new ArbolProductos();
+            NodoSupermercado *_nodoSup = new NodoSupermercado();
+            nodocategoria *_nodoCat = new nodocategoria();
+            NodoProducto *_nodoProd = new NodoProducto();
+            NodoProveedor *_nodoProv = new NodoProveedor();
+            NodoCliente *_nodoCliente = new NodoCliente();
+
+
+            //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
+
 
 
             char serverMsg[] = "V_REALIZADA";
             write(newsockfd,serverMsg,strlen(serverMsg));
+
+        }else if (tester == "PMV") {//Proveedor con mas ventas
+
+        }else if (tester == "CQMC") {//CLIENTE QUE MAS COMPRO
+
+        }else if (tester == "PQMV") {//Producto mas vendido
+
+        }else if (tester = "PQRSS") {//productos que rebajaron su stock
+
+        }else if (tester == "CMV") {//categoria mas vendida
+
+        }else if (tester == "SMV") {//supermercado con mas ventas
+
+        }else if (tester == "LQMV") {
+
+        }else if (tester == "IMPRESION") {
+
+        }else if (tester =="ELIMINAR ARTICULO" ) {
+
+        }else if (tester == "ANCHURA") {
+
+        }else if (tester == "DIJKSTRA") {
+
+        }else if (tester == "KRUSKAL") {
+
+        }else if (tester == "ARTICU") {
 
         }else {
             std::string tester (buffer);
