@@ -11,7 +11,7 @@
 #include <string>
 #include <pthread.h>
 
-using namespace std;
+//using namespace std;
 
 #include <winsock2.h>
 #include <iostream>
@@ -32,7 +32,7 @@ int main()
     WSAStartup(MAKEWORD(2,0), &WSAData);
     server = socket(AF_INET, SOCK_STREAM, 0);
  
-    addr.sin_addr.s_addr = inet_addr("192.168.0.15"); // replace the ip with your futur server ip address. If server AND client are running on the same computer, you can use the local ip 127.0.0.1
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // replace the ip with your futur server ip address. If server AND client are running on the same computer, you can use the local ip 127.0.0.1
     addr.sin_family = AF_INET;
     addr.sin_port = htons(8889);
  
@@ -45,11 +45,13 @@ int main()
  	
 	
 	string proveedor = "PROVEEDOR";
-	send(server, proveedor.c_str(), strlen(msg_char),0);
+	send(server, proveedor.c_str(), strlen(proveedor.c_str()),0);
 	
+ 	recv(server, buffer, sizeof(buffer), 0);
+ 	cout<<buffer<<endl;
  	
  for (;;){
- 	recv(server, buffer, sizeof(buffer), 0);
+ 	
  	
  	//std::cout<<"Ingrese su codigo: "<<endl;
 	std::getline(std::cin, msg);
@@ -58,8 +60,11 @@ int main()
 	memset(buffer, 0, sizeof(buffer));
 	
 	recv(server, buffer, sizeof(buffer), 0);
-	
- 	if (buffer == "CONECTADO"){
+	cout<<buffer<<endl;
+ 	if (std::string (buffer) == "CONECTADO"){
+ 		
+ 				while (true){
+				
 			
 				cout<<"||||||||||||||||||||||||||||||||Bienvenido al sistema|||||||||||||||||||||||||||||||||||||||\r\n"<<endl;
 				cout<<"Este es el menu principal"<<endl;
@@ -85,7 +90,7 @@ int main()
 				std::getline(std::cin, msg);
 				msg_char = msg.c_str(); //Convertir el string a constant char*
 				int int_msg = std::stoi(msg);
-				
+				memset(buffer, 0, sizeof(buffer));
 				switch(int_msg){
 					case 1:
 						while (true){ //Se reciben las solicitued de ventas del servidor
@@ -130,33 +135,34 @@ int main()
 							memset(buffer, 0, sizeof(buffer));
 						break;
 					}
-					//break;
+					break;
 					case 2:
 						{
+						memset(buffer, 0, sizeof(buffer));
 						cout<<"Proveedor mas ventas"<<endl;
 						string mayorProveedor_msg = "VENTAS PROVEEDOR";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"El proveedor con mas ventas es "<<buffer<<endl; 
 						
 						memset(buffer, 0, sizeof(buffer));
-						
+						break;
 						//Solicitar proveedor con mas ventas al servidor
 						}
-						break;
+						
 					case 3:
 						{
 						cout<<"Producto con mas ventas"<<endl;
 						//cout<<" mas ventas"<<endl;
 						string mayorProveedor_msg = "VENTAS PRODUCTO";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"El producto con mas ventas es "<<buffer<<endl; 
 						
 						memset(buffer, 0, sizeof(buffer));
-						
+						break;
 						//Solicitar proveedor con mas ventas al servidor
 						}
 						
@@ -167,7 +173,7 @@ int main()
 						//Solicitar productos que rebajaron stock al servidor
 						{
 						string mayorProveedor_msg = "VENTAS STOCK";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Los productos que rebajaron su stock son: "<<buffer<<endl; 
@@ -180,7 +186,7 @@ int main()
 						cout<<"Categoria con mas ventas"<<endl;
 						{
 						string mayorProveedor_msg = "VENTAS CATEGORIA";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -194,7 +200,7 @@ int main()
 						cout<<"Supermercado con mas ventas"<<endl;
 						{
 						string mayorProveedor_msg = "VENTAS SUPERMERCADO";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -208,7 +214,7 @@ int main()
 						cout<<"Lugar con mas supermercado"<<endl;
 						{
 						string mayorProveedor_msg = "SUPERMERCADO LUGAR";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -222,7 +228,7 @@ int main()
 						cout<<"Lugar con mas ventas"<<endl;
 						{
 						string mayorProveedor_msg = "VENTAS LUGAR";
-						send(server, mayorProveedor_msg.c_str(), strlen(msg_char),0);
+						send(server, mayorProveedor_msg.c_str(), strlen(mayorProveedor_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -236,7 +242,7 @@ int main()
 						cout<<"Recorrido de arboles"<<endl;
 						{
 						string otros_msg = "RECORRIDOS";
-						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -248,8 +254,8 @@ int main()
 						break;
 					case 10:
 						{
-						string mayorProveedor_msg = "ELIMINAR C";
-						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						string otros_msg = "ELIMINAR C";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -264,8 +270,8 @@ int main()
 						cout<<"Eliminar producto"<<endl;
 						//Eliminar producto
 						{
-						string mayorProveedor_msg = "ELIMINAR P";
-						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						string otros_msg = "ELIMINAR P";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -278,8 +284,8 @@ int main()
 						cout<<"Lista de adyacencia"<<endl;
 						//Solicitar lista de adyacencia
 						{
-						string mayorProveedor_msg = "ADYACENCIA";
-						send(server, otros_msg.c_str(), strlen(msg_char),0);
+						string otros_msg = "ADYACENCIA";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
 						
 						recv(server, buffer, sizeof(buffer), 0);
 						cout<<"Categoria que mas vendio: "<<buffer<<endl; 
@@ -290,56 +296,100 @@ int main()
 						break;
 					case 13:
 						cout<<"Recorrido en profundidad"<<endl;
+						{
+						string otros_msg = "PROFUNDIDAD";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Profundidad: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						//Solicitar recorrido en profundidad
 						break;
 					case 14:
 						cout<<"Recorrido en anchura"<<endl;
 						//Solicitar recorrido en anchura
+						{
+						string otros_msg = "ANCHURA";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Recorrido anchura: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 15:
 						cout<<"Prim"<<endl;
 						//Solicitar Prim
+						{
+						string otros_msg = "PRIM";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Prim: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 16:
 						cout<<"Kruskal"<<endl;
 						//Solicitar Kruskal
+						{
+						string otros_msg = "Kruskal";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Kruskal: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 17:
 						cout<<"Dijkstra"<<endl;
 						//Solicitar Dijkstra
+						{
+						string otros_msg = "DIJKSTRA";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Dijkstra: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					case 18:
 						cout<<"Puntos de articulacion"<<endl;
 						//Solicitar puntos de articulacion
+						{
+						string otros_msg = "ARTICULACION";
+						send(server, otros_msg.c_str(), strlen(otros_msg.c_str()),0);
+						
+						recv(server, buffer, sizeof(buffer), 0);
+						cout<<"Puntos de articulacion: "<<buffer<<endl; 
+						
+						memset(buffer, 0, sizeof(buffer));
+
+						}
 						break;
 					
 					cout<<"Opcion invalida"<<endl;
 				
 						
 				}
+			 }
 			}
 			
 }
 
 		
-	
-	msg_char = "CLIENTE_2"; 
-	send(server, msg_char, strlen(msg_char),0);
-	
-	recv(server, buffer, sizeof(buffer), 0);
-        
-	
-    cout << buffer << endl;
-    memset(buffer, 0, sizeof(buffer));
-	
-	//buffer = cin.get();
-	std::getline(std::cin, msg);
-	msg_char = msg.c_str();
-	send(server, msg_char, strlen(msg_char),0);
-//	memset(msg_char, 0, sizeof(msg_char));
-	
-	//cin.get();				
-    //cout << "Message sent!" << endl;
+    return 0;
  } 
     //closesocket(server);
     //WSACleanup();
