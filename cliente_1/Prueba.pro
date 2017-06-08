@@ -16,13 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     dialogcompra.cpp \
     socketclient.cpp \
-    widgetprofundidad.cpp
+    widgetprofundidad.cpp \
+    dialogclientenuevo.cpp
 
 HEADERS  += mainwindow.h \
     dialogcompra.h \
     socketclient.h \
-    widgetprofundidad.h
+    widgetprofundidad.h \
+    dialogclientenuevo.h
 
 FORMS    += mainwindow.ui \
     dialogcompra.ui \
-    widgetprofundidad.ui
+    widgetprofundidad.ui \
+    dialogclientenuevo.ui
