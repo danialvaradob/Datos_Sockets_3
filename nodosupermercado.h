@@ -17,8 +17,7 @@ public:
             cantidadVentas = 0;
             Hder = NULL;
             Hizq = NULL;
-            punteroProductos = NULL;
-            punteroCategorias = NULL;
+            punteroCategorias = new ArbolCategorias();
 
     }
 
@@ -30,8 +29,7 @@ public:
         cantidadVentas = 0;
         Hder = NULL;
         Hizq = NULL;
-        punteroProductos = NULL;
-        punteroCategorias = NULL;
+        punteroCategorias = new ArbolCategorias();
     }
 
     void insertarNodo(int _codSuper,int _codLugar, std::string _nombre );
@@ -44,7 +42,6 @@ public:
 
     NodoSupermercado *Hizq, *Hder;
     ArbolCategorias* punteroCategorias;
-    ArbolProductos*  punteroProductos;
 
     int FB;
 

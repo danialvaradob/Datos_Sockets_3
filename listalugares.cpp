@@ -189,7 +189,7 @@ bool ListaLugares::todosVisitados() {
     return true;
 }
 
-
+/*
 std::string ListaLugares::profundida(int _puntoInicial) {
     std::string recorrido_str = "";
 
@@ -226,7 +226,8 @@ std::string ListaLugares::profundida(int _puntoInicial) {
     }
     return recorrido_str;
 }
-
+*/
+/*
 std::string ListaLugares::anchura(int _puntoInicial) {
     std::string recorrido_str = "";
 
@@ -263,7 +264,7 @@ std::string ListaLugares::anchura(int _puntoInicial) {
     }
     return recorrido_str;
 }
-
+*/
 void ListaLugares::insertarLugar(NodoLugar* nuevo) {
 
     if (listaVacia()){
@@ -339,7 +340,7 @@ int ListaLugares::getMenorPeso() {  //Para obtener el peso real de cualquier nod
 	
 	
 
-
+/*
 void ListaLugares::Dijkstra(int inicio, int final){
 	
 	NodoLugar* aux = primero;
@@ -545,3 +546,4 @@ std::string ListaLugares::puntosDeArticulacion(int _puntoInicial) {
 
     return recorrido_str;
 }
+*/

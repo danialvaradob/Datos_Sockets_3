@@ -1,5 +1,5 @@
 #include "arbolproductos.h"
-#include "nodoproducto.cpp"
+//#include "nodoproducto.cpp"
 //#include <string>
 //#include <iostream>
 #include <sstream>

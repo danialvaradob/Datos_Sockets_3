@@ -184,9 +184,13 @@ std::string ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
 
     _grafo->desvisitarTODO();
     std::cout << "El peso total es: "<< pesoTotal << std::endl;
-    return std::to_string(pesoTotal);
+    std::stringstream fl;
+    std::string s;
+    fl >> pesoTotal;
+    s = fl.str();
+    return s;
 }
-
+/*
 std::string ArbolExpansionMinimo::getPrim() {
     std::string mensaje = "";
     NodoArbolExpansion* aux = primero;
@@ -198,7 +202,7 @@ std::string ArbolExpansionMinimo::getPrim() {
     } while (aux!= primero);
 
     return mensaje;
-}
+}*/
 
 void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
     NodoLugar *inicio = _grafo->getNodoLugar(_primerNodo);
