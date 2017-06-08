@@ -224,6 +224,7 @@ std::string ListaLugares::profundida(int _puntoInicial) {
         }
         cantLugares--;
     }
+    return recorrido_str;
 }
 
 void ListaLugares::insertarLugar(NodoLugar* nuevo) {
