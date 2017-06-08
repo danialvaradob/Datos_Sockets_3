@@ -496,23 +496,24 @@ void* clientManagement (void *dummyPt) {
             }
 
 
-        }else if (tester == "PROFUNDIDAD") {
+        }else if ( memcmp( buffer, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) {
+
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
 
             std::string recorridoArbol = "Recorrido en Profundidad:\n";
-            recorridoArbol += listaLugares->profundida(nodoInicial);
+            recorridoArbol += listaLugares->profundida(atoi(nodoInicialStr.c_str()));
             std::cout << recorridoArbol << std::endl;
             std::string msg2Provider = "Puede el cliente consultar la profundidad?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
-
-            std::string msgMal = "NO fue permitido";
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            std::string bufProvee (bufferProveedor);
-            if (bufProvee == "SI\n")
-                write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
-            else
-                write(newsockfd,msgMal.c_str(),strlen(msgMal.c_str()));
+
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
         } else if ( parteString == "v") {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
@@ -742,12 +743,31 @@ void* clientManagement (void *dummyPt) {
         }else if (tester =="ELIMINAR ARTICULO" ) {
             int x = 0;
         }else if (tester == "ANCHURA") {
+            /*
             char msg[] = "Esperando Respuesta";
             write(newsockfd,msg,strlen(msg));
 
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
             std::string nodoInicialStr (buffer);
+             */
+
+
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
+
+            std::string recorridoArbol = "Recorrido en Profundidad:\n";
+            recorridoArbol += listaLugares->profundida(atoi(nodoInicialStr.c_str()));
+            std::cout << recorridoArbol << std::endl;
+            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
 
         }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
 
