@@ -382,6 +382,8 @@ ArbolCategorias* categorias = new ArbolCategorias();
 ArbolProductos* productos = new ArbolProductos();
 ListaVentas* listaVentas = new ListaVentas();
 ArbolExpansionMinimo* arbolKruskal = new ArbolExpansionMinimo();
+ArbolExpansionMinimo* arbolKruskal2 = new ArbolExpansionMinimo();
+ArbolExpansionMinimo* arbol2 = new ArbolExpansionMinimo();
 
 void *task1(void *);
 static int newsockfd1;
@@ -1307,10 +1309,10 @@ void* clientManagement2 (void *dummyPt) {
     //
 
     std::cout << "Thread No: " << pthread_self() << std::endl;
-    char buffer[TAMANHO_BUFFER];
-    bzero(buffer, TAMANHO_BUFFER);
+    char bufferC2[TAMANHO_BUFFER];
+    bzero(bufferC2, TAMANHO_BUFFER);
     char msg[] = "CONECTADO AL SERVIDOR";
-    write(newsockfd,msg,strlen(msg));
+    write(newsockfdc2,msg,strlen(msg));
     bool loop = false;
 
 
@@ -1319,21 +1321,21 @@ void* clientManagement2 (void *dummyPt) {
 
 /////////////////////////////////////////
     while(!loop) {
-        bzero(buffer, TAMANHO_BUFFER);
-        read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+        bzero(bufferC2, TAMANHO_BUFFER);
+        read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
         std::string parteString, parteStr;
-        std::string tester(buffer);
+        std::string tester(bufferC2);
         parteString = tester.substr(0,1);
 
 
         if(tester == "CLIENTE"){
 
             char msg[] = "Esperando Respuesta";
-            write(newsockfd,msg,strlen(msg));
+            write(newsockfdc2,msg,strlen(msg));
 
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
-            std::string codigoCliente (buffer);
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
+            std::string codigoCliente (bufferC2);
 
             std::string msg2Provider = "Codigo Cliente Recibido," + codigoCliente;
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -1344,20 +1346,20 @@ void* clientManagement2 (void *dummyPt) {
 
 
             bool existeCliente = false;
-            std::string codCliente (buffer);
-            clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
+            std::string codCliente (bufferC2);
+            clientes->existeCliente(clientes->raizB,atoi(bufferC2),existeCliente);
             if (existeCliente) {
                 std::cout << "El cliente ingresado es el correcto" << std::endl;
                 //le dice la cliente que si existe, no pide datos
-                write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
+                write(newsockfdc2,clienteExistemsg,strlen(clienteExistemsg));
             } else {
                 banderaCLIENTENUEVO = true;
                 //le dice al cliente que no existe,
-                write(newsockfd,clienteError,strlen(clienteError));
-                bzero(buffer, TAMANHO_BUFFER);
-                read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+                write(newsockfdc2,clienteError,strlen(clienteError));
+                bzero(bufferC2, TAMANHO_BUFFER);
+                read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
-                char * lineaValores = buffer;
+                char * lineaValores = bufferC2;
 
                 std::string codClienteNuevo(std::strtok (lineaValores, ";"));
                 std::string nombre(std::strtok (NULL, ";"));
@@ -1371,15 +1373,15 @@ void* clientManagement2 (void *dummyPt) {
 
                 char clienteCre[] = "CLIENTE_CREADO";
 
-                write(newsockfd,clienteCre,strlen(clienteCre));
+                write(newsockfdc2,clienteCre,strlen(clienteCre));
 
 
             }
             codigoClienteGlobal = atoi(codigoCliente.c_str());
 
-        }else if ( (memcmp( buffer, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) == 0) {
+        }else if ( (memcmp( bufferC2, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) == 0) {
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));
 
@@ -1393,7 +1395,7 @@ void* clientManagement2 (void *dummyPt) {
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
 
-            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            write(newsockfdc2,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
 
         } else if ( parteString == "v") {
 
@@ -1403,7 +1405,7 @@ void* clientManagement2 (void *dummyPt) {
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string venta(std::strtok (lineaValores, ";"));
             std::string codLugar(std::strtok (NULL, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
@@ -1514,12 +1516,12 @@ void* clientManagement2 (void *dummyPt) {
                 //YA ACA SE VERIFICARON LOS CODIGOS
                 char serverMsg[] = "V_REALIZADA";
                 if (ventaRealizada)
-                    write(newsockfd,serverMsg,strlen(serverMsg));
+                    write(newsockfdc2,serverMsg,strlen(serverMsg));
 
 
             } else {
                 char serverMsgNO[] = "V_NO_REALIZADA";
-                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+                write(newsockfdc2,serverMsgNO,strlen(serverMsgNO));
             }
 
             //if alguna no existe no lo deja
@@ -1541,7 +1543,7 @@ void* clientManagement2 (void *dummyPt) {
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
-            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            write(newsockfdc2,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
 
 
         }else if (tester == "CMC") {//CLIENTE QUE MAS COMPRO
@@ -1556,21 +1558,21 @@ void* clientManagement2 (void *dummyPt) {
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
-            write(newsockfd,clienteMasCompras.c_str() , strlen(clienteMasCompras.c_str()));
+            write(newsockfdc2,clienteMasCompras.c_str() , strlen(clienteMasCompras.c_str()));
 
 
         }else if (tester == "PQMV") {//Producto mas vendido
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente consultar el prducto mas comprado?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
@@ -1614,22 +1616,22 @@ void* clientManagement2 (void *dummyPt) {
             if (!codigosCorrectos)
                 mensaje = "Algun codigo erroneo";
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
 
         }else if (tester == "PQRSS") {//productos que rebajaron su stock
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente consultar los productos que cambiaron su stock?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
@@ -1673,22 +1675,22 @@ void* clientManagement2 (void *dummyPt) {
             if (!codigosCorrectos)
                 mensaje = "Algun codigo erroneo";
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
 
         }else if (tester == "CMV") {//categoria mas vendida
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente consultar la categoria mas vendida?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             //std::string codCat(std::strtok (NULL, ";"));
@@ -1730,21 +1732,21 @@ void* clientManagement2 (void *dummyPt) {
             if (!codigosCorrectos)
                 mensaje = "Algun codigo erroneo";
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }else if (tester == "SMV") {//supermercado con mas ventas
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente consultar el supermercado que mas vendio?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             //std::string codSuper(std::strtok (NULL, ";"));
             //std::string codCat(std::strtok (NULL, ";"));
@@ -1775,7 +1777,7 @@ void* clientManagement2 (void *dummyPt) {
             if (!codigosCorrectos)
                 mensaje = "Algun codigo erroneo";
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }else if (tester == "LQMV") {
 
@@ -1784,7 +1786,7 @@ void* clientManagement2 (void *dummyPt) {
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             //std::string codLugar(std::strtok (lineaValores, ";"));
             //std::string codSuper(std::strtok (NULL, ";"));
             //std::string codCat(std::strtok (NULL, ";"));
@@ -1796,10 +1798,10 @@ void* clientManagement2 (void *dummyPt) {
             listaLugares->getLugarMasSuper(nodo);
             mensaje = nodo->getNombre();
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
         }else if (tester == "IMPRESION") {
             int x = 0;
-        }else if (( memcmp( buffer, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
+        }else if (( memcmp( bufferC2, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
 
             std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
 
@@ -1807,7 +1809,7 @@ void* clientManagement2 (void *dummyPt) {
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string eliminar(std::strtok (lineaValores, ";"));
             std::string codLugar(std::strtok (NULL, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
@@ -1873,12 +1875,12 @@ void* clientManagement2 (void *dummyPt) {
                 //YA ACA SE VERIFICARON LOS CODIGOS
                 char serverMsg[] = "REALIZADA";
                 if (eliminRealizada)
-                    write(newsockfd,serverMsg,strlen(serverMsg));
+                    write(newsockfdc2,serverMsg,strlen(serverMsg));
 
 
             } else {
                 char serverMsgNO[] = "NO_REALIZADA";
-                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+                write(newsockfdc2,serverMsgNO,strlen(serverMsgNO));
             }
 
             //if alguna no existe no lo deja
@@ -1893,8 +1895,8 @@ void* clientManagement2 (void *dummyPt) {
 
 
 
-        }else if (( memcmp( buffer, "ANCHURA", strlen( "ANCHURA"))) == 0) {
-            char * lineaValores = buffer;
+        }else if (( memcmp( bufferC2, "ANCHURA", strlen( "ANCHURA"))) == 0) {
+            char * lineaValores = bufferC2;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));
 
@@ -1909,11 +1911,11 @@ void* clientManagement2 (void *dummyPt) {
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
 
-            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+            write(newsockfdc2,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
 
-        }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
+        }else if (( memcmp( bufferC2, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
             int x = 0;
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));
             std::string nodoFinalStr(std::strtok (NULL, ";"));
@@ -1928,13 +1930,27 @@ void* clientManagement2 (void *dummyPt) {
 
             listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
-        }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
+        }else if (( memcmp( bufferC2, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
 
-            int x = 0;
+            char * lineaValores = bufferC2;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
 
-        }else if ((memcmp( buffer, "PRIM", strlen( "PRIM"))) == 0) {
+            std::string msg2Provider = "Puede el cliente consultar Kruskal?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            std::string mensajeTotal = "";
+
+            arbolKruskal2->kruskal(listaLugares, atoi(nodoInicialStr.c_str()));
+            mensajeTotal = arbolKruskal2->imprimirKruskal();
+
+            write(newsockfdc2,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
+
+        }else if ((memcmp( bufferC2, "PRIM", strlen( "PRIM"))) == 0) {
+
+            char * lineaValores = bufferC2;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));
 
@@ -1946,18 +1962,18 @@ void* clientManagement2 (void *dummyPt) {
 
             std::string mensajeTotal = "";
 
-            std::string pesoTotal = arbol->prim(listaLugares,atoi(nodoInicialStr.c_str()));
-            std::string mensajeParcial = arbol->getPrim();
+            std::string pesoTotal = arbol2->prim(listaLugares,atoi(nodoInicialStr.c_str()));
+            std::string mensajeParcial = arbol2->getPrim();
 
             mensajeTotal = "Peso Total:  " + pesoTotal +  " " + mensajeParcial;
 
-            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
+            write(newsockfdc2,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
 
 
 
 
 
-            //write(newsockfd,msg,strlen(msg))
+            //write(newsockfdc2,msg,strlen(msg))
 
 
 
@@ -1968,9 +1984,9 @@ void* clientManagement2 (void *dummyPt) {
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
             //std::string recibido = "Recibido";
-            //write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            //read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            //write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            //read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de proveedores?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -1979,21 +1995,21 @@ void* clientManagement2 (void *dummyPt) {
 
             std::string arbolP = "";
             proveedores->PreordenSocket(proveedores->raiz, arbolP);
-            write(newsockfd,arbolP.c_str() , strlen(arbolP.c_str()));
+            write(newsockfdc2,arbolP.c_str() , strlen(arbolP.c_str()));
 
         }else if (tester == "Categorias") {
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de categorias?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
 
@@ -2024,23 +2040,23 @@ void* clientManagement2 (void *dummyPt) {
             }else{
                 mensaje = "Codigo(s) erroneo(s)\n";
             }
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }
         else if (tester == "Productos") {
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de productos?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             std::string codSuper(std::strtok (NULL, ";"));
             std::string codCat(std::strtok (NULL, ";"));
@@ -2077,13 +2093,15 @@ void* clientManagement2 (void *dummyPt) {
                 mensaje = "Codigo(s) erroneo(s)\n";
             }
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }
         else if (tester == "Clientes") {
-            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
-            int x = 0;
 
+            std::string recibido = "Recibido";
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de clientes?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -2106,7 +2124,7 @@ void* clientManagement2 (void *dummyPt) {
             clientes->PreordenSocket(clientes->raizB, arbolClientes);
             mensaje = arbolClientes;
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }
 
@@ -2114,16 +2132,16 @@ void* clientManagement2 (void *dummyPt) {
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
             std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            write(newsockfdc2,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(bufferC2, TAMANHO_BUFFER);
+            read(newsockfdc2, bufferC2, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de supermercados?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-            char * lineaValores = buffer;
+            char * lineaValores = bufferC2;
             std::string codLugar(std::strtok (lineaValores, ";"));
             //std::string codSuper(std::strtok (NULL, ";"));
             //std::string codCat(std::strtok (NULL, ";"));
@@ -2149,15 +2167,15 @@ void* clientManagement2 (void *dummyPt) {
             }
             mensaje = strSuper;
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfdc2,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }
 
         else {
-            std::string tester (buffer);
+            std::string tester (bufferC2);
             std::cout << tester << std::endl;
             char serverMsg[] = "ERROR NO ENTRO EN NINGUNA OPCION \0";
-            write(newsockfd,serverMsg,strlen(serverMsg));
+            write(newsockfdc2,serverMsg,strlen(serverMsg));
             if(tester == "exit")
                 break;
         }
@@ -2168,16 +2186,16 @@ void* clientManagement2 (void *dummyPt) {
     }
 
     std::cout << "\nClosing thread and conn" << std::endl;
-    close(newsockfd);
+    close(newsockfdc2);
 }
 
 /*
     int nodoInicial = 20;
     std::cout << "Thread No: " << pthread_self() << std::endl;
-    char bufferC2[TAMANHO_BUFFER];
+    char bufferC2C2[TAMANHO_BUFFER];
     bzero(bufferC2, TAMANHO_BUFFER);
     char msg[] = "CONECTADO AL SERVIDOR";
-    write(newsockfdc2,msg,strlen(msg));
+    write(newsockfdc2c2,msg,strlen(msg));
     bool loop = false;
     while(!loop) {
         bzero(bufferC2, TAMANHO_BUFFER);
