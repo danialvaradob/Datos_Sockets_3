@@ -381,7 +381,7 @@ ArbolSupermercados* supermercados = new ArbolSupermercados();
 ArbolCategorias* categorias = new ArbolCategorias();
 ArbolProductos* productos = new ArbolProductos();
 ListaVentas* listaVentas = new ListaVentas();
-
+ArbolExpansionMinimo* arbolKruskal = new ArbolExpansionMinimo();
 
 void *task1(void *);
 static int newsockfd1;
@@ -1040,7 +1040,21 @@ void* clientManagement (void *dummyPt) {
 
         }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
 
-            int x = 0;
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
+            std::string msg2Provider = "Puede el cliente consultar Kruskal?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string mensajeTotal = "";
+
+            arbolKruskal->kruskal(listaLugares, atoi(nodoInicialStr.c_str()));
+            mensajeTotal = arbolKruskal->imprimirKruskal();
+
+            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
             
         }else if ((memcmp( buffer, "PRIM", strlen( "PRIM"))) == 0) {
 
@@ -2231,7 +2245,8 @@ void* clientManagement2 (void *dummyPt) {
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockfdc2);
     */
-}
+
+
 
 
 void *provider (void *dummyPt) {
