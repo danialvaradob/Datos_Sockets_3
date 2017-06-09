@@ -528,6 +528,8 @@ void* clientManagement (void *dummyPt) {
             cantidad = atoi(strCant.c_str());
 
             NodoLugar* nodo = new NodoLugar();
+            NodoProveedor* _nodoProv = new NodoProveedor();
+            NodoCliente* _nodoCliente = new NodoCliente();
             if (listaLugares->existeLugar(cL)) {
                 nodo = listaLugares->getNodoLugar(cL);
                 ArbolSupermercados* super = new ArbolSupermercados();
@@ -547,10 +549,10 @@ void* clientManagement (void *dummyPt) {
                             pro->getNodoProducto(cP,pro->raiz,nodoPro);
                             codigosCorrectos = true;
 
-                            //_arbolProveedores->getNodoProveedor(codProveedor, _arbolProveedores->raiz, _nodoProv);
-                            //_arbolClientes->getCliente(_arbolClientes->raizB, _nodoCliente, idCliente);
-                            //_nodoCliente->aumentarVentas();
-                            //_nodoProv->aumentarVentas();
+                            proveedores->getNodoProveedorMasVentas(proveedores->raiz,_nodoProv);
+                            clientes->getCliente(clientes->raizB, _nodoCliente, codigoClienteGlobal);
+                            _nodoCliente->aumentarVentas();
+                            _nodoProv->aumentarVentas();
                             nodoPro->setCantidadEnStock(cantidad);
                             nodocategoria *nodoCat = new nodocategoria();
                             cat->getNodoCat(cat->raiz,cC, nodoCat);
@@ -560,33 +562,33 @@ void* clientManagement (void *dummyPt) {
 
                             ventaRealizada = true;
                             if (banderaCLIENTENUEVO) {
-                                int x = 0;
 
-                                /*
+
+
                                 NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
                                                                       _nodoCliente->getID(),
-                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
+                                                                      _nodoCliente->getNombre(), nodoCat->getCodigo(),
                                                                       nodoCat->getDesc(),
                                                                       nodoPro->getCodigoProducto(),
                                                                       nodoPro->getNombreProducto(),
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       nodoPro->getPrecioPorUnidad() * cantidad);
                                 listaVentas->insertar(_nodoVenta);
-                                 */
+
 
                             }else {
                                     int x = 0;
-                                /*
+
                                 NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
                                                                       _nodoCliente->getID(),
-                                                                      _nodoCliente->getNombre(), _nodoCat->getCodigo(),
+                                                                      _nodoCliente->getNombre(), nodoCat->getCodigo(),
                                                                       nodoCat->getDesc(),
                                                                       nodoPro->getCodigoProducto(),
                                                                       nodoPro->getNombreProducto(),
                                                                       nodoPro->getPrecioPorUnidad(), cantidad,
                                                                       ((nodoPro->getPrecioPorUnidad() * cantidad)) - (nodoPro->getPrecioPorUnidad() * cantidad * 0.05));
                                 listaVentas->insertar(_nodoVenta);
-                            */
+
                                  }
 
                         }else {
@@ -665,7 +667,7 @@ void* clientManagement (void *dummyPt) {
             bzero(buffer, TAMANHO_BUFFER);
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
-            std::string msg2Provider = "�Puede el cliente consultar el prducto mas comprado?";
+            std::string msg2Provider = "Puede el cliente consultar el prducto mas comprado?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
@@ -813,6 +815,9 @@ void* clientManagement (void *dummyPt) {
                     super->getArbolCat(cS,super->raiz,cat);
 
 
+                    nodocategoria* nodoCat = new nodocategoria();
+
+
                     cat->getCategoriaMasVendida(cat->raiz, nodoCat);
                     
                     mensaje = nodoCat->getDesc();
@@ -906,7 +911,7 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
         }else if (tester == "IMPRESION") {
             int x = 0;
-        }else if (tester =="ELIMINAR ARTICULO" ) {
+        }else if (tester =="ELIMINAR_ARTICULO" ) {
             int x = 0;
         }else if (tester == "ANCHURA") {
             /*
@@ -917,6 +922,7 @@ void* clientManagement (void *dummyPt) {
             read(newsockfd, buffer, TAMANHO_BUFFER - 1);
             std::string nodoInicialStr (buffer);
              */
+
 
 
             char * lineaValores = buffer;
@@ -1000,7 +1006,7 @@ void* clientManagement (void *dummyPt) {
 //bufferC2
 //newsockfdc2
 void* clientManagement2 (void *dummyPt) {
-
+/*
     int nodoInicial = 20;
     std::cout << "Thread No: " << pthread_self() << std::endl;
     char bufferC2[TAMANHO_BUFFER];
@@ -1074,7 +1080,9 @@ void* clientManagement2 (void *dummyPt) {
     }
     std::cout << "\nClosing thread and conn" << std::endl;
     close(newsockfdc2);
+    */
 }
+
 
 void *provider (void *dummyPt) {
     std::cout << "Thread No: " << pthread_self() << std::endl;

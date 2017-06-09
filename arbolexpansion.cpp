@@ -190,7 +190,7 @@ std::string ArbolExpansionMinimo::prim(ListaLugares *_grafo, int _primerNodo) {
     s = fl.str();
     return s;
 }
-/*
+
 std::string ArbolExpansionMinimo::getPrim() {
     std::string mensaje = "";
     NodoArbolExpansion* aux = primero;
@@ -202,7 +202,7 @@ std::string ArbolExpansionMinimo::getPrim() {
     } while (aux!= primero);
 
     return mensaje;
-}*/
+}
 
 void ArbolExpansionMinimo::kruskal(ListaLugares *_grafo, int _primerNodo) {
     NodoLugar *inicio = _grafo->getNodoLugar(_primerNodo);
