@@ -43,6 +43,8 @@ public:
 	//NodoLugar* getNodoLugar(int _codigo);
 	void insertarLugar(NodoLugar* nuevo);
 	int getMenorPeso();
+	std::string getRutaDijkstra(std::string& ultimaconexion, int inicio, int final);
+	void generarTablaDijkstra(std::string tablaDijkstra);
 	//Fin Dijkstra
 
     int getMayorPeso();

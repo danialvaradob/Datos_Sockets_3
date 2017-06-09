@@ -420,7 +420,7 @@ void ListaLugares::Dijkstra(int inicio, int final){
 		    	aux = aux->siguiente;
 		    	//aux = aux2;
 			}
-		resueltos = resueltos + "[";	
+		resueltos = resueltos;	
 		int tempNodos = nodosResueltos->getCantidadConexiones();
 		NodoConexion* aux2 = nodosResueltos->primero; 
 		for (int k = 0; k<tempNodos;k++){
@@ -433,10 +433,10 @@ void ListaLugares::Dijkstra(int inicio, int final){
 			}
 			aux2 = aux2->siguiente;
 		}
-		resueltos = resueltos + "]";
+		resueltos = resueltos + ";";
 		
 		
-		noresueltos = noresueltos + "[";
+		noresueltos = noresueltos ;
 		tempNodos = nodosNoResueltos->getCantidadConexiones();
 		aux2 = nodosNoResueltos->primero; 
 		for (int k = 0; k<tempNodos;k++){
@@ -448,7 +448,7 @@ void ListaLugares::Dijkstra(int inicio, int final){
 			}
 			aux2 = aux2->siguiente;
 		}
-		noresueltos = noresueltos + "]";
+		noresueltos = noresueltos + ";";
 		nodosNoResueltos->visitar(codMenor);
 		codMenor = nodosNoResueltos->getCodMenorConexion();
 		
@@ -469,8 +469,171 @@ void ListaLugares::Dijkstra(int inicio, int final){
 		//aux=aux->siguiente;
 	}
 	
-	std::cout<<resueltos<<std::endl<<noresueltos<<std::endl<<distminima<<std::endl<<disttotal<<std::endl<<ultimaconexion<<std::endl;
 	
+	std::string ruta =  getRutaDijkstra(ultimaconexion, inicio, final);
+	tablaDijkstra = resueltos + " " + noresueltos + " " + distminima + " " + disttotal + " " + ultimaconexion + " " + ruta;
+	std::cout<<tablaDijkstra<<std::endl;
+	generarTablaDijkstra(tablaDijkstra);
+	//std::cout<<resueltos<<std::endl<<noresueltos<<std::endl<<distminima<<std::endl<<disttotal<<std::endl<<ultimaconexion<<std::endl;
+	
+	
+}
+
+std::string ListaLugares::getRutaDijkstra(std::string& ultimaconexion, int inicio, int final){
+	//ultimaconexion = std::string ( ultimaconexion.rbegin(), ultimaconexion.rend() );
+	//std::string _codigoLugar(std::strtok (valorEnLinea, ";") );
+	
+	
+	/*while (true){
+	    std::istringstream iss(ultimaconexion);
+	    std::string token;
+	    while (std::getline(iss, token, '-'))
+	    {
+	        std::cout << token << std::endl;
+	        while (std::getline(iss, token, ';'))
+	   		{
+	        std::cout << token << std::endl;
+	        break;
+	    	}
+	    }
+    }*/
+    
+    std::string str = "";
+    std::string primeraComponente = "";
+    std::string segundaComponente = "";
+    std::string lastcon = "";
+    std::string strinicio = std::to_string(inicio);
+    std::string strfinal = std::to_string(final);
+    bool guardar = false;
+	for(char& c : ultimaconexion) {
+	    //std::cout<<c<<std::endl;
+	    if (c == ';'){
+	    	if (segundaComponente == strfinal){
+	    		lastcon+=segundaComponente;
+	    		lastcon+="-";
+	    		lastcon+=primeraComponente;
+	    		segundaComponente = "";
+	    		segundaComponente = primeraComponente;
+	    		primeraComponente = "";
+	    		guardar=false;
+	    		
+			}
+			else{
+				segundaComponente = "";
+	    		//segundaComponente = primeraComponente;
+	    		primeraComponente = "";
+	    		guardar=false;
+			}
+		}
+	    else if (c == '-'){
+	    	guardar = true;
+		}
+		else if (guardar){
+			segundaComponente+=c;
+		}
+		else{
+			primeraComponente+=c;
+		}
+		
+	    
+	    
+	}
+	lastcon+="-";
+	lastcon+=strinicio;
+	std::cout<<"Last connection: "<<lastcon<<std::endl;
+	return lastcon;
+	
+}
+
+void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
+		//std::string tablaDijkstra;
+		std::string resueltos;
+		std::string noresueltos;
+		std::string distminima;
+		std::string disttotal;
+		std::string ultimaconexion;
+		std::string ruta;
+		
+		
+	    std::istringstream iss(tablaDijkstra);
+	    std::string token;
+	    std::getline(iss, token, ' ');
+	    resueltos = token;
+	    
+	    std::getline(iss, token, ' ');
+	    noresueltos = token;
+	    
+	    std::getline(iss, token, ' ');
+	    distminima = token;
+	    
+	    std::getline(iss, token, ' ');
+	    disttotal = token;
+	    
+	    std::getline(iss, token, ' ');
+	    ultimaconexion = token;
+	    
+	    std::getline(iss, token, ' ');
+	    ruta = token;
+	    
+	        
+	    std::cout<<"LALALA "<<ruta<<std::endl;
+	    
+	    	
+		/*	
+			pnodo aux = primero;
+	
+		cout<<"Imprimiendo factura..."<<endl;
+			
+		ofstream myfile;
+		myfile.open ("Dijkstra.txt");
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
+		myfile << "Nombre del proveedor: " <<endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo                      Producto                   Cantidad"<<endl;
+		myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
+																<< "                          " << (aux->valorF)->getCantidadProducto()<< endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+		
+		myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
+
+			
+			cout<<"Factura lista"<<endl;
+		
+		aux = aux->siguiente;
+		
+		while (aux != primero){
+
+			myfile << "\n\n---------------------------------------------------------------\n";
+			myfile << "---------------------------------------------------------------\n";
+			myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
+			myfile << "Nombre del proveedor: " <<endl;
+			myfile << "---------------------------------------------------------------\n";
+			myfile << "---------------------------------------------------------------\n";
+			myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
+			myfile << "---------------------------------------------------------------\n";
+			myfile << "Codigo                      Producto                   Cantidad"<<endl;
+			myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
+																<< "                                 " << (aux->valorF)->getCantidadProducto()<< endl;
+			myfile << "---------------------------------------------------------------\n";
+			myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+		
+				myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
+		
+			aux = aux->siguiente;
+			}
+
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "------------------- Gracias por preferirnos :) ----------------\n";
+		myfile.close();	
+		
+    */
 	
 }
 
