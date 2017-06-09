@@ -961,6 +961,8 @@ void* clientManagement (void *dummyPt) {
 
                         if (pro->existeProducto(pro->raiz,cP)) {
 
+                            eliminRealizada = true;
+
                             pro->eliminar(pro->raiz,cP);
                             codigosCorrectos = true;
 
@@ -1146,9 +1148,10 @@ void* clientManagement (void *dummyPt) {
                 arbolS = nodoLug->getArbolSuper();
                 if(arbolS->existeSupermercado(cS, arbolS->raiz)){
                     arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
+                    codigosCorrectos = true;
                 }
             }
-            if(arbolCat != NULL){
+            if(arbolCat != NULL && codigosCorrectos){
                 arbolCat->PreordenSocket(arbolCat->raiz, arbolC);
                 //Aqui van las funciones para hacer el recorrido del arbol de categorias
                 mensaje = arbolC;
@@ -1197,10 +1200,11 @@ void* clientManagement (void *dummyPt) {
                     arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
                     if(arbolCat != NULL){
                         arbolCat->getArbolProd(arbolCat->raiz, cC, arbolProd);
+                        codigosCorrectos = true;
                     }
                 }
             }
-            if(arbolCat != NULL && arbolProd != NULL){
+            if(arbolCat != NULL && arbolProd != NULL && codigosCorrectos){
                 arbolProd->PreordenSocket(arbolProd->raiz, arbolP);
                 //Aqui van las funciones para hacer el recorrido del arbol de categorias
                 mensaje = arbolP;
@@ -1276,7 +1280,7 @@ void* clientManagement (void *dummyPt) {
                 arbolS = nodoLug->getArbolSuper();
                 arbolS->PreordenSocket(arbolS->raiz, strSuper);
             }else{
-                mensaje = "Codigos erroneos\n";
+                mensaje = "Codigo erroneo\n";
             }
 			mensaje = strSuper;
 			
@@ -1608,6 +1612,7 @@ void* clientManagement2 (void *dummyPt) {
                         pro->getProductoMasVendido(pro->raiz,nodoPro);
 
                         mensaje = nodoPro->getNombreProducto();
+                        codigosCorrectos = true;
                     }
                 } else {
                     codigosCorrectos = false;
@@ -1667,6 +1672,7 @@ void* clientManagement2 (void *dummyPt) {
                         pro->getProductosCambiaronStock(pro->raiz,nodoPro);
 
                         mensaje = nodoPro;
+                        codigosCorrectos = true;
                     }
                 } else {
                     codigosCorrectos = false;
@@ -1725,6 +1731,7 @@ void* clientManagement2 (void *dummyPt) {
                     cat->getCategoriaMasVendida(cat->raiz, nodoCat);
 
                     mensaje = nodoCat->getDesc();
+                    codigosCorrectos = true;
                 } else {
                     codigosCorrectos = false;
                 }
@@ -1773,6 +1780,7 @@ void* clientManagement2 (void *dummyPt) {
                 super->getSuperMasVendido(super->raiz, nodoSup);
 
                 mensaje = nodoSup->getNombre();
+                codigosCorrectos = true;
 
             } else {
                 codigosCorrectos = false;
@@ -1852,6 +1860,9 @@ void* clientManagement2 (void *dummyPt) {
                         if (pro->existeProducto(pro->raiz,cP)) {
 
                             pro->eliminar(pro->raiz,cP);
+                            codigosCorrectos = true;
+                            eliminRealizada = true;
+
 
 
                         }else {
@@ -2035,9 +2046,10 @@ void* clientManagement2 (void *dummyPt) {
                 arbolS = nodoLug->getArbolSuper();
                 if(arbolS->existeSupermercado(cS, arbolS->raiz)){
                     arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
+                    codigosCorrectos = true;
                 }
             }
-            if(arbolCat != NULL){
+            if(arbolCat != NULL && codigosCorrectos){
                 arbolCat->PreordenSocket(arbolCat->raiz, arbolC);
                 //Aqui van las funciones para hacer el recorrido del arbol de categorias
                 mensaje = arbolC;
@@ -2086,10 +2098,11 @@ void* clientManagement2 (void *dummyPt) {
                     arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
                     if(arbolCat != NULL){
                         arbolCat->getArbolProd(arbolCat->raiz, cC, arbolProd);
+                        codigosCorrectos = true;
                     }
                 }
             }
-            if(arbolCat != NULL && arbolProd != NULL){
+            if(codigosCorrectos && arbolProd != NULL){
                 arbolProd->PreordenSocket(arbolProd->raiz, arbolP);
                 //Aqui van las funciones para hacer el recorrido del arbol de categorias
                 mensaje = arbolP;
