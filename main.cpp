@@ -774,6 +774,7 @@ void* clientManagement (void *dummyPt) {
                         pro->getProductosCambiaronStock(pro->raiz,nodoPro);
 
                         mensaje = nodoPro;
+                        codigosCorrectos = true;
                     }
                 } else {
                     codigosCorrectos = false;
@@ -832,6 +833,7 @@ void* clientManagement (void *dummyPt) {
                     cat->getCategoriaMasVendida(cat->raiz, nodoCat);
                     
                     mensaje = nodoCat->getDesc();
+                    codigosCorrectos = true;
                 } else {
                     codigosCorrectos = false;
                 }
@@ -880,6 +882,7 @@ void* clientManagement (void *dummyPt) {
                 super->getSuperMasVendido(super->raiz, nodoSup);
                 
                 mensaje = nodoSup->getNombre();
+                codigosCorrectos = true;
 
             } else {
                 codigosCorrectos = false;
@@ -914,7 +917,7 @@ void* clientManagement (void *dummyPt) {
             int x = 0;
         }else if (( memcmp( buffer, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
 
-            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+
 
             std::string msg2Provider = "Solicitud de Eliminar Producto";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -959,6 +962,7 @@ void* clientManagement (void *dummyPt) {
                         if (pro->existeProducto(pro->raiz,cP)) {
 
                             pro->eliminar(pro->raiz,cP);
+                            codigosCorrectos = true;
 
 
                         }else {
