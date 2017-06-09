@@ -14,12 +14,9 @@ DialogImpArboles::~DialogImpArboles()
     delete ui;
 }
 
-void DialogImpArboles::on_comboBox_activated(const QString &arg1)
-{
 
-}
 
-void DialogImpArboles::on_buttonBox_accepted()
+void DialogImpArboles::on_pushButton_clicked()
 {
     std::string itemCombo = ui->comboBox->currentText().toStdString();
     if (itemCombo == "Proveedores") {
@@ -86,10 +83,10 @@ void DialogImpArboles::on_buttonBox_accepted()
            // codC = ui->lineEdit_2->text().toStdString();
             //codS = ui->lineEdit_3->text().toStdString();
 
-            res += codL + ";" + codS + ";" + codC; //No habria que mandar codigos
+            //res += codL + ";" + codS + ";" + codC; //No habria que mandar codigos
             //pero no se si aca hace falta mandarle algo para que funciones el server
 
-            client->writeSocket(res);///////
+            client->writeSocket("CLIENTES");///////
             client->readSocket();
 
             std::string infoInSocket (client->buffer);
