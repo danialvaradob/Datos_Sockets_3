@@ -31,7 +31,7 @@
 */
 
 
-int const TAMANHO_BUFFER = 512;
+int const TAMANHO_BUFFER = 1024;
 
 
 
@@ -520,16 +520,20 @@ void* clientManagement (void *dummyPt) {
             std::string codCat(std::strtok (NULL, ";"));
             std::string codProducto(std::strtok (NULL, ";"));
             std::string strCant(std::strtok (NULL, ";"));
+            std::string codigoProv(std::strtok (NULL, ";"));
+
 
 
             bool codigosCorrectos = false;
             bool ventaRealizada = false;
-            int cL,cS,cC,cP, cantidad;
+            int cL,cS,cC,cP, cantidad, codProveedor;
             cL = atoi(codLugar.c_str());
             cS = atoi(codSuper.c_str());
             cC = atoi(codCat.c_str());
             cP = atoi(codProducto.c_str());
             cantidad = atoi(strCant.c_str());
+            codProveedor = atoi(codigoProv.c_str());
+
 
             NodoLugar* nodo = new NodoLugar();
             NodoProveedor* _nodoProv = new NodoProveedor();
@@ -553,7 +557,7 @@ void* clientManagement (void *dummyPt) {
                             pro->getNodoProducto(cP,pro->raiz,nodoPro);
                             codigosCorrectos = true;
 
-                            proveedores->getNodoProveedorMasVentas(proveedores->raiz,_nodoProv);
+                            proveedores->getNodoProveedor(codProveedor,proveedores->raiz,_nodoProv);
                             clientes->getCliente(clientes->raizB, _nodoCliente, codigoClienteGlobal);
                             _nodoCliente->aumentarVentas();
                             _nodoProv->aumentarVentas();
