@@ -712,6 +712,7 @@ void* clientManagement (void *dummyPt) {
                         pro->getProductoMasVendido(pro->raiz,nodoPro);
 
                         mensaje = nodoPro->getNombreProducto();
+                        codigosCorrectos = true;
                     }
                 } else {
                     codigosCorrectos = false;
