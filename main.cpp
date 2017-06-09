@@ -987,7 +987,7 @@ void* clientManagement (void *dummyPt) {
         }else if (tester == "ARTICU") {
             int x = 0;
 
-        }else if (tester == "Proveedores") {
+        }else if (tester == "Proveedores") {           //Este manda el arbol apenas le llega el mensaje con "Proveedores"
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
             //std::string recibido = "Recibido";
@@ -1018,7 +1018,137 @@ void* clientManagement (void *dummyPt) {
 
             write(newsockfd,arbolP.c_str() , strlen(arbolP.c_str()));
 
-        }else {
+        }else if (tester == "Categorias") {
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de categorias?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+            std::string arbolC = "";		                                       	
+            //Aqui van las funciones para hacer el recorrido del arbol de categorias
+			mensaje = arbolC;
+			
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        else if (tester == "Productos") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de productos?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+            std::string arbolP = "";
+            //Aqui va lo del recorrido del arbol de productos
+			mensaje = arbolP;
+			
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        else if (tester == "Clientes") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de clientes?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+           // char * lineaValores = buffer;
+            //std::string codLugar(std::strtok (lineaValores, ";"));
+           // std::string codSuper(std::strtok (NULL, ";"));
+           // std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+           // int cL,cS,cC;
+            //cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+           // cC = atoi(codCat.c_str());
+
+           // bool codigosCorrectos = false;
+           std::string arbolClientes = "";
+            //Aqui va lo del recorrido del arbol de clientes
+			mensaje = arbolClientes;
+			
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        
+        else if (tester == "Supermercados") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de categorias?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+            std::string arbolS = "";
+            //Aca va lo del recorrido del arbol de supermercados
+            //listaLugares->getNodoLugar(cL)->getArbolSuper()->PreordenSocket(listaLugares->getNodoLugar(cL)->getArbolSuper()->raiz, arbolS);
+			mensaje = arbolS;
+			
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        
+		else {
             std::string tester (buffer);
             std::cout << tester << std::endl;
             char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
