@@ -2,8 +2,12 @@
 // Created by Daniel Alvarado on 5/18/17.
 //
 #include "listalugares.h"
+#include <iomanip>
 //#include "ListaConexiones.cpp"
 //#include "pila.cpp"
+
+
+
 ListaLugares::~ListaLugares() {
     NodoLugar* aux;
 
@@ -344,7 +348,7 @@ int ListaLugares::getMenorPeso() {  //Para obtener el peso real de cualquier nod
 	
 
 
-void ListaLugares::Dijkstra(int inicio, int final){
+std::string ListaLugares::Dijkstra(int inicio, int final){
 	
 	NodoLugar* aux = primero;
 	int distMinima=0;
@@ -389,7 +393,7 @@ void ListaLugares::Dijkstra(int inicio, int final){
 			noResueltos->sumarDistTotal(distMinima, codMenor);
 			
 			if (noResueltos->primero == NULL){
-				return;
+				break;
 			}
 			
 			//noResueltos->insertarNodosNoResueltos(nodosNoResueltos);
@@ -471,9 +475,12 @@ void ListaLugares::Dijkstra(int inicio, int final){
 	
 	
 	std::string ruta =  getRutaDijkstra(ultimaconexion, inicio, final);
-	tablaDijkstra = resueltos + " " + noresueltos + " " + distminima + " " + disttotal + " " + ultimaconexion + " " + ruta;
+	
+	
+	tablaDijkstra = resueltos + "$" +" " + noresueltos + "$" + " " + distminima + "$" +" " + disttotal + "$" + " " + ultimaconexion + "$" + " " + ruta;
 	std::cout<<tablaDijkstra<<std::endl;
 	generarTablaDijkstra(tablaDijkstra);
+	return tablaDijkstra;
 	//std::cout<<resueltos<<std::endl<<noresueltos<<std::endl<<distminima<<std::endl<<disttotal<<std::endl<<ultimaconexion<<std::endl;
 	
 	
@@ -576,64 +583,55 @@ void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
 	    ruta = token;
 	    
 	        
-	    std::cout<<"LALALA "<<ruta<<std::endl;
+	    //std::cout<<"LALALA "<<ruta<<std::endl;
 	    
-	    	
-		/*	
-			pnodo aux = primero;
-	
-		cout<<"Imprimiendo factura..."<<endl;
-			
-		ofstream myfile;
+	    std::ofstream myfile;
 		myfile.open ("Dijkstra.txt");
 		myfile << "---------------------------------------------------------------\n";
 		myfile << "---------------------------------------------------------------\n";
-		myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
-		myfile << "Nombre del proveedor: " <<endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Codigo                      Producto                   Cantidad"<<endl;
-		myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
-																<< "                          " << (aux->valorF)->getCantidadProducto()<< endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+		myfile<<"Nodo resuelto"<<std::setw(100)<<"Nodo no-resuelto"<<std::setw(100)<<"Distancia minima"<<std::setw(100)<<"Distancia total"<<std::setw(100)<<"Ultima conexion"<<std::endl;
+	    
+	    
+	    std::istringstream iss0(resueltos);
+	    std::istringstream iss1(noresueltos);
+	    std::istringstream iss2(distminima);
+	    std::istringstream iss3(disttotal);
+	    std::istringstream iss4(ultimaconexion);
+	    while (true){
+	    	
 		
-		myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
-
-			
-			cout<<"Factura lista"<<endl;
+	    std::getline(iss0, token, ';');
+	    myfile << std::left<<std::setw(50) <<token << std::setw(50) << "      ";
+	    std::cout << token << std::endl;
+	    
+	    
+	    std::getline(iss1, token, ';');
+	    myfile << std::setw(50) << token << std::setw(50) << "      ";
+	    std::cout << token << std::endl;
 		
-		aux = aux->siguiente;
 		
-		while (aux != primero){
-
-			myfile << "\n\n---------------------------------------------------------------\n";
-			myfile << "---------------------------------------------------------------\n";
-			myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
-			myfile << "Nombre del proveedor: " <<endl;
-			myfile << "---------------------------------------------------------------\n";
-			myfile << "---------------------------------------------------------------\n";
-			myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
-			myfile << "---------------------------------------------------------------\n";
-			myfile << "Codigo                      Producto                   Cantidad"<<endl;
-			myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
-																<< "                                 " << (aux->valorF)->getCantidadProducto()<< endl;
-			myfile << "---------------------------------------------------------------\n";
-			myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+	    std::getline(iss2, token, ';');
+	    myfile << std::left<< std::setw(50) << token << std::setw(50) << "      ";
+	    std::cout << token << std::endl;
 		
-				myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
 		
-			aux = aux->siguiente;
-			}
-
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "------------------- Gracias por preferirnos :) ----------------\n";
-		myfile.close();	
 		
-    */
+	    std::getline(iss3, token, ';');
+	    myfile<< std::left << std::setw(50) << token << std::setw(50) << "      ";
+	    std::cout << token << std::endl;
+		
+		
+	    std::getline(iss4, token, ';');
+	    myfile << std::left<< std::setw(50) << token << "      "<<std::endl;
+	    myfile <<std::endl<<std::endl;;
+	    std::cout << token << std::endl;
+		
+		if (token == "$"){
+	
+			myfile << "La ruta es: " <<ruta;
+		   break;
+	   	}
+	    }
 	
 }
 

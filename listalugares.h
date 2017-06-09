@@ -39,7 +39,7 @@ public:
     void visitarTodasConexiones(int _codigoDeConexion);
     
     //Dijkstra
-    void Dijkstra(int inicio, int final);
+    std::string Dijkstra(int inicio, int final);
 	//NodoLugar* getNodoLugar(int _codigo);
 	void insertarLugar(NodoLugar* nuevo);
 	int getMenorPeso();
