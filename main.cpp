@@ -31,7 +31,7 @@
 */
 
 
-int const TAMANHO_BUFFER = 1024;
+int const TAMANHO_BUFFER = 2048;
 
 
 
@@ -888,11 +888,6 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
             
         }else if (tester == "LQMV") {
-            int x = 0;
-            std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
 
             std::string msg2Provider = "Puede el cliente consultar el lugar con mas supermercados?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -905,11 +900,6 @@ void* clientManagement (void *dummyPt) {
             //std::string codCat(std::strtok (NULL, ";"));
 
             std::string mensaje = "";
-            //int cL,cS,cC;
-            //cL = atoi(codLugar.c_str());
-            //cS = atoi(codSuper.c_str());
-            //cC = atoi(codCat.c_str());
-
             bool codigosCorrectos = false;
 
             NodoLugar* nodo = new NodoLugar();
@@ -919,8 +909,100 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
         }else if (tester == "IMPRESION") {
             int x = 0;
-        }else if (tester =="ELIMINAR_ARTICULO" ) {
-            int x = 0;
+        }else if (( memcmp( buffer, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
+
+            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+
+            std::string msg2Provider = "Solicitud de Eliminar Producto";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            char * lineaValores = buffer;
+            std::string eliminar(std::strtok (lineaValores, ";"));
+            std::string codLugar(std::strtok (NULL, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+            std::string codProducto(std::strtok (NULL, ";"));
+
+
+
+
+            bool codigosCorrectos = false;
+            bool eliminRealizada = false;
+            int cL,cS,cC,cP, cantidad, codProveedor;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+            cP = atoi(codProducto.c_str());
+
+
+            NodoLugar* nodo = new NodoLugar();
+            NodoProveedor* _nodoProv = new NodoProveedor();
+            NodoCliente* _nodoCliente = new NodoCliente();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        if (pro->existeProducto(pro->raiz,cP)) {
+
+                            pro->eliminar(pro->raiz,cP);
+
+
+                        }else {
+                            codigosCorrectos = false;
+
+                        }
+
+
+                    } else {
+                        codigosCorrectos = false;
+                    }
+
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+
+            if (codigosCorrectos) {
+
+                //ACA VA ABOSLUTAMENTE TODO LO QUE HACES DE LA VENTA
+                //YA ACA SE VERIFICARON LOS CODIGOS
+                char serverMsg[] = "REALIZADA";
+                if (eliminRealizada)
+                    write(newsockfd,serverMsg,strlen(serverMsg));
+
+
+            } else {
+                char serverMsgNO[] = "NO_REALIZADA";
+                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+            }
+
+            //if alguna no existe no lo deja
+
+            //DECLARACION DE VARIABLES
+
+
+
+            //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
+
+
+
+
+
         }else if (( memcmp( buffer, "ANCHURA", strlen( "ANCHURA"))) == 0) {
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
@@ -957,6 +1039,7 @@ void* clientManagement (void *dummyPt) {
             listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
         }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
+
             int x = 0;
             
         }else if ((memcmp( buffer, "PRIM", strlen( "PRIM"))) == 0) {
@@ -1004,22 +1087,8 @@ void* clientManagement (void *dummyPt) {
             bzero(bufferProveedor,TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
 
-           // char * lineaValores = buffer;
-            //std::string codLugar(std::strtok (lineaValores, ";"));
-            //std::string codSuper(std::strtok (NULL, ";"));
-            //std::string codCat(std::strtok (NULL, ";"));
-
-            //std::string mensaje = "";
-            //int cL,cS,cC;
-            //cL = atoi(codLugar.c_str());
-            //cS = atoi(codSuper.c_str());
-            //cC = atoi(codCat.c_str());
-
-            //bool codigosCorrectos = false;
             std::string arbolP = "";
             proveedores->PreordenSocket(proveedores->raiz, arbolP);
-           //mensaje = arbolP;
-
             write(newsockfd,arbolP.c_str() , strlen(arbolP.c_str()));
 
         }else if (tester == "Categorias") {
@@ -1124,10 +1193,7 @@ void* clientManagement (void *dummyPt) {
         else if (tester == "Clientes") {
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
-            std::string recibido = "Recibido";
-            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
 
             std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de clientes?";
             write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
@@ -1200,7 +1266,7 @@ void* clientManagement (void *dummyPt) {
 		else {
             std::string tester (buffer);
             std::cout << tester << std::endl;
-            char serverMsg[] = "BIENVENIDO AL SERVIDOR \0";
+            char serverMsg[] = "ERROR NO ENTRO EN NINGUNA OPCION \0";
             write(newsockfd,serverMsg,strlen(serverMsg));
             if(tester == "exit")
                 break;
