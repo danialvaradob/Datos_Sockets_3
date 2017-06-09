@@ -918,17 +918,6 @@ void* clientManagement (void *dummyPt) {
         }else if (tester =="ELIMINAR_ARTICULO" ) {
             int x = 0;
         }else if (tester == "ANCHURA") {
-            /*
-            char msg[] = "Esperando Respuesta";
-            write(newsockfd,msg,strlen(msg));
-
-            bzero(buffer, TAMANHO_BUFFER);
-            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
-            std::string nodoInicialStr (buffer);
-             */
-
-
-
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));
