@@ -450,13 +450,16 @@ void* clientManagement (void *dummyPt) {
 
             bzero(bufferProveedor, TAMANHO_BUFFER);
             read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            std::string bufProvv (bufferProveedor);
+
+
             bool existeCliente = false;
+            std::string codCliente (buffer);
             clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
             if (existeCliente) {
                 std::cout << "El cliente ingresado es el correcto" << std::endl;
                 //le dice la cliente que si existe, no pide datos
                 write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
-                break;
             } else {
                 banderaCLIENTENUEVO = true;
                 //le dice al cliente que no existe,
@@ -482,9 +485,9 @@ void* clientManagement (void *dummyPt) {
 
 
             }
+            codigoClienteGlobal = atoi(codigoCliente.c_str());
 
-
-        }else if ( memcmp( buffer, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) {
+        }else if ( (memcmp( buffer, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) == 0) {
 
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
@@ -960,10 +963,10 @@ void* clientManagement (void *dummyPt) {
             
             listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
-        }else if ( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) {
+        }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
             int x = 0;
             
-        }else if (memcmp( buffer, "PRIM", strlen( "PRIM"))) {
+        }else if ((memcmp( buffer, "PRIM", strlen( "PRIM"))) == 0) {
 
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));

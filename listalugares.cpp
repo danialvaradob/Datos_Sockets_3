@@ -339,7 +339,7 @@ int ListaLugares::getMenorPeso() {  //Para obtener el peso real de cualquier nod
 	
 	
 
-/*
+
 void ListaLugares::Dijkstra(int inicio, int final){
 	
 	NodoLugar* aux = primero;
@@ -545,4 +545,4 @@ std::string ListaLugares::puntosDeArticulacion(int _puntoInicial) {
 
     return recorrido_str;
 }
-*/
+
