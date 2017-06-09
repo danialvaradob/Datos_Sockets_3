@@ -348,6 +348,7 @@ std::string ArbolExpansionMinimo::imprimirKruskal() {
     flujo << pesoTotal;
     f = flujo.str();
     buffer += "Peso Total: " + f;
+    return buffer;
 }
 
 NodoArbolExpansion *ArbolExpansionMinimo::obetenerNodoEnPosicion(int pos) {
