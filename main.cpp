@@ -1285,6 +1285,877 @@ void* clientManagement (void *dummyPt) {
 //bufferC2
 //newsockfdc2
 void* clientManagement2 (void *dummyPt) {
+
+    //PRUEBAS
+
+    int nodoInicial;
+    //
+
+    std::cout << "Thread No: " << pthread_self() << std::endl;
+    char buffer[TAMANHO_BUFFER];
+    bzero(buffer, TAMANHO_BUFFER);
+    char msg[] = "CONECTADO AL SERVIDOR";
+    write(newsockfd,msg,strlen(msg));
+    bool loop = false;
+
+
+    char clienteError[] = "NO_EXISTE";
+    char clienteExistemsg[] = "CLIENTE_EXISTE";
+
+/////////////////////////////////////////
+    while(!loop) {
+        bzero(buffer, TAMANHO_BUFFER);
+        read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+        std::string parteString, parteStr;
+        std::string tester(buffer);
+        parteString = tester.substr(0,1);
+
+
+        if(tester == "CLIENTE"){
+
+            char msg[] = "Esperando Respuesta";
+            write(newsockfd,msg,strlen(msg));
+
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+            std::string codigoCliente (buffer);
+
+            std::string msg2Provider = "Codigo Cliente Recibido," + codigoCliente;
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            std::string bufProvv (bufferProveedor);
+
+
+            bool existeCliente = false;
+            std::string codCliente (buffer);
+            clientes->existeCliente(clientes->raizB,atoi(buffer),existeCliente);
+            if (existeCliente) {
+                std::cout << "El cliente ingresado es el correcto" << std::endl;
+                //le dice la cliente que si existe, no pide datos
+                write(newsockfd,clienteExistemsg,strlen(clienteExistemsg));
+            } else {
+                banderaCLIENTENUEVO = true;
+                //le dice al cliente que no existe,
+                write(newsockfd,clienteError,strlen(clienteError));
+                bzero(buffer, TAMANHO_BUFFER);
+                read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+                char * lineaValores = buffer;
+
+                std::string codClienteNuevo(std::strtok (lineaValores, ";"));
+                std::string nombre(std::strtok (NULL, ";"));
+                std::string direccion(std::strtok (NULL, ";"));
+                std::string telefono(std::strtok (NULL, ";"));
+
+                int codClienteI = atoi(codClienteNuevo.c_str());
+                int telI = atoi(telefono.c_str());
+
+                clientes->IniciarInsercionB(codClienteI,codClienteI,nombre,direccion,telI);
+
+                char clienteCre[] = "CLIENTE_CREADO";
+
+                write(newsockfd,clienteCre,strlen(clienteCre));
+
+
+            }
+            codigoClienteGlobal = atoi(codigoCliente.c_str());
+
+        }else if ( (memcmp( buffer, "PROFUNDIDAD", strlen( "PROFUNDIDAD"))) == 0) {
+
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
+
+            std::string recorridoArbol = "Recorrido en Profundidad:\n";
+            recorridoArbol += listaLugares->profundida(atoi(nodoInicialStr.c_str()));
+            std::cout << recorridoArbol << std::endl;
+            std::string msg2Provider = "Puede el cliente consultar la profundidad?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
+        } else if ( parteString == "v") {
+
+            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+
+            std::string msg2Provider = "Solicitud de Venta Recibida";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            char * lineaValores = buffer;
+            std::string venta(std::strtok (lineaValores, ";"));
+            std::string codLugar(std::strtok (NULL, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+            std::string codProducto(std::strtok (NULL, ";"));
+            std::string strCant(std::strtok (NULL, ";"));
+            std::string codigoProv(std::strtok (NULL, ";"));
+
+
+
+            bool codigosCorrectos = false;
+            bool ventaRealizada = false;
+            int cL,cS,cC,cP, cantidad, codProveedor;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+            cP = atoi(codProducto.c_str());
+            cantidad = atoi(strCant.c_str());
+            codProveedor = atoi(codigoProv.c_str());
+
+
+            NodoLugar* nodo = new NodoLugar();
+            NodoProveedor* _nodoProv = new NodoProveedor();
+            NodoCliente* _nodoCliente = new NodoCliente();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        if (pro->existeProducto(pro->raiz,cP)) {
+                            NodoProducto* nodoPro = new NodoProducto();
+                            pro->getNodoProducto(cP,pro->raiz,nodoPro);
+                            codigosCorrectos = true;
+
+                            proveedores->getNodoProveedor(codProveedor,proveedores->raiz,_nodoProv);
+                            clientes->getCliente(clientes->raizB, _nodoCliente, codigoClienteGlobal);
+                            _nodoCliente->aumentarVentas();
+                            _nodoProv->aumentarVentas();
+                            nodoPro->setCantidadEnStock(cantidad);
+                            nodocategoria *nodoCat = new nodocategoria();
+                            cat->getNodoCat(cat->raiz,cC, nodoCat);
+                            nodoCat->incBestScore();
+                            super->getNodoSupermercado(cS, super->raiz, nodoSuper);
+                            nodoSuper->aumentarVentas();
+
+                            ventaRealizada = true;
+                            if (banderaCLIENTENUEVO) {
+
+
+
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), nodoCat->getCodigo(),
+                                                                      nodoCat->getDesc(),
+                                                                      nodoPro->getCodigoProducto(),
+                                                                      nodoPro->getNombreProducto(),
+                                                                      nodoPro->getPrecioPorUnidad(), cantidad,
+                                                                      nodoPro->getPrecioPorUnidad() * cantidad);
+                                listaVentas->insertar(_nodoVenta);
+
+
+                            }else {
+                                int x = 0;
+
+                                NodoVenta *_nodoVenta = new NodoVenta(_nodoProv->getID(), _nodoProv->getNombre(),
+                                                                      _nodoCliente->getID(),
+                                                                      _nodoCliente->getNombre(), nodoCat->getCodigo(),
+                                                                      nodoCat->getDesc(),
+                                                                      nodoPro->getCodigoProducto(),
+                                                                      nodoPro->getNombreProducto(),
+                                                                      nodoPro->getPrecioPorUnidad(), cantidad,
+                                                                      ((nodoPro->getPrecioPorUnidad() * cantidad)) - (nodoPro->getPrecioPorUnidad() * cantidad * 0.05));
+                                listaVentas->insertar(_nodoVenta);
+
+                            }
+
+                        }else {
+                            codigosCorrectos = false;
+
+                        }
+
+
+                    } else {
+                        codigosCorrectos = false;
+                    }
+
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+
+            if (codigosCorrectos) {
+
+                //ACA VA ABOSLUTAMENTE TODO LO QUE HACES DE LA VENTA
+                //YA ACA SE VERIFICARON LOS CODIGOS
+                char serverMsg[] = "V_REALIZADA";
+                if (ventaRealizada)
+                    write(newsockfd,serverMsg,strlen(serverMsg));
+
+
+            } else {
+                char serverMsgNO[] = "V_NO_REALIZADA";
+                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+            }
+
+            //if alguna no existe no lo deja
+
+            //DECLARACION DE VARIABLES
+
+
+
+            //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
+
+
+        }else if (tester == "PMV") {//Proveedor con mas ventas
+            std::string recorridoArbol = "El proveedor con mas ventas es:\n";
+            NodoProveedor* nodo = new NodoProveedor();
+            proveedores->getNodoProveedorMasVentas(proveedores->raiz,nodo);
+
+            recorridoArbol += nodo->getNombre();
+            std::string msg2Provider = "Puede el cliente consultar el proveedor con mas ventas?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
+
+        }else if (tester == "CMC") {//CLIENTE QUE MAS COMPRO
+            std::string clienteMasCompras = "El Cliente con mas Compras es:\n";
+
+            NodoCliente* nodo = new NodoCliente();
+            clientes->getClienteMasCompras(clientes->raizB,nodo);
+
+
+            clienteMasCompras += nodo->getNombre();
+            std::string msg2Provider = "Puede el cliente consultar el cliente con mas compras?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+            write(newsockfd,clienteMasCompras.c_str() , strlen(clienteMasCompras.c_str()));
+
+
+        }else if (tester == "PQMV") {//Producto mas vendido
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente consultar el prducto mas comprado?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        NodoProducto* nodoPro = new NodoProducto();
+                        pro->getProductoMasVendido(pro->raiz,nodoPro);
+
+                        mensaje = nodoPro->getNombreProducto();
+                    }
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+
+        }else if (tester == "PQRSS") {//productos que rebajaron su stock
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente consultar los productos que cambiaron su stock?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        std::string nodoPro;
+                        pro->getProductosCambiaronStock(pro->raiz,nodoPro);
+
+                        mensaje = nodoPro;
+                    }
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+
+        }else if (tester == "CMV") {//categoria mas vendida
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente consultar la categoria mas vendida?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+
+                    nodocategoria* nodoCat = new nodocategoria();
+
+
+                    cat->getCategoriaMasVendida(cat->raiz, nodoCat);
+
+                    mensaje = nodoCat->getDesc();
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }else if (tester == "SMV") {//supermercado con mas ventas
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente consultar el supermercado que mas vendio?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                NodoSupermercado* nodoSup = new NodoSupermercado();
+                super->getSuperMasVendido(super->raiz, nodoSup);
+
+                mensaje = nodoSup->getNombre();
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+            if (!codigosCorrectos)
+                mensaje = "Algun codigo erroneo";
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }else if (tester == "LQMV") {
+
+            std::string msg2Provider = "Puede el cliente consultar el lugar con mas supermercados?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            //std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            bool codigosCorrectos = false;
+
+            NodoLugar* nodo = new NodoLugar();
+            listaLugares->getLugarMasSuper(nodo);
+            mensaje = nodo->getNombre();
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+        }else if (tester == "IMPRESION") {
+            int x = 0;
+        }else if (( memcmp( buffer, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
+
+            std::cout << "SE ESTA REALIZANDO UNA VENTA" << std::endl;
+
+            std::string msg2Provider = "Solicitud de Eliminar Producto";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor, TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER-1);
+            char * lineaValores = buffer;
+            std::string eliminar(std::strtok (lineaValores, ";"));
+            std::string codLugar(std::strtok (NULL, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+            std::string codProducto(std::strtok (NULL, ";"));
+
+
+
+
+            bool codigosCorrectos = false;
+            bool eliminRealizada = false;
+            int cL,cS,cC,cP, cantidad, codProveedor;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+            cP = atoi(codProducto.c_str());
+
+
+            NodoLugar* nodo = new NodoLugar();
+            NodoProveedor* _nodoProv = new NodoProveedor();
+            NodoCliente* _nodoCliente = new NodoCliente();
+            if (listaLugares->existeLugar(cL)) {
+                nodo = listaLugares->getNodoLugar(cL);
+                ArbolSupermercados* super = new ArbolSupermercados();
+                super = nodo->getArbolSuper();
+
+                if (super->existeSupermercado(cS,super->raiz)) {
+                    NodoSupermercado* nodoSuper = new NodoSupermercado();
+                    ArbolCategorias* cat = new ArbolCategorias();
+                    super->getArbolCat(cS,super->raiz,cat);
+
+                    if (cat->existeCategoria(cC,cat->raiz)) {
+                        ArbolProductos* pro = new ArbolProductos();
+                        cat->getArbolProd(cat->raiz,cC,pro);
+
+                        if (pro->existeProducto(pro->raiz,cP)) {
+
+                            pro->eliminar(pro->raiz,cP);
+
+
+                        }else {
+                            codigosCorrectos = false;
+
+                        }
+
+
+                    } else {
+                        codigosCorrectos = false;
+                    }
+
+                } else {
+                    codigosCorrectos = false;
+                }
+
+            } else {
+                codigosCorrectos = false;
+            }
+
+
+            if (codigosCorrectos) {
+
+                //ACA VA ABOSLUTAMENTE TODO LO QUE HACES DE LA VENTA
+                //YA ACA SE VERIFICARON LOS CODIGOS
+                char serverMsg[] = "REALIZADA";
+                if (eliminRealizada)
+                    write(newsockfd,serverMsg,strlen(serverMsg));
+
+
+            } else {
+                char serverMsgNO[] = "NO_REALIZADA";
+                write(newsockfd,serverMsgNO,strlen(serverMsgNO));
+            }
+
+            //if alguna no existe no lo deja
+
+            //DECLARACION DE VARIABLES
+
+
+
+            //arbolSupermercados->getNodoSupermercado(codSuper, arbolSupermercados->raiz, _nodoSup);
+
+
+
+
+
+        }else if (( memcmp( buffer, "ANCHURA", strlen( "ANCHURA"))) == 0) {
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
+
+            std::string recorridoArbol = "Recorrido en Anchura:\n";
+            recorridoArbol += listaLugares->anchura(atoi(nodoInicialStr.c_str()));
+
+            std::cout << recorridoArbol << std::endl;
+            std::string msg2Provider = "Puede el cliente consultar el recorrido en Anchura?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+
+            write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
+
+        }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
+            int x = 0;
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+            std::string nodoFinalStr(std::strtok (NULL, ";"));
+
+            //esto se hace para simular que el proveedor acepta el pedido
+            std::string msg2Provider = "Puede el cliente consultar el Dijkstra?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string mensajeTotal = "";
+
+            listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
+
+        }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
+
+            int x = 0;
+
+        }else if ((memcmp( buffer, "PRIM", strlen( "PRIM"))) == 0) {
+
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+
+            //esto se hace para simular que el proveedor acepta el pedido
+            std::string msg2Provider = "Puede el cliente consultar el PRIM?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string mensajeTotal = "";
+
+            std::string pesoTotal = arbol->prim(listaLugares,atoi(nodoInicialStr.c_str()));
+            std::string mensajeParcial = arbol->getPrim();
+
+            mensajeTotal = "Peso Total:  " + pesoTotal +  " " + mensajeParcial;
+
+            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
+
+
+
+
+
+            //write(newsockfd,msg,strlen(msg))
+
+
+
+        }else if (tester == "ARTICU") {
+            int x = 0;
+
+        }else if (tester == "Proveedores") {           //Este manda el arbol apenas le llega el mensaje con "Proveedores"
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            //std::string recibido = "Recibido";
+            //write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            //read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de proveedores?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string arbolP = "";
+            proveedores->PreordenSocket(proveedores->raiz, arbolP);
+            write(newsockfd,arbolP.c_str() , strlen(arbolP.c_str()));
+
+        }else if (tester == "Categorias") {
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de categorias?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            ArbolCategorias *arbolCat = NULL;
+
+            bool codigosCorrectos = false;
+            std::string arbolC = "";
+            if(listaLugares->existeLugar(cL)){
+                ArbolSupermercados *arbolS;
+                NodoLugar *nodoLug;
+                nodoLug = listaLugares->getNodoLugar(cL);
+                arbolS = nodoLug->getArbolSuper();
+                if(arbolS->existeSupermercado(cS, arbolS->raiz)){
+                    arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
+                }
+            }
+            if(arbolCat != NULL){
+                arbolCat->PreordenSocket(arbolCat->raiz, arbolC);
+                //Aqui van las funciones para hacer el recorrido del arbol de categorias
+                mensaje = arbolC;
+            }else{
+                mensaje = "Codigo(s) erroneo(s)\n";
+            }
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        else if (tester == "Productos") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de productos?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            std::string codSuper(std::strtok (NULL, ";"));
+            std::string codCat(std::strtok (NULL, ";"));
+
+            ArbolCategorias *arbolCat = NULL;
+            ArbolProductos *arbolProd = NULL;
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            cS = atoi(codSuper.c_str());
+            cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+            std::string arbolP = "";
+
+            //Aqui va lo del recorrido del arbol de productos
+            if(listaLugares->existeLugar(cL)){
+                ArbolSupermercados *arbolS;
+                NodoLugar *nodoLug;
+                nodoLug = listaLugares->getNodoLugar(cL);
+                arbolS = nodoLug->getArbolSuper();
+                if(arbolS->existeSupermercado(cS, arbolS->raiz)){
+                    arbolS->getArbolCat(cS, arbolS->raiz, arbolCat);
+                    if(arbolCat != NULL){
+                        arbolCat->getArbolProd(arbolCat->raiz, cC, arbolProd);
+                    }
+                }
+            }
+            if(arbolCat != NULL && arbolProd != NULL){
+                arbolProd->PreordenSocket(arbolProd->raiz, arbolP);
+                //Aqui van las funciones para hacer el recorrido del arbol de categorias
+                mensaje = arbolP;
+            }else{
+                mensaje = "Codigo(s) erroneo(s)\n";
+            }
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+        else if (tester == "Clientes") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de clientes?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            // char * lineaValores = buffer;
+            //std::string codLugar(std::strtok (lineaValores, ";"));
+            // std::string codSuper(std::strtok (NULL, ";"));
+            // std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            // int cL,cS,cC;
+            //cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            // cC = atoi(codCat.c_str());
+
+            // bool codigosCorrectos = false;
+            std::string arbolClientes = "";
+            clientes->PreordenSocket(clientes->raizB, arbolClientes);
+            mensaje = arbolClientes;
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+
+        else if (tester == "Supermercados") {
+            //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
+            int x = 0;
+            std::string recibido = "Recibido";
+            write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de supermercados?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            char * lineaValores = buffer;
+            std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            std::string mensaje = "";
+            int cL,cS,cC;
+            cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            bool codigosCorrectos = false;
+            std::string strSuper = "";
+            //Aca va lo del recorrido del arbol de supermercados
+            //listaLugares->getNodoLugar(cL)->getArbolSuper()->PreordenSocket(listaLugares->getNodoLugar(cL)->getArbolSuper()->raiz, arbolS);
+            if(listaLugares->existeLugar(cL)) {
+                ArbolSupermercados *arbolS;
+                NodoLugar *nodoLug;
+                nodoLug = listaLugares->getNodoLugar(cL);
+                arbolS = nodoLug->getArbolSuper();
+                arbolS->PreordenSocket(arbolS->raiz, strSuper);
+            }else{
+                mensaje = "Codigos erroneos\n";
+            }
+            mensaje = strSuper;
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
+        }
+
+        else {
+            std::string tester (buffer);
+            std::cout << tester << std::endl;
+            char serverMsg[] = "ERROR NO ENTRO EN NINGUNA OPCION \0";
+            write(newsockfd,serverMsg,strlen(serverMsg));
+            if(tester == "exit")
+                break;
+        }
+
+        // /write()
+        //  if(tester == "exit")
+        //    break;
+    }
+
+    std::cout << "\nClosing thread and conn" << std::endl;
+    close(newsockfd);
+}
+
 /*
     int nodoInicial = 20;
     std::cout << "Thread No: " << pthread_self() << std::endl;
