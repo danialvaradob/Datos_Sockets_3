@@ -987,9 +987,36 @@ void* clientManagement (void *dummyPt) {
         }else if (tester == "ARTICU") {
             int x = 0;
 
-        }else if (tester == "ARBOLES") {
+        }else if (tester == "Proveedores") {
             //ACA ENTRA PARA IMPRIMIR LOS ARBOLES
             int x = 0;
+            //std::string recibido = "Recibido";
+            //write(newsockfd,recibido.c_str() , strlen(recibido.c_str()));
+            bzero(buffer, TAMANHO_BUFFER);
+            //read(newsockfd, buffer, TAMANHO_BUFFER - 1);
+
+            std::string msg2Provider = "Puede el cliente recibir un recorrido del arbol de supermercados?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+           // char * lineaValores = buffer;
+            //std::string codLugar(std::strtok (lineaValores, ";"));
+            //std::string codSuper(std::strtok (NULL, ";"));
+            //std::string codCat(std::strtok (NULL, ";"));
+
+            //std::string mensaje = "";
+            //int cL,cS,cC;
+            //cL = atoi(codLugar.c_str());
+            //cS = atoi(codSuper.c_str());
+            //cC = atoi(codCat.c_str());
+
+            //bool codigosCorrectos = false;
+            std::string arbolP = "";
+			proveedores->PreordenSocket(proveedores->raiz, arbolP);
+            mensaje = arbolP;
+
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
 
         }else {
             std::string tester (buffer);
