@@ -917,7 +917,7 @@ void* clientManagement (void *dummyPt) {
             int x = 0;
         }else if (tester =="ELIMINAR_ARTICULO" ) {
             int x = 0;
-        }else if (tester == "ANCHURA") {
+        }else if (( memcmp( buffer, "ANCHURA", strlen( "ANCHURA"))) == 0) {
             char * lineaValores = buffer;
             std::string nombre(std::strtok (lineaValores, ";"));
             std::string nodoInicialStr(std::strtok (NULL, ";"));

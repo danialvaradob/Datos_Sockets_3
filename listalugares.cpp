@@ -193,7 +193,8 @@ bool ListaLugares::todosVisitados() {
 std::string ListaLugares::profundida(int _puntoInicial) {
     std::string recorrido_str = "";
 
-    int cantVisitados,codLugar = 0;
+    int cantVisitados = 0;
+    int codLugar = 0;
     int contador = getNumVertices();
     int cantLugares = getNumVertices();
     Pila* pilaLugares = new Pila();
@@ -224,13 +225,15 @@ std::string ListaLugares::profundida(int _puntoInicial) {
         }
         cantLugares--;
     }
+    desvisitarTODO();
     return recorrido_str;
 }
 
 std::string ListaLugares::anchura(int _puntoInicial) {
     std::string recorrido_str = "";
 
-    int cantVisitados,codLugar = 0;
+    int cantVisitados = 0;
+    int codLugar = 0;
     int contador = getNumVertices();
     int cantLugares = getNumVertices();
     ListaLugares* pilaLugares = new ListaLugares();
@@ -261,6 +264,7 @@ std::string ListaLugares::anchura(int _puntoInicial) {
         }
         cantLugares--;
     }
+    desvisitarTODO();
     return recorrido_str;
 }
 
