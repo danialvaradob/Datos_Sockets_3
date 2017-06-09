@@ -13,6 +13,7 @@
 #include <string>
 #include <pthread.h>
 #include <vector>
+#include <cstring>
 
 #include "arbolproveedores.h"
 #include "arbolclientes.h"
@@ -943,11 +944,25 @@ void* clientManagement (void *dummyPt) {
             write(newsockfd,recorridoArbol.c_str() , strlen(recorridoArbol.c_str()));
 
         }else if (( memcmp( buffer, "DIJKSTRA", strlen( "DIJKSTRA"))) == 0) {
-
             int x = 0;
+            char * lineaValores = buffer;
+            std::string nombre(std::strtok (lineaValores, ";"));
+            std::string nodoInicialStr(std::strtok (NULL, ";"));
+            std::string nodoFinalStr(std::strtok (NULL, ";"));
+
+            //esto se hace para simular que el proveedor acepta el pedido
+            std::string msg2Provider = "Puede el cliente consultar el Dijkstra?";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            std::string mensajeTotal = "";
+            
+            listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
         }else if ( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) {
             int x = 0;
+            
         }else if (memcmp( buffer, "PRIM", strlen( "PRIM"))) {
 
             char * lineaValores = buffer;
