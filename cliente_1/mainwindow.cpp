@@ -3,6 +3,7 @@
 #include "dialogcompra.h"
 #include "widgetprofundidad.h"
 #include "dialogconsulta.h"
+#include "dialoggrafos.h"
 #include <QMessageBox>
 
 
@@ -77,3 +78,13 @@ void MainWindow::on_pushButton_3_clicked()
     consulta.setClient(client);
     consulta.exec();
 }
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    DialogGrafos grafosD;
+    grafosD.setModal(true);
+    grafosD.setClient(client);
+    grafosD.exec();
+    
+}
+

@@ -18,6 +18,11 @@ public:
     SocketClient* client;
     void setCliente(SocketClient *_client);
 
+
+
+private slots:
+    void on_buttonBox_accepted();
+
 private:
     Ui::WidgetProfundidad *ui;
 };

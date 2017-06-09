@@ -22,10 +22,17 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="text">
+       <string>Impresion Arboles</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="0">
      <widget class="QPushButton" name="pushButton_2">
       <property name="text">
-       <string>Profundidad</string>
+       <string>Profundidad - Anch</string>
       </property>
      </widget>
     </item>
@@ -36,21 +43,7 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="text">
-       <string>Impresion Arboles</string>
-      </property>
-     </widget>
-    </item>
     <item row="4" column="0">
-     <widget class="QPushButton" name="pushButton_5">
-      <property name="text">
-       <string>Anchura</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
      <widget class="QPushButton" name="pushButton_6">
       <property name="text">
        <string>Algoritmos Grafos</string>

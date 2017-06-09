@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     widgetprofundidad.cpp \
     dialogclientenuevo.cpp \
     dialogconsulta.cpp \
-    dialoggrafos.cpp
+    dialoggrafos.cpp \
+    dialogimparboles.cpp \
+    dialogelimprod.cpp
 
 HEADERS  += mainwindow.h \
     dialogcompra.h \
@@ -27,11 +29,15 @@ HEADERS  += mainwindow.h \
     widgetprofundidad.h \
     dialogclientenuevo.h \
     dialogconsulta.h \
-    dialoggrafos.h
+    dialoggrafos.h \
+    dialogimparboles.h \
+    dialogelimprod.h
 
 FORMS    += mainwindow.ui \
     dialogcompra.ui \
     widgetprofundidad.ui \
     dialogclientenuevo.ui \
     dialogconsulta.ui \
-    dialoggrafos.ui
+    dialoggrafos.ui \
+    dialogimparboles.ui \
+    dialogelimprod.ui

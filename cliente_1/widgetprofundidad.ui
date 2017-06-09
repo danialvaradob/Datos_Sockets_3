@@ -65,6 +65,26 @@
     </item>
    </layout>
   </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>110</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>PROFUNDIDAD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>ANCHURA</string>
+    </property>
+   </item>
+  </widget>
  </widget>
  <resources/>
  <connections>
