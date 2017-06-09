@@ -31,7 +31,7 @@ void dialogCompra::on_buttonBox_accepted()
     codC = ui->catLine->text().toStdString();
     codP = ui->productoLine->text().toStdString();
     cantidad = ui->lineEdit->text().toStdString();
-    buff += codCliente + ";" + codL + ";" + codS + ";" + codC + ";" + codP + ";" + cantidad;
+    buff += codL + ";" + codS + ";" + codC + ";" + codP + ";" + cantidad;
 
 
 }

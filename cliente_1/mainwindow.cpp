@@ -5,7 +5,7 @@
 #include "dialogconsulta.h"
 #include "dialoggrafos.h"
 #include <QMessageBox>
-
+#include "dialogimparboles.h"
 
 
 MainWindow::MainWindow( SocketClient* _server ,QWidget *parent) :
@@ -61,7 +61,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    client->writeSocket("PROFUNDIDAD");
+    //client->writeSocket("PROFUNDIDAD");
 
     WidgetProfundidad widgetProfundidad;
     widgetProfundidad.setModal(true);
@@ -88,3 +88,12 @@ void MainWindow::on_pushButton_6_clicked()
     
 }
 
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    DialogImpArboles imprimirArboles;
+    imprimirArboles.setModal(true);
+    imprimirArboles.setClient(client);
+    imprimirArboles.exec();
+
+}

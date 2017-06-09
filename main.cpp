@@ -1013,10 +1013,10 @@ void* clientManagement (void *dummyPt) {
 
             //bool codigosCorrectos = false;
             std::string arbolP = "";
-			proveedores->PreordenSocket(proveedores->raiz, arbolP);
-            mensaje = arbolP;
+            proveedores->PreordenSocket(proveedores->raiz, arbolP);
+           //mensaje = arbolP;
 
-            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+            write(newsockfd,arbolP.c_str() , strlen(arbolP.c_str()));
 
         }else {
             std::string tester (buffer);
