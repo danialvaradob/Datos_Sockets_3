@@ -913,8 +913,16 @@ void* clientManagement (void *dummyPt) {
             mensaje = nodo->getNombre();
 
             write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
-        }else if (tester == "IMPRESION") {
-            int x = 0;
+        }else if (tester == "FACTURA") {
+            std::string msg2Provider = "Realizando factura";
+            write(newsockProvider,msg2Provider.c_str(),strlen(msg2Provider.c_str()));
+            bzero(bufferProveedor,TAMANHO_BUFFER);
+            read(newsockProvider,bufferProveedor,TAMANHO_BUFFER - 1);
+
+            listaVentas->crearFactura();
+            std::string mensaje = "Factura creada";
+            write(newsockfd,mensaje.c_str() , strlen(mensaje.c_str()));
+
         }else if (( memcmp( buffer, "ELIMINAR_ARTICULO", strlen( "ELIMINAR_ARTICULO"))) == 0) {
 
 
