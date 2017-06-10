@@ -1,0 +1,3 @@
+/Users/danielalvarado/Google Drive/server/Pruebas Servidor - Cliente/proveedor_Prueba/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/danielalvarado/Google Drive/server/Pruebas Servidor - Cliente/proveedor_Prueba/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/danielalvarado/Google Drive/server/Pruebas Servidor - Cliente/proveedor_Prueba/cmake-build-debug/CMakeFiles/proveedor_Prueba.dir
