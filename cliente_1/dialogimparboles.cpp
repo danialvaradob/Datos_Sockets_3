@@ -18,6 +18,8 @@ DialogImpArboles::~DialogImpArboles()
 
 void DialogImpArboles::on_pushButton_clicked()
 {
+    ui->plainTextEdit->clear();
+
     std::string itemCombo = ui->comboBox->currentText().toStdString();
     if (itemCombo == "Proveedores") {
         client->writeSocket("Proveedores");
@@ -76,18 +78,6 @@ void DialogImpArboles::on_pushButton_clicked()
             client->writeSocket("Clientes");
             client->readSocket();
 
-            //std::string res = "";
-
-           // string codL,codC,codS;
-            //codL = ui->lineEdit_4->text().toStdString();
-           // codC = ui->lineEdit_2->text().toStdString();
-            //codS = ui->lineEdit_3->text().toStdString();
-
-            //res += codL + ";" + codS + ";" + codC; //No habria que mandar codigos
-            //pero no se si aca hace falta mandarle algo para que funciones el server
-
-            client->writeSocket("CLIENTES");///////
-            client->readSocket();
 
             std::string infoInSocket (client->buffer);
             QString str = QString::fromUtf8(infoInSocket.c_str());

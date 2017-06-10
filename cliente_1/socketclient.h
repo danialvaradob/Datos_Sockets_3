@@ -19,7 +19,7 @@
 #include <vector>
 using namespace std;
 
-int const TAMANHO_BUFFER = 512;
+int const TAMANHO_BUFFER = 2048;
 
 class SocketClient
 {

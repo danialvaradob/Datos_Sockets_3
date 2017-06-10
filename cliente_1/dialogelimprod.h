@@ -1,6 +1,6 @@
 #ifndef DIALOGELIMPROD_H
 #define DIALOGELIMPROD_H
-
+#include "socketclient.h"
 #include <QDialog>
 
 namespace Ui {
@@ -14,6 +14,13 @@ class DialogElimProd : public QDialog
 public:
     explicit DialogElimProd(QWidget *parent = 0);
     ~DialogElimProd();
+
+    SocketClient *client;
+    void setClient(SocketClient* _cliente) {client = _cliente;}
+
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::DialogElimProd *ui;

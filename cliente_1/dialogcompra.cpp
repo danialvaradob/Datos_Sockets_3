@@ -24,14 +24,15 @@ dialogCompra::~dialogCompra()
 void dialogCompra::on_buttonBox_accepted()
 {
     buff = "";
-    std::string codL,codS,codC,codP,cantidad;
+    std::string codL,codS,codC,codP,codProveedor,cantidad;
     buff += "v;";
     codL = ui->lugarLine->text().toStdString();
     codS = ui->superLine->text().toStdString();
     codC = ui->catLine->text().toStdString();
     codP = ui->productoLine->text().toStdString();
     cantidad = ui->lineEdit->text().toStdString();
-    buff += codL + ";" + codS + ";" + codC + ";" + codP + ";" + cantidad;
+    codProveedor = ui->lineEdit_2->text().toStdString();
+    buff += codL + ";" + codS + ";" + codC + ";" + codP + ";" + cantidad + ";" + codProveedor;
 
 
 }

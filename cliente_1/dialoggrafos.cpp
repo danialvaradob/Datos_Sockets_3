@@ -36,11 +36,34 @@ void DialogGrafos::on_buttonBox_accepted()
 
 void DialogGrafos::on_pushButton_clicked()
 {
-    std::string lineaCombo = ui->comboBox->currentText().toStdString() +
-            ";" + ui->lineEdit->text().toStdString();
+    ui->plainTextEdit->clear();
 
-    client->writeSocket(lineaCombo);
-    client->readSocket();
+    std::string lineaCombo = ui->comboBox->currentText().toStdString();
+
+
+
+
+
+    if (lineaCombo == "KRUSKAL") {
+
+        std::string nodoI = ";" + ui->lineEdit->text().toStdString();
+        lineaCombo += nodoI;
+        client->writeSocket(lineaCombo);
+        client->readSocket();
+    } else if (lineaCombo == "PRIM") {
+        std::string nodoI = ";" + ui->lineEdit->text().toStdString();
+        lineaCombo += nodoI;
+        client->writeSocket(lineaCombo);
+        client->readSocket();
+    } else if (lineaCombo == "DIJKSTRA") {
+        std::string nodoI = ";" + ui->lineEdit->text().toStdString();
+        std::string nodoF = ";" + ui->lineEdit_2->text().toStdString();
+        lineaCombo += nodoI + nodoF;
+        client->writeSocket(lineaCombo);
+        client->readSocket();
+    }
+
+
 
 
     std::string infoInSocket (client->buffer);

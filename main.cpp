@@ -1945,6 +1945,9 @@ void* clientManagement2 (void *dummyPt) {
 
             listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
+            char mensaje12[] = "Tabla se encuentra en el TXT del servidor";
+            write(newsockfd,mensaje12,strlen(mensaje12));
+
         }else if (( memcmp( bufferC2, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
 
             char * lineaValores = bufferC2;

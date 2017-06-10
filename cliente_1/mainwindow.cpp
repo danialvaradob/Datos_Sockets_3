@@ -6,6 +6,7 @@
 #include "dialoggrafos.h"
 #include <QMessageBox>
 #include "dialogimparboles.h"
+#include "dialogelimprod.h"
 
 
 MainWindow::MainWindow( SocketClient* _server ,QWidget *parent) :
@@ -95,5 +96,13 @@ void MainWindow::on_pushButton_4_clicked()
     imprimirArboles.setModal(true);
     imprimirArboles.setClient(client);
     imprimirArboles.exec();
+
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{   DialogElimProd elimPro;
+    elimPro.setModal(true);
+    elimPro.setClient(client);
+    elimPro.exec();
 
 }

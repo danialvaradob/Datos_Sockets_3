@@ -1,8 +1,7 @@
 #ifndef DIALOGCOMPRA_H
 #define DIALOGCOMPRA_H
-#include <iostream>
 #include <QDialog>
-
+#include "socketclient.h"
 namespace Ui {
 class dialogCompra;
 }
@@ -16,12 +15,18 @@ public:
     ~dialogCompra();
 
     std::string buff;
+    std::string codCliente;
+
+
+    SocketClient* client;
 
     std::string getInfo() {return buff;}
 
+    void setCliente(SocketClient* _client);
     Ui::dialogCompra *ui;
 private slots:
     void on_buttonBox_accepted();
+    void on_OkClient_clicked();
 };
 
 #endif // DIALOGCOMPRA_H

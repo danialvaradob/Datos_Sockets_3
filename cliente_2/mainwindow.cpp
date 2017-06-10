@@ -2,8 +2,11 @@
 #include "ui_mainwindow.h"
 #include "dialogcompra.h"
 #include "widgetprofundidad.h"
+#include "dialogconsulta.h"
+#include "dialoggrafos.h"
 #include <QMessageBox>
-
+#include "dialogimparboles.h"
+#include "dialogelimprod.h"
 
 
 MainWindow::MainWindow( SocketClient* _server ,QWidget *parent) :
@@ -27,6 +30,7 @@ void MainWindow::on_pushButton_clicked()
 
     dialogCompra compraDialog;
     compraDialog.setModal(true);
+    compraDialog.setCliente(client);
     compraDialog.exec(); //show the dialog when button is pressed
 
     //std::cout << compraDialog.getInfo() << std::endl;
@@ -58,14 +62,47 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    client->writeSocket("PROFUNDIDAD");
+    //client->writeSocket("PROFUNDIDAD");
 
     WidgetProfundidad widgetProfundidad;
     widgetProfundidad.setModal(true);
     widgetProfundidad.setCliente(client);
     widgetProfundidad.exec(); //show the dialog when button is pressed
+}
 
 
 
+void MainWindow::on_pushButton_3_clicked()
+{
+    DialogConsulta consulta;
+    consulta.setModal(true);
+    consulta.setClient(client);
+    consulta.exec();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    DialogGrafos grafosD;
+    grafosD.setModal(true);
+    grafosD.setClient(client);
+    grafosD.exec();
+    
+}
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    DialogImpArboles imprimirArboles;
+    imprimirArboles.setModal(true);
+    imprimirArboles.setClient(client);
+    imprimirArboles.exec();
+
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{   DialogElimProd elimPro;
+    elimPro.setModal(true);
+    elimPro.setClient(client);
+    elimPro.exec();
 
 }

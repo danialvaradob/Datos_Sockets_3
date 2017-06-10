@@ -53,6 +53,9 @@ void WidgetProfundidad::on_buttonBox_accepted()
 
 void WidgetProfundidad::on_pushButton_clicked()
 {
+
+    ui->plainTextEdit->clear();
+
     std::string lineaCombo = ui->comboBox->currentText().toStdString() +
             ";" + ui->lineEdit->text().toStdString();
 

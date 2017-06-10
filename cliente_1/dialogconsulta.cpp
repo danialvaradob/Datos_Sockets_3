@@ -136,7 +136,10 @@ void DialogConsulta::on_buttonBox_accepted()
 void DialogConsulta::on_pushButton_clicked()
 {
 
+    ui->plainTextEdit->clear();
+
     std::string itemCombo = ui->comboBox->currentText().toStdString();
+
     if (itemCombo == "PMV") {
         client->writeSocket("PMV");
         client->readSocket();
@@ -168,8 +171,8 @@ void DialogConsulta::on_pushButton_clicked()
         ui->plainTextEdit->setReadOnly(true);
 
 
-    }else if (itemCombo == "PCSS") {
-        client->writeSocket("PCSS");
+    }else if (itemCombo == "PQRSS") {
+        client->writeSocket("PQRSS");
         client->readSocket();
 
         std::string res = "";

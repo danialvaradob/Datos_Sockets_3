@@ -5,7 +5,10 @@
 #include <iomanip>
 //#include "ListaConexiones.cpp"
 //#include "pila.cpp"
-
+#include <fstream>
+#include <cstring>
+#include <iostream>
+#include <sstream>
 
 
 ListaLugares::~ListaLugares() {
@@ -490,8 +493,8 @@ std::string ListaLugares::getRutaDijkstra(std::string& ultimaconexion, int inici
 	//ultimaconexion = std::string ( ultimaconexion.rbegin(), ultimaconexion.rend() );
 	//std::string _codigoLugar(std::strtok (valorEnLinea, ";") );
 	
-	
-	/*while (true){
+	/*
+	while (true){
 	    std::istringstream iss(ultimaconexion);
 	    std::string token;
 	    while (std::getline(iss, token, '-'))
@@ -503,8 +506,9 @@ std::string ListaLugares::getRutaDijkstra(std::string& ultimaconexion, int inici
 	        break;
 	    	}
 	    }
-    }*/
-    
+    }
+    */
+
     std::string str = "";
     std::string primeraComponente = "";
     std::string segundaComponente = "";
@@ -554,14 +558,15 @@ std::string ListaLugares::getRutaDijkstra(std::string& ultimaconexion, int inici
 
 void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
 		//std::string tablaDijkstra;
+
 		std::string resueltos;
 		std::string noresueltos;
 		std::string distminima;
 		std::string disttotal;
 		std::string ultimaconexion;
 		std::string ruta;
-		
-		
+
+
 	    std::istringstream iss(tablaDijkstra);
 	    std::string token;
 	    std::getline(iss, token, ' ');
@@ -581,7 +586,7 @@ void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
 	    
 	    std::getline(iss, token, ' ');
 	    ruta = token;
-	    
+
 	        
 	    //std::cout<<"LALALA "<<ruta<<std::endl;
 	    
@@ -591,15 +596,16 @@ void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
 		myfile << "---------------------------------------------------------------\n";
 		myfile<<"Nodo resuelto"<<std::setw(100)<<"Nodo no-resuelto"<<std::setw(100)<<"Distancia minima"<<std::setw(100)<<"Distancia total"<<std::setw(100)<<"Ultima conexion"<<std::endl;
 	    
-	    
-	    std::istringstream iss0(resueltos);
-	    std::istringstream iss1(noresueltos);
-	    std::istringstream iss2(distminima);
-	    std::istringstream iss3(disttotal);
-	    std::istringstream iss4(ultimaconexion);
+
+
+	    std::istringstream iss0 (resueltos);
+	    std::istringstream iss1 (noresueltos);
+	    std::istringstream iss2 (distminima);
+	    std::istringstream iss3 (disttotal);
+	    std::istringstream iss4 (ultimaconexion);
 	    while (true){
 	    	
-		
+
 	    std::getline(iss0, token, ';');
 	    myfile << std::left<<std::setw(50) <<token << std::setw(50) << "      ";
 	    std::cout << token << std::endl;
@@ -632,6 +638,7 @@ void ListaLugares::generarTablaDijkstra(std::string tablaDijkstra){
 		   break;
 	   	}
 	    }
+
 	
 }
 
@@ -709,5 +716,6 @@ std::string ListaLugares::puntosDeArticulacion(int _puntoInicial) {
    // arbolM->profundida(_puntoInicial);
 
     return recorrido_str;
+
 }
 
