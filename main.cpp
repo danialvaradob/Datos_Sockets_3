@@ -1952,10 +1952,10 @@ void* clientManagement2 (void *dummyPt) {
 
             std::string mensajeTotal = "";
 
-            listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
+            mensajeTotal = listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
 
             char mensaje12[] = "Tabla se encuentra en el TXT del servidor";
-            write(newsockfd,mensaje12,strlen(mensaje12));
+            write(newsockfd,mensajeTotal.c_str(),strlen(mensajeTotal.c_str()));
 
         }else if (( memcmp( bufferC2, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
 
