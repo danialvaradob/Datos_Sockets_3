@@ -19,5 +19,5 @@ std::string NodoArbolExpansion::toString() {
     flujo3 << peso;
     f3 = flujo3.str();
 
-    return "Lugar1: " + f1 + "| Lugar2: " + f2 + "| Peso: " + f3 + ";";
+    return "Lugar1: " + f1 + "| Lugar2: " + f2 + "| Peso: " + f3 + ";\n";
 }

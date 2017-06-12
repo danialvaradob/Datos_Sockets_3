@@ -31,7 +31,7 @@
 */
 
 
-int const TAMANHO_BUFFER = 2048;
+int const TAMANHO_BUFFER = 4096;
 
 
 
@@ -1045,7 +1045,8 @@ void* clientManagement (void *dummyPt) {
 
             std::string mensajeTotal = "";
             
-            listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
+            mensajeTotal =  listaLugares->Dijkstra(atoi(nodoInicialStr.c_str()), atoi(nodoFinalStr.c_str()));
+            write(newsockfd,mensajeTotal.c_str() , strlen(mensajeTotal.c_str()));
 
         }else if (( memcmp( buffer, "KRUSKAL", strlen( "KRUSKAL"))) == 0) {
 
@@ -2382,7 +2383,7 @@ int main() {
 
     pthread_t threadA[3];
 
-    portNo = 8889;
+    portNo = 6666;
 
     //create socket
     listenFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
