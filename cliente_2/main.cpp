@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
     char host[] = "127.0.0.1";
     int portNo = 8889;
-    SocketClient* client = new SocketClient(listenFd,host,portNo);
+    SocketClient* client = new SocketClient(host,portNo);
 
     QApplication a(argc, argv);
     MainWindow* w = new MainWindow(client);

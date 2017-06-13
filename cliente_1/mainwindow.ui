@@ -57,6 +57,13 @@
       </property>
      </widget>
     </item>
+    <item row="6" column="0">
+     <widget class="QPushButton" name="pushButton_7">
+      <property name="text">
+       <string>Crear Factura</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -65,7 +72,7 @@
      <x>0</x>
      <y>0</y>
      <width>453</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

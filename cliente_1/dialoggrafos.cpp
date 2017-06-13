@@ -61,6 +61,7 @@ void DialogGrafos::on_pushButton_clicked()
         lineaCombo += nodoI + nodoF;
         client->writeSocket(lineaCombo);
         client->readSocket();
+        client->crearArchivo(client->buffer);
     }
 
 

@@ -74,9 +74,9 @@ int main(int argc, char *argv[])
     //struct thread_data td[NUM_THREADS];
     int rc,i;
 
-    char host[] = "127.0.0.1";
-    int portNo = 8889;
-    SocketClient* client = new SocketClient(listenFd,host,portNo);
+    char host[] = "172.18.108.119";
+    int portNo = 6666;
+    SocketClient* client = new SocketClient(host,portNo);
 
     QApplication a(argc, argv);
     MainWindow* w = new MainWindow(client);

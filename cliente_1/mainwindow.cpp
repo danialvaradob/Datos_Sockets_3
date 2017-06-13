@@ -106,3 +106,11 @@ void MainWindow::on_pushButton_5_clicked()
     elimPro.exec();
 
 }
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    client->writeSocket("FACTURA");
+    client->readSocket();
+
+    QMessageBox::about(this,tr("Factura Creada"), tr("Factura Creada"));
+}

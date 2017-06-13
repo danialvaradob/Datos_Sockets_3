@@ -1,46 +1,35 @@
 #ifndef SOCKETCLIENT_H
 #define SOCKETCLIENT_H
+#include <winsock2.h>
 #include <iostream>
-#include <string.h>
-#include <cstring>
-#include <unistd.h>
-#include <stdio.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <strings.h>
-#include <stdlib.h>
 #include <string>
-#include <time.h>
-#include <vector>
+#include <cstdlib>
+#include <exception>
+#include <cstdlib>
+
 using namespace std;
 
-int const TAMANHO_BUFFER = 2048;
+int const TAMANHO_BUFFER = 4096;
 
 class SocketClient
 {
 public:
 
 
-    SocketClient(int _listenFd, char* host, int portNo);
+    SocketClient(char* host, int portNo);
+
+    WSADATA WSAData;
+    SOCKET listenFd;
+    SOCKADDR_IN addr;
 
     int TAMANO_BUFFER = TAMANHO_BUFFER;
-    int listenFd;
-    int checker;
-    struct sockaddr_in svrAdd;
-    struct hostent *server;
+
     char buffer[TAMANHO_BUFFER];
 
     void readSocket();
     void writeSocket(std::string _message);
-    void emptyBuffer();
-    void fillBuffer(std::string _message);
-
-
+    void crearArchivo(std::string _msj);
 };
 
 #endif // SOCKETCLIENT_H
