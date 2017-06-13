@@ -970,8 +970,9 @@ void* clientManagement (void *dummyPt) {
                         if (pro->existeProducto(pro->raiz,cP)) {
 
                             eliminRealizada = true;
+                            bool bandera = false;
 
-                            pro->eliminar(pro->raiz,cP);
+                            pro->eliminar(pro->raiz,cP,bandera);
                             codigosCorrectos = true;
 
 
@@ -1876,10 +1877,13 @@ void* clientManagement2 (void *dummyPt) {
 
                         if (pro->existeProducto(pro->raiz,cP)) {
 
-                            eliminRealizada = true;
 
-                            pro->eliminar(pro->raiz,cP);
+                            eliminRealizada = true;
+                            bool bandera = false;
+
+                            pro->eliminar(pro->raiz,cP,bandera);
                             codigosCorrectos = true;
+
 
 
                         }else {

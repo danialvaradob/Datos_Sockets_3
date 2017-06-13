@@ -19,7 +19,7 @@ public:
     void balancear(NodoProducto * temp);  //se utiliza rebal en ingles
     NodoProducto* insertarNodo(NodoProducto * temp, NodoProducto * ins); // se utiliza insert en ingles
     void print(NodoProducto*H);
-    NodoProducto *eliminar(NodoProducto* _raiz,int _codigoProducto); //estaba intenandola
+    NodoProducto *eliminar(NodoProducto* _raiz,int _codigoProducto,bool& _bandera); //estaba intenandola
     NodoProducto *decrementarNivel(NodoProducto* _raiz);
 
     void PreordenSocket(NodoProducto *_raiz, std::string &_string);

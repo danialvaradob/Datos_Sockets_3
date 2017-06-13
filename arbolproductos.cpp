@@ -133,40 +133,42 @@ bool ArbolProductos::existeProducto(NodoProducto *_raiz, int _codProducto) {
     }
 }
 
-NodoProducto *ArbolProductos::eliminar(NodoProducto *_raiz, int _codigoProducto) {
-    //_raiz = T
-    // L = L
-    //_codigoProducto = X
+NodoProducto *ArbolProductos::eliminar(NodoProducto *_raiz, int _codigoProducto,bool& bandera) {
 
     NodoProducto *L;
     if( _codigoProducto > _raiz->getCodigoProducto()) {
-        _raiz->der = eliminar(_raiz->der, _codigoProducto);
-    } else if(_codigoProducto < _raiz->getCodigoProducto()) {
+        bandera = true;
+        _raiz->der = eliminar(_raiz->der, _codigoProducto,bandera);
 
-        _raiz->izq = eliminar(_raiz->izq, _codigoProducto);
+    } else if(_codigoProducto < _raiz->getCodigoProducto()) {
+        bandera = true;
+        _raiz->izq = eliminar(_raiz->izq, _codigoProducto,bandera);
 
     } else {
         if (_raiz->izq == NULL && _raiz->der == NULL) {
+            if(!bandera){
+                raiz = NULL;
+            }
             return NULL;
         }else {
             if(_raiz->izq == NULL){
                 L = _raiz->der;
-                _raiz->der = eliminar(_raiz->der, L->getCodigoProducto());
+                _raiz->der = eliminar(_raiz->der, L->getCodigoProducto(),bandera);
                 _raiz = L;
             } else{
                 L = _raiz->padre;
-                _raiz->izq = eliminar(_raiz->izq, L->getCodigoProducto());
+                _raiz->izq = eliminar(_raiz->izq, L->getCodigoProducto(),bandera);
                 _raiz = L;
             }
         }
     }
-    raiz = decrementarNivel(raiz);
-    if (raiz->izq) girar(raiz);
-    if (raiz->der) girar(raiz->der);
-    if (raiz->der->der) girar(raiz->der->der);
-    dividir(raiz);
-    if (raiz->der) dividir(raiz->der);
-    return raiz;
+    _raiz = decrementarNivel(_raiz);
+    if (_raiz->izq) girar(_raiz);
+    if (_raiz->der) girar(_raiz->der);
+    if (_raiz->der->der) girar(_raiz->der->der);
+    dividir(_raiz);
+    if (_raiz->der) dividir(_raiz->der);
+    return _raiz;
 
 }
 
