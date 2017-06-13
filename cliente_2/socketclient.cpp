@@ -10,16 +10,32 @@ using namespace std;
 
 SocketClient::SocketClient(char* host, int portNo)    {
 
-    WSAStartup(MAKEWORD(2,0), &WSAData);
+
+    //portNo = 8888;
+    //create client skt
+
     listenFd = socket(AF_INET, SOCK_STREAM, 0);
 
+    if(listenFd < 0)
+    {
+        cerr << "Cannot open socket" << endl;
+        //return 0;
+    }
+    server = gethostbyname(host);
+    if(server == NULL)
+    {
+        cerr << "Host does not exist" << endl;
+        //return 0;
+    }
 
-    addr.sin_addr.s_addr = inet_addr(host); // replace the ip with your futur server ip address. If server AND client are running on the same computer, you can use the local ip 127.0.0.1
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(portNo);
+    bzero((char *) &svrAdd, sizeof(svrAdd));
+    svrAdd.sin_family = AF_INET;
 
-    connect(listenFd, (SOCKADDR *)&addr, sizeof(addr));
+    bcopy((char *) server -> h_addr, (char *) &svrAdd.sin_addr.s_addr, server -> h_length);
 
+    svrAdd.sin_port = htons(portNo);
+
+    checker = connect(listenFd,(struct sockaddr *) &svrAdd, sizeof(svrAdd));
     writeSocket("CLIENTE_2");
     readSocket();
 
